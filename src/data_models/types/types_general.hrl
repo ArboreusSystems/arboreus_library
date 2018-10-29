@@ -9,6 +9,9 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 
+-type float_pos() :: float().
+-type float_neg() :: float().
+
 -type unix_path() :: unix_path_binary() | unix_path_string().
 -type unix_path_string() :: unicode:charlist().
 -type unix_path_binary() :: unicode:unicode_binary().
@@ -45,6 +48,7 @@
 -type list_of_properties() :: [any()].
 -type list_of_records() :: [record()].
 -type list_of_integers() :: [integer()].
+-type list_of_floats() :: [float()].
 -type list_of_atoms() :: [atom()].
 -type list_of_functions() :: [function()].
 -type list_of_lists() :: [list()].

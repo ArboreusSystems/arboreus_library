@@ -12,6 +12,8 @@
 -type float_pos() :: float().
 -type float_neg() :: float().
 
+-type boolean_digit() :: 1 | 0.
+
 -type unix_path() :: unix_path_binary() | unix_path_string().
 -type unix_path_string() :: unicode:charlist().
 -type unix_path_binary() :: unicode:unicode_binary().

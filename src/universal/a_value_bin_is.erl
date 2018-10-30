@@ -20,7 +20,9 @@
 -export([
 	test/0,
 	integer/1,integer_pos/1,integer_neg/1,integer_from_list/2,integer_ranged/3,
-	float/1,float_pos/1,float_neg/1,float_from_list/2,float_ranged/3
+	float/1,float_pos/1,float_neg/1,float_from_list/2,float_ranged/3,
+	atom/1,atom_from_list/2,
+	boolean/1,boolean_digit/1
 ]).
 
 
@@ -89,6 +91,30 @@ test() ->
 	false = a_value_bin_is:integer_ranged(Integer_wrong,Integer3,Integer_neg),
 	false = a_value_bin_is:integer_ranged(Integer1_binary,Integer3,Integer2),
 	io:format("DONE! Integer values verification test passed.~n"),
+	Atom1 = atom1, Atom1_binary = <<("atom1")/utf8>>,
+	Atom2 = atom2, Atom2_binary = <<("atom2")/utf8>>,
+	Atom3 = atom3, Atom3_binary = <<("atom3")/utf8>>,
+	Atom_wrong_binary = <<("Atom_wrong")/utf8>>,
+	Atoms = [Atom2,Atom3],
+	{true,Atom1} = a_value_bin_is:atom(Atom1_binary),
+	{true,Atom2} = a_value_bin_is:atom(Atom2_binary),
+	false = a_value_bin_is:atom(Atom_wrong_binary),
+	{true,Atom3} = a_value_bin_is:atom_from_list(Atom3_binary,Atoms),
+	false = a_value_bin_is:atom_from_list(Atom_wrong_binary,Atoms),
+	false = a_value_bin_is:atom_from_list(Atom1_binary,Atoms),
+	io:format("DONE! Atom values verification test passed.~n"),
+	Boolean1 = true, Boolean1_binary = <<("true")/utf8>>,
+	Boolean2 = false, Boolean2_binary = <<("false")/utf8>>,
+	Boolean_digit1 = 1, Boolean_digit1_binary = <<("1")/utf8>>,
+	Boolean_digit2 = 0, Boolean_digit2_binary = <<("0")/utf8>>,
+	Boolean_wrong = <<("boolean_wrong")/utf8>>,
+	{true,Boolean1} = a_value_bin_is:boolean(Boolean1_binary),
+	{true,Boolean2} = a_value_bin_is:boolean(Boolean2_binary),
+	false = a_value_bin_is:boolean(Boolean_wrong),
+	{true,Boolean_digit1} = a_value_bin_is:boolean_digit(Boolean_digit1_binary),
+	{true,Boolean_digit2} = a_value_bin_is:boolean_digit(Boolean_digit2_binary),
+	false = a_value_bin_is:boolean_digit(Boolean_wrong),
+	io:format("DONE! Boolean values verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -97,6 +123,56 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify digital boolean value
+-spec boolean_digit(Binary) -> {true,boolean_digit()} | false
+	when
+	Binary :: utf_text_binary().
+
+boolean_digit(Binary) -> integer_from_list(Binary,[1,0]).
+
+
+%% ----------------------------
+%% @doc Verify boolean value
+-spec boolean(Binary) -> {true,boolean()} | false
+	when
+	Binary :: utf_text_binary().
+
+boolean(Binary) -> atom_from_list(Binary,[true,false]).
+
+
+%% ----------------------------
+%% @doc Verify atom value
+-spec atom(Binary) -> {true,atom()} | false
+	when
+	Binary :: utf_text_binary().
+
+atom(Binary) ->
+	Pattern = <<("^[a-z]{1}[a-zA-Z0-9\_]*$")/utf8>>,
+	case re:run(Binary,Pattern) of
+		{match,_} -> {true,binary_to_atom(Binary,utf8)};
+		_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify atom from list membership
+-spec atom_from_list(Binary,List) -> {true,atom()} | false
+	when
+	Binary :: utf_text_binary(),
+	List :: list_of_atoms().
+
+atom_from_list(Binary,List) ->
+	case atom(Binary) of
+		{true,Atom} ->
+			case lists:member(Atom,List) of
+				true -> {true,Atom};
+				_ -> false
+			end;
+		_ -> false
+	end.
 
 
 %% ----------------------------

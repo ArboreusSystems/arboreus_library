@@ -22,7 +22,10 @@
 	integer/1,integer_pos/1,integer_neg/1,integer_from_list/2,integer_ranged/3,
 	float/1,float_pos/1,float_neg/1,float_from_list/2,float_ranged/3,
 	atom/1,atom_from_list/2,
-	boolean/1,boolean_digit/1
+	boolean/1,boolean_digit/1,
+	by_pattern/2,by_size/2,
+	latin_name/1,latin_name_limited/2,
+	email/1
 ]).
 
 
@@ -115,6 +118,22 @@ test() ->
 	{true,Boolean_digit2} = a_value_bin_is:boolean_digit(Boolean_digit2_binary),
 	false = a_value_bin_is:boolean_digit(Boolean_wrong),
 	io:format("DONE! Boolean values verification test passed.~n"),
+	Latin_name = <<("Vasya Pukin")/utf8>>,
+	{true,Latin_name} = latin_name(Latin_name),
+	false = latin_name(Boolean_wrong),
+	{true,Latin_name} = latin_name_limited(Latin_name,{less_or_equal,50}),
+	{true,Latin_name} = latin_name_limited(Latin_name,{more_or_equal,5}),
+	{true,Latin_name} = latin_name_limited(Latin_name,{equal,11}),
+	{true,Latin_name} = latin_name_limited(Latin_name,{ranged,1,100}),
+	false = latin_name_limited(Latin_name,{equal,5}),
+	false = latin_name_limited(Latin_name,{less_or_equal,5}),
+	false = latin_name_limited(Latin_name,{more_or_equal,50}),
+	false = latin_name_limited(Latin_name,{ranged,100,1000}),
+	io:format("DONE! Latin Name values verification test passed.~n"),
+	Email = <<("test@arboreus.systems")/utf8>>,
+	{true,Email} = email(Email),
+	false = email(Latin_name),
+	io:format("DONE! Email values verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -123,6 +142,97 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify email by pattern
+-spec email(Binary) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary().
+
+email(Binary) ->
+	by_pattern(Binary,<<("^([a-z0-9\.\_\-]{1,})\@([a-z0-9\.\_\-]{1,})$")/utf8>>).
+
+
+%% ----------------------------
+%% @doc Verify latin name value limited by length by pattern
+-spec latin_name_limited(Binary,Limit) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+latin_name_limited(Binary,Limit) ->
+	case latin_name(Binary) of
+		{true,Binary} -> by_size(Binary,Limit);
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify latin name binary by pattern
+-spec latin_name(Binary) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary().
+
+latin_name(Binary) ->
+	by_pattern(Binary,<<("^(\ ?[A-Z]{1}[a-z]{0,}){1,}$")/utf8>>).
+
+
+%% ----------------------------
+%% @doc verify value by regex pattern
+-spec by_pattern(Binary,Pattern) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Pattern :: utf_text_binary().
+
+by_pattern(Binary,Pattern) ->
+	case re:run(Binary,Pattern) of
+		{match,_} -> {true,Binary};
+		_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify binary value by size
+-spec by_size(Binary,Parameters) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Parameters :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+by_size(Binary,{equal,Length}) ->
+	Size = byte_size(Binary),
+	if
+		Size == Length -> {true,Binary};
+		true -> false
+	end;
+by_size(Binary,{less_or_equal,Length}) ->
+	Size = byte_size(Binary),
+	if
+		Size =< Length -> {true,Binary};
+		true -> false
+	end;
+by_size(Binary,{more_or_equal,Length}) ->
+	Size = byte_size(Binary),
+	if
+		Size >= Length -> {true,Binary};
+		true -> false
+	end;
+by_size(Binary,{ranged,Minimal,Maximal}) ->
+	Size = byte_size(Binary),
+	if
+		Size =< Maximal ->
+			if
+				Size >= Minimal -> {true,Binary};
+				true -> false
+			end;
+		true -> false
+	end.
 
 
 %% ----------------------------

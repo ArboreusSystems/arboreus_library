@@ -13,6 +13,7 @@
 
 %% Data types
 -include("../data_models/types/types_general.hrl").
+-include("../data_models/types/types_network.hrl").
 
 %% Data models
 
@@ -26,7 +27,8 @@
 	by_pattern/2,by_size/2,
 	latin_name/1,latin_name_limited/2,
 	email/1,
-	fqdn/1
+	fqdn/1,
+	ipv4/2,ipv6/2
 ]).
 
 
@@ -140,6 +142,30 @@ test() ->
 	{true,Fqdn1} = fqdn(Fqdn1),
 	false = fqdn(Fqdn_wrong),
 	io:format("DONE! FQDN values verification test passed.~n"),
+	Term = [erlang,term],
+	Term_binary = term_to_binary(Term),
+	Term_wrong = <<("wrong_term")/utf8>>,
+	{true,Term} = term(Term_binary),
+	false = term(Term_wrong),
+	io:format("DONE! Erlang Terms values verification test passed.~n"),
+	IPv4_tuple = {1,1,1,1},
+	IPv4_binary = <<("1.1.1.1")/utf8>>,
+	IPv4_integer = 16843009,
+	IPv4_wrong = <<("ip_wrong")/utf8>>,
+	{true,IPv4_tuple} = ipv4(IPv4_binary,tuple),
+	{true,IPv4_integer} = ipv4(IPv4_binary,integer),
+	false = ipv4(IPv4_wrong,integer),
+	false = ipv4(IPv4_wrong,tuple),
+	io:format("DONE! IPv4 values verification test passed.~n"),
+	IPv6_tuple = {8193,3512,4515,2519,7988,35374,1952,30301},
+	IPv6_binary = <<("2001:0db8:11a3:09d7:1f34:8a2e:07a0:765d")/utf8>>,
+	IPv6_integer = 42540766416740939402060931394078537309,
+	IPv6_wrong = <<("ip_wrong")/utf8>>,
+	{true,IPv6_tuple} = ipv6(IPv6_binary,tuple),
+	{true,IPv6_integer} = ipv6(IPv6_binary,integer),
+	false = ipv6(IPv6_wrong,integer),
+	false = ipv6(IPv6_wrong,tuple),
+	io:format("DONE! IPv6 values verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -148,6 +174,60 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify IPv6 value
+-spec ipv6(Binary,Return_mode) -> {true,Ip} | false
+	when
+	Binary :: utf_text_binary(),
+	Return_mode :: integer | tuple,
+	Ip :: ipv6_tuple() | ipv4_integer().
+
+ipv6(Binary,Return_mode) ->
+	Ip_string = unicode:characters_to_list(Binary),
+	try
+		case Return_mode of
+			integer ->
+				{true,a_net:ipv6_to_integer(Ip_string)};
+			_ ->
+				{ok,Ip_tuple} = inet:parse_ipv6_address(Ip_string),
+				{true,Ip_tuple}
+		end
+	catch
+		_:_ -> false
+	end.
+	
+
+%% ----------------------------
+%% @doc Verify IPv4 value
+-spec ipv4(Binary,Return_mode) -> {true,Ip} | false
+	when
+	Binary :: utf_text_binary(),
+	Return_mode :: integer | tuple,
+	Ip :: ipv4_integer() | ipv4_tuple().
+
+ipv4(Binary,Return_mode) ->
+	try
+		{ok,Ip_tuple} = inet:parse_ipv4_address(unicode:characters_to_list(Binary)),
+		case Return_mode of
+			integer -> {true,a_net:ipv4_to_integer(Ip_tuple)};
+			_ -> {true,Ip_tuple}
+		end
+	catch
+		_:_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify Erlang term value
+-spec term(Byte) -> {true,term()} | false
+	when
+	Byte :: byte().
+
+term(Byte) ->
+	try {true,binary_to_term(Byte)}
+	catch _:_ -> false end.
 
 
 %% ----------------------------

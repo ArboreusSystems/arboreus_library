@@ -22,6 +22,10 @@
 -type utf_text_string() :: unicode:charlist().
 -type utf_text_binary() :: unicode:unicode_binary().
 
+-type utf_base64_text() :: utf_base64_string() | utf_base64_binary().
+-type utf_base64_string() :: unicode:charlist().
+-type utf_base64_binary() :: unicode:unicode_binary().
+
 -type md() :: md5() | md4().
 -type md_binary() :: md5_binary() | md4_binary().
 -type md_string() :: md5_string() | md4_string().

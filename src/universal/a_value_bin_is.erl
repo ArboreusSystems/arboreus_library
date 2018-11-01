@@ -28,7 +28,10 @@
 	latin_name/1,latin_name_limited/2,
 	email/1,
 	fqdn/1,
-	ipv4/2,ipv6/2
+	ipv4/2,ipv6/2,
+	numeric/1,numeric_limited/2,
+	base64/2,base64_limited/3,
+	password/3
 ]).
 
 
@@ -166,6 +169,51 @@ test() ->
 	false = ipv6(IPv6_wrong,integer),
 	false = ipv6(IPv6_wrong,tuple),
 	io:format("DONE! IPv6 values verification test passed.~n"),
+	Numeric1 = <<("12345")/utf8>>,
+	Numeric_wrong = <<("numeric_wrong")/utf8>>,
+	{true,Numeric1} = numeric(Numeric1),
+	false = numeric(Numeric_wrong),
+	{true,Numeric1} = numeric_limited(Numeric1,{equal,5}),
+	false = numeric_limited(Numeric1,{equal,1}),
+	{true,Numeric1} = numeric_limited(Numeric1,{less_or_equal,5}),
+	false = numeric_limited(Numeric1,{less_or_equal,4}),
+	{true,Numeric1} = numeric_limited(Numeric1,{more_or_equal,5}),
+	false = numeric_limited(Numeric1,{more_or_equal,6}),
+	{true,Numeric1} = numeric_limited(Numeric1,{ranged,4,6}),
+	false = numeric_limited(Numeric1,{ranged,6,7}),
+	io:format("DONE! Numeric values verification test passed.~n"),
+	Base64_decoded = <<("Base64_binary")/utf8>>,
+	Base64_encoded = base64:encode(Base64_decoded),
+	Base64_wrong = <<("Base64_wrong")/utf8>>,
+	Base64_encoded_size = byte_size(Base64_encoded),
+	Base64_decoded_size = byte_size(Base64_decoded),
+	{true,Base64_decoded} = base64(Base64_encoded,binary),
+	{true,Base64_encoded} = base64(Base64_encoded,base64),
+	false = base64(Base64_wrong,binary),
+	{true,Base64_decoded} = base64_limited(Base64_encoded,binary,{equal,Base64_decoded_size}),
+	false = base64_limited(Base64_encoded,binary,{equal,Base64_decoded_size+1}),
+	{true,Base64_encoded} = base64_limited(Base64_encoded,base64,{equal,Base64_encoded_size}),
+	false = base64_limited(Base64_encoded,binary,{equal,Base64_encoded_size+1}),
+	{true,Base64_decoded} = base64_limited(Base64_encoded,binary,{less_or_equal,Base64_decoded_size}),
+	false = base64_limited(Base64_encoded,binary,{less_or_equal,Base64_decoded_size-1}),
+	{true,Base64_encoded} = base64_limited(Base64_encoded,base64,{less_or_equal,Base64_encoded_size}),
+	false = base64_limited(Base64_encoded,binary,{less_or_equal,Base64_encoded_size-10}),
+	{true,Base64_decoded} = base64_limited(Base64_encoded,binary,{more_or_equal,Base64_decoded_size}),
+	false = base64_limited(Base64_encoded,binary,{more_or_equal,Base64_decoded_size+1}),
+	{true,Base64_encoded} = base64_limited(Base64_encoded,base64,{more_or_equal,Base64_encoded_size}),
+	false = base64_limited(Base64_encoded,binary,{more_or_equal,Base64_encoded_size+1}),
+	{true,Base64_decoded} = base64_limited(Base64_encoded,binary,{ranged,Base64_decoded_size-1,Base64_decoded_size+1}),
+	false = base64_limited(Base64_encoded,binary,{ranged,Base64_decoded_size+1,Base64_decoded_size+2}),
+	{true,Base64_encoded} = base64_limited(Base64_encoded,base64,{ranged,Base64_encoded_size-1,Base64_encoded_size+1}),
+	false = base64_limited(Base64_encoded,binary,{ranged,Base64_encoded_size+1,Base64_encoded_size+2}),
+	io:format("DONE! Base64 values verification test passed.~n"),
+	Password_decoded = <<("qwerty")/utf8>>,
+	Password_encoded = base64:encode(Password_decoded),
+	Password_wrong = <<("password_wrong")/utf8>>,
+	{true,Password_decoded} = password(Password_encoded,4,8),
+	false = password(Password_encoded,1,2),
+	false = password(Password_wrong,4,8),
+	io:format("DONE! Password values verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -174,6 +222,90 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify password value
+-spec password(Binary,Minimal_length,Maximal_length) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_base64_binary(),
+	Minimal_length :: pos_integer(),
+	Maximal_length :: pos_integer().
+
+password(Binary,Minimal,Maximal) ->
+	base64_limited(Binary,binary,{ranged,Minimal,Maximal}).
+
+
+%% ----------------------------
+%% @doc Verify Base64 limited value
+-spec base64_limited(Binary,Return_mode,Limit) -> {true,Result} | false
+	when
+	Binary :: utf_base64_binary(),
+	Return_mode :: base64 | binary,
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer(),
+	Result :: utf_base64_binary() | utf_text_binary().
+
+base64_limited(Binary,Return_mode,Limit) ->
+	case Return_mode of
+		binary ->
+			case base64(Binary,Return_mode) of
+				{true,Encoded_binary} -> by_size(Encoded_binary,Limit);
+				Result -> Result
+			end;
+		_ ->
+			case by_size(Binary,Limit) of
+				{true,Binary} -> base64(Binary,base64);
+				Result -> Result
+			end
+	end.
+
+
+%% ----------------------------
+%% @doc Verify Base64 value
+-spec base64(Binary,Return_mode) -> {true,Result} | false
+	when
+	Binary :: utf_base64_binary(),
+	Return_mode :: base64 | binary,
+	Result :: utf_base64_binary() | utf_text_binary().
+
+base64(Binary,Return_mode) ->
+	try
+		Encoded_binary = base64:decode(Binary),
+		case Return_mode of
+			base64 -> {true,Binary};
+			_ -> {true,Encoded_binary}
+		end
+	catch _:_ -> false end.
+
+
+%% ----------------------------
+%% @doc Verify limited numeric value
+-spec numeric_limited(Binary,Limit) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+numeric_limited(Binary,Limit) ->
+	case by_size(Binary,Limit) of
+		{true,Binary} -> numeric(Binary);
+		_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify numeric value
+-spec numeric(Binary) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary().
+
+numeric(Binary) ->
+	by_pattern(Binary,<<("^[0-9]{1,}$")/utf8>>).
 
 
 %% ----------------------------

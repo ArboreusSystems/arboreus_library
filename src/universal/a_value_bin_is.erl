@@ -25,7 +25,8 @@
 	boolean/1,boolean_digit/1,
 	by_pattern/2,by_size/2,
 	latin_name/1,latin_name_limited/2,
-	email/1
+	email/1,
+	fqdn/1
 ]).
 
 
@@ -134,6 +135,11 @@ test() ->
 	{true,Email} = email(Email),
 	false = email(Latin_name),
 	io:format("DONE! Email values verification test passed.~n"),
+	Fqdn1 = <<("fqdn1765_098.test_domain.example.com.")/utf8>>,
+	Fqdn_wrong = <<("wrong_fqdn")/utf8>>,
+	{true,Fqdn1} = fqdn(Fqdn1),
+	false = fqdn(Fqdn_wrong),
+	io:format("DONE! FQDN values verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -142,6 +148,19 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify FQND value
+-spec fqdn(Binary) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary().
+
+fqdn(Binary) ->
+	case by_size(Binary,{less_or_equal,255}) of
+		{true,Binary} -> by_pattern(Binary,<<("^([a-z0-9\-\ \_]{1,}[\.]{1}){1,}$")/utf8>>);
+		Result -> Result
+	end.
 
 
 %% ----------------------------
@@ -165,8 +184,8 @@ email(Binary) ->
 	Maximal :: pos_integer().
 
 latin_name_limited(Binary,Limit) ->
-	case latin_name(Binary) of
-		{true,Binary} -> by_size(Binary,Limit);
+	case by_size(Binary,Limit) of
+		{true,Binary} -> latin_name(Binary);
 		Result -> Result
 	end.
 

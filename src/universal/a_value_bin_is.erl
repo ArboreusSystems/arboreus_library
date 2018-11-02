@@ -30,6 +30,8 @@
 	fqdn/1,
 	ipv4/2,ipv6/2,
 	numeric/1,numeric_limited/2,
+	alphanumeric/1,alphanumeric_limited/2,
+	id_numeric/2,id_alphanumeric/2,
 	base64/2,base64_limited/3,
 	password/3
 ]).
@@ -182,6 +184,27 @@ test() ->
 	{true,Numeric1} = numeric_limited(Numeric1,{ranged,4,6}),
 	false = numeric_limited(Numeric1,{ranged,6,7}),
 	io:format("DONE! Numeric values verification test passed.~n"),
+	Alphanumeric = <<("bNBZOekdc4r71r7C")/utf8>>,
+	Alphanumeric_wrong1 = <<("12345")/utf8>>,
+	Alphanumeric_wrong2 = <<("bNB Oekdc4r71r7C")/utf8>>,
+	{true,Alphanumeric} = alphanumeric(Alphanumeric),
+	false = alphanumeric(Alphanumeric_wrong2),
+	{true,Alphanumeric} = alphanumeric_limited(Alphanumeric,{equal,16}),
+	false = alphanumeric_limited(Alphanumeric,{equal,17}),
+	{true,Alphanumeric} = alphanumeric_limited(Alphanumeric,{less_or_equal,16}),
+	false = alphanumeric_limited(Alphanumeric,{less_or_equal,15}),
+	{true,Alphanumeric} = alphanumeric_limited(Alphanumeric,{more_or_equal,16}),
+	false = alphanumeric_limited(Alphanumeric,{more_or_equal,17}),
+	{true,Alphanumeric} = alphanumeric_limited(Alphanumeric,{ranged,15,17}),
+	false = alphanumeric_limited(Alphanumeric,{ranged,17,18}),
+	io:format("DONE! Alphanumeric values verification test passed.~n"),
+	{true,Alphanumeric} = id_alphanumeric(Alphanumeric,16),
+	false = id_alphanumeric(Alphanumeric_wrong1,16),
+	false = id_alphanumeric(Alphanumeric_wrong2,16),
+	{true,Numeric1} = id_numeric(Numeric1,5),
+	false = id_numeric(Numeric1,6),
+	false = id_numeric(Numeric_wrong,5),
+	io:format("DONE! ID values verification test passed.~n"),
 	Base64_decoded = <<("Base64_binary")/utf8>>,
 	Base64_encoded = base64:encode(Base64_decoded),
 	Base64_wrong = <<("Base64_wrong")/utf8>>,
@@ -279,6 +302,53 @@ base64(Binary,Return_mode) ->
 			_ -> {true,Encoded_binary}
 		end
 	catch _:_ -> false end.
+
+
+%% ----------------------------
+%% @doc Verify alphanumeric ID value
+-spec id_alphanumeric(Binary,Length) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Length :: pos_integer().
+
+id_alphanumeric(Binary,Length) -> alphanumeric_limited(Binary,{equal,Length}).
+
+
+%% ----------------------------
+%% @doc Verify numeric ID value
+-spec id_numeric(Binary,Length) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Length :: pos_integer().
+
+id_numeric(Binary,Length) -> numeric_limited(Binary,{equal,Length}).
+
+
+%% ----------------------------
+%% @doc Verify limited alphanumeric value
+-spec alphanumeric_limited(Binary,Limit) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+alphanumeric_limited(Binary,Limit) ->
+	case by_size(Binary,Limit) of
+		{true,Binary} -> alphanumeric(Binary);
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify alphanumeric value
+-spec alphanumeric(Binary) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary().
+
+alphanumeric(Binary) ->
+	by_pattern(Binary,<<("^[a-zA-Z0-9]{1,}$")/utf8>>).
 
 
 %% ----------------------------

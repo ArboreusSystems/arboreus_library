@@ -15,10 +15,9 @@
 %% API
 -export([
 	test/0,
-	to_file/2,
-	from_file/1,
-	from_string/1,
-	from_binary/1
+	to_file/2,from_file/1,
+	to_string/1,from_string/1,
+	to_utf_binary/1,from_utf_binary/1
 ]).
 
 
@@ -36,10 +35,12 @@ test() ->
 	Term_string = "[1,2,3,4,5].",
 	Term = [1,2,3,4,5],
 	Term = from_string(Term_string),
-	io:format("DONE! Parsing from string functionality test passed.~n"),
+	Term_string = to_string(Term),
+	io:format("DONE! String functionality test passed.~n"),
 	Term_binary = <<("[1,2,3,4,5].")/utf8>>,
-	Term = from_binary(Term_binary),
-	io:format("DONE! Parsing from utf binary functionality test passed.~n"),
+	Term = from_utf_binary(Term_binary),
+	Term_binary = to_utf_binary(Term),
+	io:format("DONE! Utf binary functionality test passed.~n"),
 	{ok,Path} = file:get_cwd(),
 	Full_path = lists:concat([Path,"/a_term.test"]),
 	{ok,Full_path} = to_file(Full_path,Term),
@@ -57,12 +58,34 @@ test() ->
 
 
 %% ----------------------------
+%% @doc transform term to utf binary
+-spec to_utf_binary(Term) -> utf_text_binary()
+	when
+	Term :: term().
+
+to_utf_binary(Term) ->
+	unicode:characters_to_binary(to_string(Term)).
+
+
+%% ----------------------------
+%% @doc Transform term to string
+-spec to_string(Term) -> utf_text()
+	when
+	Term :: term().
+
+to_string(Term) ->
+	lists:concat(
+		[lists:flatten(io_lib:format("~p",[Term])),"."]
+	).
+
+
+%% ----------------------------
 %% @doc Parse term from utf binary string
--spec from_binary(Binary) -> term()
+-spec from_utf_binary(Binary) -> term()
 	when
 	Binary :: utf_text_binary().
 
-from_binary(Binary) ->
+from_utf_binary(Binary) ->
 	from_string(unicode:characters_to_list(Binary)).
 
 

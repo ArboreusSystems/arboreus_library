@@ -33,7 +33,8 @@
 	alphanumeric/1,alphanumeric_limited/2,
 	id_numeric/2,id_alphanumeric/2,
 	base64/2,base64_limited/3,
-	password/3
+	password/3,
+	utf_free/1,utf_limited/2,utf_by_pattern/2
 ]).
 
 
@@ -237,6 +238,22 @@ test() ->
 	false = password(Password_encoded,1,2),
 	false = password(Password_wrong,4,8),
 	io:format("DONE! Password values verification test passed.~n"),
+	UTF_binary = <<("utf_binary")/utf8>>,
+	UTF_size = byte_size(UTF_binary),
+	UTF_binary_wrong = utf_wrong,
+	{true,UTF_binary} = utf_free(UTF_binary),
+	false = utf_free(UTF_binary_wrong),
+	{true,UTF_binary} = utf_limited(UTF_binary,{equal,UTF_size}),
+	false = utf_limited(UTF_binary,{equal,UTF_size-1}),
+	{true,UTF_binary} = utf_limited(UTF_binary,{less_or_equal,UTF_size}),
+	false = utf_limited(UTF_binary,{less_or_equal,UTF_size-1}),
+	{true,UTF_binary} = utf_limited(UTF_binary,{more_or_equal,UTF_size}),
+	false = utf_limited(UTF_binary,{more_or_equal,UTF_size+1}),
+	{true,UTF_binary} = utf_limited(UTF_binary,{ranged,UTF_size-1,UTF_size+1}),
+	false = utf_limited(UTF_binary,{ranged,UTF_size+1,UTF_size+2}),
+	{true,UTF_binary} = utf_by_pattern(UTF_binary,<<("^.{1,}$")/utf8>>),
+	false = utf_by_pattern(UTF_binary,<<("^[A]{1}$")/utf8>>),
+	io:format("DONE! UTF binary verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -245,6 +262,47 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify unicode binary by pattern
+-spec utf_by_pattern(Binary,Pattern) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Pattern :: utf_text_binary().
+
+utf_by_pattern(Binary,Pattern) ->
+	case utf_free(Binary) of
+		{true,Binary} -> by_pattern(Binary,Pattern);
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify limited unicode binary
+-spec utf_limited(Binary,Limit) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary(),
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+utf_limited(Binary,Limit) ->
+	case utf_free(Binary) of
+		{true,Binary} -> by_size(Binary,Limit);
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify unicode binary
+-spec utf_free(Binary) -> {true,utf_text_binary()} | false
+	when
+	Binary :: utf_text_binary().
+
+utf_free(Binary) when is_binary(Binary) -> {true,Binary};
+utf_free(_) -> false.
 
 
 %% ----------------------------

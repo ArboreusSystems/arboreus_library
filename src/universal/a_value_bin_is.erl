@@ -14,6 +14,7 @@
 %% Data types
 -include("../data_models/types/types_general.hrl").
 -include("../data_models/types/types_network.hrl").
+-include("../data_models/types/types_time.hrl").
 
 %% Data models
 
@@ -28,13 +29,15 @@
 	latin_name/1,latin_name_limited/2,
 	email/1,
 	fqdn/1,
+	term/1,
 	ipv4/2,ipv6/2,
 	numeric/1,numeric_limited/2,
 	alphanumeric/1,alphanumeric_limited/2,
 	id_numeric/2,id_alphanumeric/2,
 	base64/2,base64_limited/3,
 	password/3,
-	utf_free/1,utf_limited/2,utf_by_pattern/2
+	utf_free/1,utf_limited/2,utf_by_pattern/2,
+	time_timestamp/1,time_tuple/1,time_ansi/2,time_rfc822/2,time_rfc850/2
 ]).
 
 
@@ -149,7 +152,7 @@ test() ->
 	false = fqdn(Fqdn_wrong),
 	io:format("DONE! FQDN values verification test passed.~n"),
 	Term = [erlang,term],
-	Term_binary = term_to_binary(Term),
+	Term_binary = <<("[erlang,term].")/utf8>>,
 	Term_wrong = <<("wrong_term")/utf8>>,
 	{true,Term} = term(Term_binary),
 	false = term(Term_wrong),
@@ -254,6 +257,26 @@ test() ->
 	{true,UTF_binary} = utf_by_pattern(UTF_binary,<<("^.{1,}$")/utf8>>),
 	false = utf_by_pattern(UTF_binary,<<("^[A]{1}$")/utf8>>),
 	io:format("DONE! UTF binary verification test passed.~n"),
+	Time_tuple = erlang:localtime(),
+	Time_tuple_binary = a_term:to_utf_binary(Time_tuple),
+	Time_tuple_binary_wrong = <<("wrong_time_tuple")/utf8>>,
+	{true,Time_tuple} = time_tuple(Time_tuple_binary),
+	false = time_tuple(Time_tuple_binary_wrong),
+	Time_timestamp = a_time:timestamp(),
+	Time_timestamp_binary = integer_to_binary(Time_timestamp),
+	Time_timestamp_wrong = <<("wrong_timestamp")/utf8>>,
+	{true,Time_timestamp} = time_timestamp(Time_timestamp_binary),
+	false = time_timestamp(Time_timestamp_wrong),
+	Time_ansi = a_time:format(ansi,{date_tuple,Time_tuple}),
+	Time_rfc850 = a_time:format(rfc850,{date_tuple,Time_tuple}),
+	Time_rfc822 = a_time:format(rfc822,{date_tuple,Time_tuple}),
+	{true,Time_tuple} = time_ansi(Time_ansi,tuple),
+	false = time_ansi(Time_tuple_binary_wrong,tuple),
+	{true,Time_tuple} = time_rfc850(Time_rfc850,tuple),
+	false = time_rfc850(Time_tuple_binary_wrong,tuple),
+	{true,Time_tuple} = time_rfc822(Time_rfc822,tuple),
+	false = time_rfc822(Time_tuple_binary_wrong,tuple),
+	io:format("DONE! Time verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -262,6 +285,78 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify time-tuple binary value
+-spec time_tuple(Binary) -> {true,a_time_tuple()} | false
+	when
+	Binary :: utf_text_binary().
+
+time_tuple(Binary) ->
+	try
+		{{Year,Month,Day},{Hours,Minutes,Seconds}} = a_term:from_utf_binary(Binary),
+		{true,{{Year,Month,Day},{Hours,Minutes,Seconds}}}
+	catch
+		_:_  -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify UNIX-timestamp value
+-spec time_timestamp(Binary) -> {true,pos_integer()} | false
+	when
+	Binary :: utf_text_binary().
+
+time_timestamp(Binary) -> integer_pos(Binary).
+
+
+%% ----------------------------
+%% @doc Verify rfc822 unicode time value
+-spec time_rfc822(Binary,Return_mode) -> {true,Time} | false
+	when
+	Binary :: utf_text_binary(),
+	Return_mode :: tuple | seconds | timestamp,
+	Time :: pos_integer() | a_time_tuple().
+
+time_rfc822(Binary,Return_mode) ->
+	case a_time:from_formated(rfc822,Binary,Return_mode) of
+		{error,_} -> false;
+		false -> false;
+		Result -> {true,Result}
+	end.
+
+
+%% ----------------------------
+%% @doc Verify rfc850 unicode time value
+-spec time_rfc850(Binary,Return_mode) -> {true,Time} | false
+	when
+	Binary :: utf_text_binary(),
+	Return_mode :: tuple | seconds | timestamp,
+	Time :: pos_integer() | a_time_tuple().
+
+time_rfc850(Binary,Return_mode) ->
+	case a_time:from_formated(rfc850,Binary,Return_mode) of
+		{error,_} -> false;
+		false -> false;
+		Result -> {true,Result}
+	end.
+
+
+%% ----------------------------
+%% @doc Verify ANSI unicode time value
+-spec time_ansi(Binary,Return_mode) -> {true,Time} | false
+	when
+	Binary :: utf_text_binary(),
+	Return_mode :: tuple | seconds | timestamp,
+	Time :: pos_integer() | a_time_tuple().
+
+time_ansi(Binary,Return_mode) ->
+	case a_time:from_formated(ansi,Binary,Return_mode) of
+		{error,_} -> false;
+		false -> false;
+		Result -> {true,Result}
+	end.
 
 
 %% ----------------------------
@@ -486,7 +581,7 @@ ipv4(Binary,Return_mode) ->
 	Byte :: byte().
 
 term(Byte) ->
-	try {true,binary_to_term(Byte)}
+	try {true,a_term:from_utf_binary(Byte)}
 	catch _:_ -> false end.
 
 

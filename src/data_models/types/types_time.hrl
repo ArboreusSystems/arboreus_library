@@ -12,6 +12,7 @@
 %% ------------------------------------------
 %% Time types
 
+-type a_time_tuple() :: {a_date(),a_time()}.
 -type a_date() :: {year(),month(),day()}.
 -type a_time() :: {hour(),minute(),second()}.
 -type local_time() :: {a_date(),a_time()}.

@@ -28,7 +28,11 @@
 	boolean/1,boolean_digit/1,
 	latin_name/1,latin_name_limited/2,
 	email/1,
-	fqdn/1
+	fqdn/1,
+	ipv4/2,ipv6/2,
+	numeric/1,numeric_limited/2,
+	alphanumeric/1,alphanumeric_limited/2,
+	id_numeric/2,id_alphanumeric/2
 ]).
 
 
@@ -87,28 +91,28 @@ test() ->
 	false = a_value_str_is:integer_ranged(Integer_wrong,Integer3,Integer_neg),
 	false = a_value_str_is:integer_ranged(Integer1_string,Integer3,Integer2),
 	io:format("DONE! Integer values verification test passed.~n"),
-	Atom1 = atom1, Atom1_binary = "atom1",
-	Atom2 = atom2, Atom2_binary = "atom2",
-	Atom3 = atom3, Atom3_binary = "atom3",
+	Atom1 = atom1, Atom1_string = "atom1",
+	Atom2 = atom2, Atom2_string = "atom2",
+	Atom3 = atom3, Atom3_string = "atom3",
 	Atom_wrong_binary = "Atom_wrong",
 	Atoms = [Atom2,Atom3],
-	{true,Atom1} = a_value_str_is:atom(Atom1_binary),
-	{true,Atom2} = a_value_str_is:atom(Atom2_binary),
+	{true,Atom1} = a_value_str_is:atom(Atom1_string),
+	{true,Atom2} = a_value_str_is:atom(Atom2_string),
 	false = a_value_str_is:atom(Atom_wrong_binary),
-	{true,Atom3} = a_value_str_is:atom_from_list(Atom3_binary,Atoms),
+	{true,Atom3} = a_value_str_is:atom_from_list(Atom3_string,Atoms),
 	false = a_value_str_is:atom_from_list(Atom_wrong_binary,Atoms),
-	false = a_value_str_is:atom_from_list(Atom1_binary,Atoms),
+	false = a_value_str_is:atom_from_list(Atom1_string,Atoms),
 	io:format("DONE! Atom values verification test passed.~n"),
-	Boolean1 = true, Boolean1_binary = "true",
-	Boolean2 = false, Boolean2_binary = "false",
-	Boolean_digit1 = 1, Boolean_digit1_binary = "1",
-	Boolean_digit2 = 0, Boolean_digit2_binary = "0",
+	Boolean1 = true, Boolean1_string = "true",
+	Boolean2 = false, Boolean2_string = "false",
+	Boolean_digit1 = 1, Boolean_digit1_string = "1",
+	Boolean_digit2 = 0, Boolean_digit2_string = "0",
 	Boolean_wrong = "boolean_wrong",
-	{true,Boolean1} = a_value_str_is:boolean(Boolean1_binary),
-	{true,Boolean2} = a_value_str_is:boolean(Boolean2_binary),
+	{true,Boolean1} = a_value_str_is:boolean(Boolean1_string),
+	{true,Boolean2} = a_value_str_is:boolean(Boolean2_string),
 	false = a_value_str_is:boolean(Boolean_wrong),
-	{true,Boolean_digit1} = a_value_str_is:boolean_digit(Boolean_digit1_binary),
-	{true,Boolean_digit2} = a_value_str_is:boolean_digit(Boolean_digit2_binary),
+	{true,Boolean_digit1} = a_value_str_is:boolean_digit(Boolean_digit1_string),
+	{true,Boolean_digit2} = a_value_str_is:boolean_digit(Boolean_digit2_string),
 	false = a_value_str_is:boolean_digit(Boolean_wrong),
 	io:format("DONE! Boolean values verification test passed.~n"),
 	Latin_name = "Vasya Pukin",
@@ -133,11 +137,63 @@ test() ->
 	false = fqdn(Fqdn_wrong),
 	io:format("DONE! FQDN values verification test passed.~n"),
 	Term = [erlang,term],
-	Term_binary = "[erlang,term].",
+	Term_string = "[erlang,term].",
 	Term_wrong = "wrong_term",
-	{true,Term} = term(Term_binary),
+	{true,Term} = term(Term_string),
 	false = term(Term_wrong),
 	io:format("DONE! Erlang Terms values verification test passed.~n"),
+	IPv4_tuple = {1,1,1,1},
+	IPv4_string = "1.1.1.1",
+	IPv4_integer = 16843009,
+	IPv4_wrong = "ip_wrong",
+	{true,IPv4_tuple} = ipv4(IPv4_string,tuple),
+	{true,IPv4_integer} = ipv4(IPv4_string,integer),
+	false = ipv4(IPv4_wrong,integer),
+	false = ipv4(IPv4_wrong,tuple),
+	io:format("DONE! IPv4 values verification test passed.~n"),
+	IPv6_tuple = {8193,3512,4515,2519,7988,35374,1952,30301},
+	IPv6_string = "2001:0db8:11a3:09d7:1f34:8a2e:07a0:765d",
+	IPv6_integer = 42540766416740939402060931394078537309,
+	IPv6_wrong = "ip_wrong",
+	{true,IPv6_tuple} = ipv6(IPv6_string,tuple),
+	{true,IPv6_integer} = ipv6(IPv6_string,integer),
+	false = ipv6(IPv6_wrong,integer),
+	false = ipv6(IPv6_wrong,tuple),
+	io:format("DONE! IPv6 values verification test passed.~n"),
+	Numeric1 = "12345",
+	Numeric_wrong = "numeric_wrong",
+	{true,Numeric1} = numeric(Numeric1),
+	false = numeric(Numeric_wrong),
+	{true,Numeric1} = numeric_limited(Numeric1,{equal,5}),
+	false = numeric_limited(Numeric1,{equal,1}),
+	{true,Numeric1} = numeric_limited(Numeric1,{less_or_equal,5}),
+	false = numeric_limited(Numeric1,{less_or_equal,4}),
+	{true,Numeric1} = numeric_limited(Numeric1,{more_or_equal,5}),
+	false = numeric_limited(Numeric1,{more_or_equal,6}),
+	{true,Numeric1} = numeric_limited(Numeric1,{ranged,4,6}),
+	false = numeric_limited(Numeric1,{ranged,6,7}),
+	io:format("DONE! Numeric values verification test passed.~n"),
+	Alphanumeric = "bNBZOekdc4r71r7C",
+	Alphanumeric_wrong1 = "12345",
+	Alphanumeric_wrong2 = "bNB Oekdc4r71r7C",
+	{true,Alphanumeric} = alphanumeric(Alphanumeric),
+	false = alphanumeric(Alphanumeric_wrong2),
+	{true,Alphanumeric} = alphanumeric_limited(Alphanumeric,{equal,16}),
+	false = alphanumeric_limited(Alphanumeric,{equal,17}),
+	{true,Alphanumeric} = alphanumeric_limited(Alphanumeric,{less_or_equal,16}),
+	false = alphanumeric_limited(Alphanumeric,{less_or_equal,15}),
+	{true,Alphanumeric} = alphanumeric_limited(Alphanumeric,{more_or_equal,16}),
+	false = alphanumeric_limited(Alphanumeric,{more_or_equal,17}),
+	{true,Alphanumeric} = alphanumeric_limited(Alphanumeric,{ranged,15,17}),
+	false = alphanumeric_limited(Alphanumeric,{ranged,17,18}),
+	io:format("DONE! Alphanumeric values verification test passed.~n"),
+	{true,Alphanumeric} = id_alphanumeric(Alphanumeric,16),
+	false = id_alphanumeric(Alphanumeric_wrong1,16),
+	false = id_alphanumeric(Alphanumeric_wrong2,16),
+	{true,Numeric1} = id_numeric(Numeric1,5),
+	false = id_numeric(Numeric1,6),
+	false = id_numeric(Numeric_wrong,5),
+	io:format("DONE! ID values verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -146,6 +202,120 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify alphanumeric ID string value
+-spec id_alphanumeric(Utf_string,Length) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Length :: pos_integer().
+
+id_alphanumeric(Utf_string,Length) -> alphanumeric_limited(Utf_string,{equal,Length}).
+
+
+%% ----------------------------
+%% @doc Verify numeric ID string value
+-spec id_numeric(Utf_string,Length) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Length :: pos_integer().
+
+id_numeric(Utf_string,Length) -> numeric_limited(Utf_string,{equal,Length}).
+
+
+%% ----------------------------
+%% @doc Verify limited alphanumeric string value
+-spec alphanumeric_limited(Utf_string,Limit) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+alphanumeric_limited(Utf_string,Limit) ->
+	case by_size(Utf_string,Limit) of
+		{true,Utf_string} -> alphanumeric(Utf_string);
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify alphanumeric string value
+-spec alphanumeric(Utf_string) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string().
+
+alphanumeric(Utf_string) -> by_pattern(Utf_string,"^[a-zA-Z0-9]{1,}$").
+
+
+%% ----------------------------
+%% @doc Verify limited numeric string value
+-spec numeric_limited(Utf_string,Limit) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+numeric_limited(Utf_string,Limit) ->
+	case by_size(Utf_string,Limit) of
+		{true,Utf_string} -> numeric(Utf_string);
+		_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify numeric string value
+-spec numeric(Utf_string) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string().
+
+numeric(Utf_string) -> by_pattern(Utf_string,"^[0-9]{1,}$").
+
+
+%% ----------------------------
+%% @doc Verify IPv6 string value
+-spec ipv6(Utf_string,Return_mode) -> {true,Ip} | false
+	when
+	Utf_string :: utf_text_string(),
+	Return_mode :: integer | tuple,
+	Ip :: ipv6_tuple() | ipv4_integer().
+
+ipv6(Utf_string,Return_mode) ->
+	try
+		case Return_mode of
+			integer ->
+				{true,a_net:ipv6_to_integer(Utf_string)};
+			_ ->
+				{ok,Ip_tuple} = inet:parse_ipv6_address(Utf_string),
+				{true,Ip_tuple}
+		end
+	catch
+		_:_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify IPv4 string value
+-spec ipv4(Utf_string,Return_mode) -> {true,Ip} | false
+	when
+	Utf_string :: utf_text_string(),
+	Return_mode :: integer | tuple,
+	Ip :: ipv4_integer() | ipv4_tuple().
+
+ipv4(Utf_string,Return_mode) ->
+	try
+		{ok,Ip_tuple} = inet:parse_ipv4_address(Utf_string),
+		case Return_mode of
+			integer -> {true,a_net:ipv4_to_integer(Ip_tuple)};
+			_ -> {true,Ip_tuple}
+		end
+	catch
+		_:_ -> false
+	end.
 
 
 %% ----------------------------

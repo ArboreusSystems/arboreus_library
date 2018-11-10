@@ -41,10 +41,25 @@ test() ->
 		"Module (a_node) testing started at:~n~p (~p)~n",
 		[a_time:from_timestamp(rfc850, Time_start), Time_start]
 	),
-	List_structure = [(fun is_integer/1),(fun is_integer/1),(fun is_integer/1)],
-	Record_structure = lists:append([(fun is_atom/1)],List_structure),
-	true = a_list:structure_equality(load(list),List_structure),
-	true = a_list:structure_equality(tuple_to_list(load(record)),Record_structure),
+	Load_list_structure = [(fun is_integer/1),(fun is_integer/1),(fun is_integer/1)],
+	Load_list = load(list),
+	Load_list_wrong = [wrong,list,structure],
+	true = a_structure_l:verify(return_boolean,Load_list_structure,Load_list),
+	false = a_structure_l:verify(return_boolean,Load_list_structure,Load_list_wrong),
+	Load_record_structure = {
+		(fun is_atom/1),
+		(fun is_integer/1),
+		(fun is_integer/1),
+		(fun is_integer/1)
+	},
+	Load_record = load(record),
+	Load_record_wrong = #a_node_load{
+		processes = processes,
+		memory_total = memory_total,
+		ports = ports
+	},
+	true = a_structure_r:verify(return_boolean,Load_record_structure,Load_record),
+	false = a_structure_r:verify(return_boolean,Load_record_structure,Load_record_wrong),
 	io:format("DONE! Fun load/1 test passed~n"),
 	New_name_sting = "new_name",
 	Change_name_test = case node() of

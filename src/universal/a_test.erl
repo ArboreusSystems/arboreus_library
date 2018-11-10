@@ -64,7 +64,9 @@ run() -> run_handler(?MODULES).
 	when
 	Modules :: list_of_atoms().
 
-run_handler([]) -> ok;
+run_handler([]) ->
+	io:format("*******************************~nDONE! All tests passed.~n"),
+	ok;
 run_handler([Module|Modules]) ->
 	ok = Module:test(),
 	io:format("DONE! Module ~p test passed.~n",[Module]),

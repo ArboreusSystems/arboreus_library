@@ -31,4 +31,5 @@ include $(PWD)/make/paths.mk
 include $(PWD)/make/backup.mk
 include $(PWD)/make/configure.mk
 include $(PWD)/make/github.mk
+include $(PWD)/make/test.mk
 

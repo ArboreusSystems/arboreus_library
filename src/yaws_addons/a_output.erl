@@ -22,13 +22,13 @@
 value({wrapped,Value_in}) when is_binary(Value_in) ->
 	<<("\"")/utf8,Value_in/binary,("\"")/utf8>>;
 value(Value_in) when Value_in == true; Value_in == false ->
-	a:to_binary(Value_in);
+	a_var:to_binary(Value_in);
 value(Value_in) when is_integer(Value_in) ->
-	a:to_binary(Value_in);
+	a_var:to_binary(Value_in);
 value(Value_in) when is_binary(Value_in) ->
 	value({wrapped,Value_in});
 value(Value_in) when is_atom(Value_in) ->
-	value({wrapped,a:to_binary(Value_in)});
+	value({wrapped,a_var:to_binary(Value_in)});
 value(Value_in) when is_list(Value_in) ->
 	case io_lib:char_list(Value_in) of
 		true ->

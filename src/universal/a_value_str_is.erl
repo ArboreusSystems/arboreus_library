@@ -25,7 +25,10 @@
 	float/1,float_pos/1,float_neg/1,float_from_list/2,float_ranged/3,
 	integer/1,integer_pos/1,integer_neg/1,integer_from_list/2,integer_ranged/3,
 	atom/1,atom_from_list/2,
-	boolean/1,boolean_digit/1
+	boolean/1,boolean_digit/1,
+	latin_name/1,latin_name_limited/2,
+	email/1,
+	fqdn/1
 ]).
 
 
@@ -108,6 +111,33 @@ test() ->
 	{true,Boolean_digit2} = a_value_str_is:boolean_digit(Boolean_digit2_binary),
 	false = a_value_str_is:boolean_digit(Boolean_wrong),
 	io:format("DONE! Boolean values verification test passed.~n"),
+	Latin_name = "Vasya Pukin",
+	{true,Latin_name} = latin_name(Latin_name),
+	false = latin_name(Boolean_wrong),
+	{true,Latin_name} = latin_name_limited(Latin_name,{less_or_equal,50}),
+	{true,Latin_name} = latin_name_limited(Latin_name,{more_or_equal,5}),
+	{true,Latin_name} = latin_name_limited(Latin_name,{equal,11}),
+	{true,Latin_name} = latin_name_limited(Latin_name,{ranged,1,100}),
+	false = latin_name_limited(Latin_name,{equal,5}),
+	false = latin_name_limited(Latin_name,{less_or_equal,5}),
+	false = latin_name_limited(Latin_name,{more_or_equal,50}),
+	false = latin_name_limited(Latin_name,{ranged,100,1000}),
+	io:format("DONE! Latin Name values verification test passed.~n"),
+	Email = "test@arboreus.systems",
+	{true,Email} = email(Email),
+	false = email(Latin_name),
+	io:format("DONE! Email values verification test passed.~n"),
+	Fqdn1 = "fqdn1765_098.test_domain.example.com.",
+	Fqdn_wrong = "wrong_fqdn",
+	{true,Fqdn1} = fqdn(Fqdn1),
+	false = fqdn(Fqdn_wrong),
+	io:format("DONE! FQDN values verification test passed.~n"),
+	Term = [erlang,term],
+	Term_binary = "[erlang,term].",
+	Term_wrong = "wrong_term",
+	{true,Term} = term(Term_binary),
+	false = term(Term_wrong),
+	io:format("DONE! Erlang Terms values verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -116,6 +146,67 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify Erlang term string value
+-spec term(Utf_string) -> {true,term()} | false
+	when
+	Utf_string :: utf_text_string().
+
+term(Utf_string) ->
+	try {true,a_term:from_string(Utf_string)}
+	catch _:_ -> false end.
+
+
+%% ----------------------------
+%% @doc Verify FQND string value
+-spec fqdn(Utf_string) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string().
+
+fqdn(Utf_string) ->
+	case by_size(Utf_string,{less_or_equal,255}) of
+		{true,Utf_string} -> by_pattern(Utf_string,"^([a-z0-9\-\ \_]{1,}[\.]{1}){1,}$");
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify email string by pattern
+-spec email(Utf_string) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string().
+
+email(Utf_string) ->
+	by_pattern(Utf_string,"^([a-z0-9\.\_\-]{1,})\@([a-z0-9\.\_\-]{1,})$").
+
+
+%% ----------------------------
+%% @doc Verify latin name string value limited by length
+-spec latin_name_limited(Utf_string,Limit) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+latin_name_limited(Binary,Limit) ->
+	case by_size(Binary,Limit) of
+		{true,Binary} -> latin_name(Binary);
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify latin name string by pattern
+-spec latin_name(Utf_string) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string().
+
+latin_name(Utf_string) ->
+	by_pattern(Utf_string,"^(\ ?[A-Z]{1}[a-z]{0,}){1,}$").
 
 
 %% ----------------------------

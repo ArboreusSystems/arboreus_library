@@ -609,7 +609,7 @@ email(Binary) ->
 
 
 %% ----------------------------
-%% @doc Verify latin name value limited by length by pattern
+%% @doc Verify latin name value limited by length
 -spec latin_name_limited(Binary,Limit) -> {true,utf_text_binary()} | false
 	when
 	Binary :: utf_text_binary(),

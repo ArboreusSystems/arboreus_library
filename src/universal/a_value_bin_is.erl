@@ -751,7 +751,7 @@ integer(Binary) ->
 
 
 %% ----------------------------
-%% @doc verify positive integer value
+%% @doc Verify positive integer binary value
 -spec integer_pos(Binary) -> {true,pos_integer()} | false
 	when
 	Binary :: utf_text_binary().

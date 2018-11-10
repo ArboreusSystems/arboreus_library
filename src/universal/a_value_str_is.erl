@@ -21,8 +21,11 @@
 %% API
 -export([
 	test/0,
+	by_size/2,by_pattern/2,
 	float/1,float_pos/1,float_neg/1,float_from_list/2,float_ranged/3,
-	integer/1,integer_pos/1,integer_neg/1,integer_from_list/2,integer_ranged/3
+	integer/1,integer_pos/1,integer_neg/1,integer_from_list/2,integer_ranged/3,
+	atom/1,atom_from_list/2,
+	boolean/1,boolean_digit/1
 ]).
 
 
@@ -81,6 +84,30 @@ test() ->
 	false = a_value_str_is:integer_ranged(Integer_wrong,Integer3,Integer_neg),
 	false = a_value_str_is:integer_ranged(Integer1_string,Integer3,Integer2),
 	io:format("DONE! Integer values verification test passed.~n"),
+	Atom1 = atom1, Atom1_binary = "atom1",
+	Atom2 = atom2, Atom2_binary = "atom2",
+	Atom3 = atom3, Atom3_binary = "atom3",
+	Atom_wrong_binary = "Atom_wrong",
+	Atoms = [Atom2,Atom3],
+	{true,Atom1} = a_value_str_is:atom(Atom1_binary),
+	{true,Atom2} = a_value_str_is:atom(Atom2_binary),
+	false = a_value_str_is:atom(Atom_wrong_binary),
+	{true,Atom3} = a_value_str_is:atom_from_list(Atom3_binary,Atoms),
+	false = a_value_str_is:atom_from_list(Atom_wrong_binary,Atoms),
+	false = a_value_str_is:atom_from_list(Atom1_binary,Atoms),
+	io:format("DONE! Atom values verification test passed.~n"),
+	Boolean1 = true, Boolean1_binary = "true",
+	Boolean2 = false, Boolean2_binary = "false",
+	Boolean_digit1 = 1, Boolean_digit1_binary = "1",
+	Boolean_digit2 = 0, Boolean_digit2_binary = "0",
+	Boolean_wrong = "boolean_wrong",
+	{true,Boolean1} = a_value_str_is:boolean(Boolean1_binary),
+	{true,Boolean2} = a_value_str_is:boolean(Boolean2_binary),
+	false = a_value_str_is:boolean(Boolean_wrong),
+	{true,Boolean_digit1} = a_value_str_is:boolean_digit(Boolean_digit1_binary),
+	{true,Boolean_digit2} = a_value_str_is:boolean_digit(Boolean_digit2_binary),
+	false = a_value_str_is:boolean_digit(Boolean_wrong),
+	io:format("DONE! Boolean values verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -89,6 +116,56 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify digital boolean string value
+-spec boolean_digit(Utf_string) -> {true,boolean_digit()} | false
+	when
+	Utf_string :: utf_text_string().
+
+boolean_digit(Utf_string) -> integer_from_list(Utf_string,[1,0]).
+
+
+%% ----------------------------
+%% @doc Verify boolean string value
+-spec boolean(Utf_string) -> {true,boolean()} | false
+	when
+	Utf_string :: utf_text_string().
+
+boolean(Utf_string) -> atom_from_list(Utf_string,[true,false]).
+
+
+%% ----------------------------
+%% @doc Verify atom string value from list
+-spec atom_from_list(Utf_string,List) -> {true,atom()} | false
+	when
+	Utf_string :: utf_text_string(),
+	List :: list_of_atoms().
+
+atom_from_list(Utf_string,List) ->
+	case atom(Utf_string) of
+		{true,Atom} ->
+			case lists:member(Atom,List) of
+				true -> {true,Atom};
+				_ -> false
+			end;
+		_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify atom string value
+-spec atom(Utf_string) -> {true,atom()} | false
+	when
+	Utf_string :: utf_text_string().
+
+atom(Utf_string) ->
+	Pattern = "^[a-z]{1}[a-zA-Z0-9\_]*$",
+	case re:run(Utf_string,Pattern) of
+		{match,_} -> {true,list_to_atom(Utf_string)};
+		_ -> false
+	end.
 
 
 %% ----------------------------
@@ -266,3 +343,57 @@ float_pos(Utf_string) ->
 float(Utf_string) ->
 	try {true,list_to_float(Utf_string)}
 	catch _:_ -> false end.
+
+
+%% ----------------------------
+%% @doc Verify string value by regex pattern
+-spec by_pattern(Utf_string,Pattern) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Pattern :: utf_text_string().
+
+by_pattern(Utf_string,Pattern) ->
+	case re:run(Utf_string,Pattern) of
+		{match,_} -> {true,Utf_string};
+		_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify string value by size
+-spec by_size(Utf_string,Parameters) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Parameters :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+by_size(Utf_string,{equal,Length}) ->
+	Size = length(Utf_string),
+	if
+		Size == Length -> {true,Utf_string};
+		true -> false
+	end;
+by_size(Utf_string,{less_or_equal,Length}) ->
+	Size = length(Utf_string),
+	if
+		Size =< Length -> {true,Utf_string};
+		true -> false
+	end;
+by_size(Utf_string,{more_or_equal,Length}) ->
+	Size = length(Utf_string),
+	if
+		Size >= Length -> {true,Utf_string};
+		true -> false
+	end;
+by_size(Utf_string,{ranged,Minimal,Maximal}) ->
+	Size = length(Utf_string),
+	if
+		Size =< Maximal ->
+			if
+				Size >= Minimal -> {true,Utf_string};
+				true -> false
+			end;
+		true -> false
+	end.

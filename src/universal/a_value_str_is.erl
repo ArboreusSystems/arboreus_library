@@ -32,7 +32,11 @@
 	ipv4/2,ipv6/2,
 	numeric/1,numeric_limited/2,
 	alphanumeric/1,alphanumeric_limited/2,
-	id_numeric/2,id_alphanumeric/2
+	id_numeric/2,id_alphanumeric/2,
+	base64/2,base64_limited/3,
+	password/3,
+	utf_free/1,utf_limited/2,utf_by_pattern/2,
+	time_ansi/2,time_rfc850/2,time_rfc822/2,time_tuple/1,time_timestamp/1
 ]).
 
 
@@ -194,6 +198,74 @@ test() ->
 	false = id_numeric(Numeric1,6),
 	false = id_numeric(Numeric_wrong,5),
 	io:format("DONE! ID values verification test passed.~n"),
+	Base64_decoded = "Base64_string",
+	Base64_encoded = base64:encode_to_string(Base64_decoded),
+	Base64_wrong = "Base64_wrong",
+	Base64_encoded_size = length(Base64_encoded),
+	Base64_decoded_size = length(Base64_decoded),
+	{true,Base64_decoded} = base64(Base64_encoded,string),
+	{true,Base64_encoded} = base64(Base64_encoded,base64),
+	false = base64(Base64_wrong,string),
+	{true,Base64_decoded} = base64_limited(Base64_encoded,string,{equal,Base64_decoded_size}),
+	false = base64_limited(Base64_encoded,string,{equal,Base64_decoded_size+1}),
+	{true,Base64_encoded} = base64_limited(Base64_encoded,base64,{equal,Base64_encoded_size}),
+	false = base64_limited(Base64_encoded,string,{equal,Base64_encoded_size+1}),
+	{true,Base64_decoded} = base64_limited(Base64_encoded,string,{less_or_equal,Base64_decoded_size}),
+	false = base64_limited(Base64_encoded,string,{less_or_equal,Base64_decoded_size-1}),
+	{true,Base64_encoded} = base64_limited(Base64_encoded,base64,{less_or_equal,Base64_encoded_size}),
+	false = base64_limited(Base64_encoded,string,{less_or_equal,Base64_encoded_size-10}),
+	{true,Base64_decoded} = base64_limited(Base64_encoded,string,{more_or_equal,Base64_decoded_size}),
+	false = base64_limited(Base64_encoded,string,{more_or_equal,Base64_decoded_size+1}),
+	{true,Base64_encoded} = base64_limited(Base64_encoded,base64,{more_or_equal,Base64_encoded_size}),
+	false = base64_limited(Base64_encoded,string,{more_or_equal,Base64_encoded_size+1}),
+	{true,Base64_decoded} = base64_limited(Base64_encoded,string,{ranged,Base64_decoded_size-1,Base64_decoded_size+1}),
+	false = base64_limited(Base64_encoded,string,{ranged,Base64_decoded_size+1,Base64_decoded_size+2}),
+	{true,Base64_encoded} = base64_limited(Base64_encoded,base64,{ranged,Base64_encoded_size-1,Base64_encoded_size+1}),
+	false = base64_limited(Base64_encoded,string,{ranged,Base64_encoded_size+1,Base64_encoded_size+2}),
+	io:format("DONE! Base64 values verification test passed.~n"),
+	Password_decoded = "qwerty",
+	Password_encoded = base64:encode_to_string(Password_decoded),
+	Password_wrong = "password_wrong",
+	{true,Password_decoded} = password(Password_encoded,4,8),
+	false = password(Password_encoded,1,2),
+	false = password(Password_wrong,4,8),
+	io:format("DONE! Password values verification test passed.~n"),
+	UTF_string = "utf_string",
+	UTF_size = length(UTF_string),
+	UTF_string_wrong = utf_wrong,
+	{true,UTF_string} = utf_free(UTF_string),
+	false = utf_free(UTF_string_wrong),
+	{true,UTF_string} = utf_limited(UTF_string,{equal,UTF_size}),
+	false = utf_limited(UTF_string,{equal,UTF_size-1}),
+	{true,UTF_string} = utf_limited(UTF_string,{less_or_equal,UTF_size}),
+	false = utf_limited(UTF_string,{less_or_equal,UTF_size-1}),
+	{true,UTF_string} = utf_limited(UTF_string,{more_or_equal,UTF_size}),
+	false = utf_limited(UTF_string,{more_or_equal,UTF_size+1}),
+	{true,UTF_string} = utf_limited(UTF_string,{ranged,UTF_size-1,UTF_size+1}),
+	false = utf_limited(UTF_string,{ranged,UTF_size+1,UTF_size+2}),
+	{true,UTF_string} = utf_by_pattern(UTF_string,"^.{1,}$"),
+	false = utf_by_pattern(UTF_string,"^[A]{1}$"),
+	io:format("DONE! UTF string verification test passed.~n"),
+	Time_tuple = erlang:localtime(),
+	Time_tuple_string = a_term:to_string(Time_tuple),
+	Time_tuple_string_wrong = "wrong_time_tuple",
+	{true,Time_tuple} = time_tuple(Time_tuple_string),
+	false = time_tuple(Time_tuple_string_wrong),
+	Time_timestamp = a_time:timestamp(),
+	Time_timestamp_string = integer_to_list(Time_timestamp),
+	Time_timestamp_wrong = <<("wrong_timestamp")/utf8>>,
+	{true,Time_timestamp} = time_timestamp(Time_timestamp_string),
+	false = time_timestamp(Time_timestamp_wrong),
+	Time_ansi = a_time:format(ansi,{date_tuple,Time_tuple}),
+	Time_rfc850 = a_time:format(rfc850,{date_tuple,Time_tuple}),
+	Time_rfc822 = a_time:format(rfc822,{date_tuple,Time_tuple}),
+	{true,Time_tuple} = time_ansi(Time_ansi,tuple),
+	false = time_ansi(Time_tuple_string_wrong,tuple),
+	{true,Time_tuple} = time_rfc850(Time_rfc850,tuple),
+	false = time_rfc850(Time_tuple_string_wrong,tuple),
+	{true,Time_tuple} = time_rfc822(Time_rfc822,tuple),
+	false = time_rfc822(Time_tuple_string_wrong,tuple),
+	io:format("DONE! Time verification test passed.~n"),
 	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -202,6 +274,180 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
+
+
+%% ----------------------------
+%% @doc Verify time-tuple string value
+-spec time_tuple(Utf_string) -> {true,a_time_tuple()} | false
+	when
+	Utf_string :: utf_text_string().
+
+time_tuple(Binary) ->
+	try
+		{{Year,Month,Day},{Hours,Minutes,Seconds}} = a_term:from_string(Binary),
+		{true,{{Year,Month,Day},{Hours,Minutes,Seconds}}}
+	catch
+		_:_  -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Verify UNIX-timestamp string value
+-spec time_timestamp(Utf_string) -> {true,a_timestamp()} | false
+	when
+	Utf_string :: utf_text_binary().
+
+time_timestamp(Utf_string) -> integer_pos(Utf_string).
+
+
+%% ----------------------------
+%% @doc Verify rfc822 unicode time string value
+-spec time_rfc822(Utf_string,Return_mode) -> {true,Time} | false
+	when
+	Utf_string :: utf_text_string(),
+	Return_mode :: tuple | seconds | timestamp,
+	Time :: pos_integer() | a_time_tuple().
+
+time_rfc822(Utf_string,Return_mode) ->
+	case a_time:from_formated(rfc822,Utf_string,Return_mode) of
+		{error,_} -> false;
+		false -> false;
+		Result -> {true,Result}
+	end.
+
+
+%% ----------------------------
+%% @doc Verify rfc850 unicode time string value
+-spec time_rfc850(Utf_string,Return_mode) -> {true,Time} | false
+	when
+	Utf_string :: utf_text_string(),
+	Return_mode :: tuple | seconds | timestamp,
+	Time :: pos_integer() | a_time_tuple().
+
+time_rfc850(Utf_string,Return_mode) ->
+	case a_time:from_formated(rfc850,Utf_string,Return_mode) of
+		{error,_} -> false;
+		false -> false;
+		Result -> {true,Result}
+	end.
+
+
+%% ----------------------------
+%% @doc Verify ANSI unicode time string value
+-spec time_ansi(Utf_string,Return_mode) -> {true,Time} | false
+	when
+	Utf_string :: utf_text_string(),
+	Return_mode :: tuple | seconds | timestamp,
+	Time :: pos_integer() | a_time_tuple().
+
+time_ansi(Utf_string,Return_mode) ->
+	case a_time:from_formated(ansi,Utf_string,Return_mode) of
+		{error,_} -> false;
+		false -> false;
+		Result -> {true,Result}
+	end.
+
+
+%% ----------------------------
+%% @doc Verify unicode string by pattern
+-spec utf_by_pattern(Utf_string,Pattern) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Pattern :: utf_text_string().
+
+utf_by_pattern(Utf_string,Pattern) ->
+	case utf_free(Utf_string) of
+		{true,Utf_string} -> by_pattern(Utf_string,Pattern);
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify limited unicode string
+-spec utf_limited(Utf_string,Limit) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer().
+
+utf_limited(Utf_string,Limit) ->
+	case utf_free(Utf_string) of
+		{true,Binary} -> by_size(Binary,Limit);
+		Result -> Result
+	end.
+
+
+%% ----------------------------
+%% @doc Verify unicode string
+-spec utf_free(Utf_string) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string().
+
+utf_free(Utf_string) when is_list(Utf_string) ->
+	case io_lib:printable_unicode_list(Utf_string) of
+		true -> {true,Utf_string};
+		_ -> false
+	end;
+utf_free(_) -> false.
+
+
+%% ----------------------------
+%% @doc Verify password string value
+-spec password(Utf_string,Minimal_length,Maximal_length) -> {true,utf_text_string()} | false
+	when
+	Utf_string :: utf_text_string(),
+	Minimal_length :: pos_integer(),
+	Maximal_length :: pos_integer().
+
+password(Binary,Minimal,Maximal) ->
+	base64_limited(Binary,string,{ranged,Minimal,Maximal}).
+
+
+%% ----------------------------
+%% @doc Verify Base64 string limited value
+-spec base64_limited(Utf_string,Return_mode,Limit) -> {true,Result} | false
+	when
+	Utf_string :: utf_text_string(),
+	Return_mode :: base64 | string,
+	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
+	Length :: pos_integer(),
+	Minimal :: pos_integer(),
+	Maximal :: pos_integer(),
+	Result :: utf_base64_string() | utf_text_string().
+
+base64_limited(Utf_string,Return_mode,Limit) ->
+	case Return_mode of
+		string ->
+			case base64(Utf_string,Return_mode) of
+				{true,Encoded_string} -> by_size(Encoded_string,Limit);
+				Result -> Result
+			end;
+		_ ->
+			case by_size(Utf_string,Limit) of
+				{true,Utf_string} -> base64(Utf_string,base64);
+				Result -> Result
+			end
+	end.
+
+
+%% ----------------------------
+%% @doc Verify Base64 string value
+-spec base64(Utf_string,Return_mode) -> {true,Result} | false
+	when
+	Utf_string :: utf_base64_string(),
+	Return_mode :: base64 | string,
+	Result :: utf_base64_string() | utf_text_string().
+
+base64(Utf_string,Return_mode) ->
+	try
+		Encoded_string = base64:decode_to_string(Utf_string),
+		case Return_mode of
+			string -> {true,Encoded_string};
+			_ -> {true,Utf_string}
+		end
+	catch _:_ -> false end.
 
 
 %% ----------------------------

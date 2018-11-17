@@ -15,8 +15,8 @@
 %% API
 -export([
 	test/0,
-	to_file/2,from_file/1,
-	to_string/1,from_string/1,
+	to_binary_file/2,from_binary_file/1,
+	to_utf_string/1,from_utf_string/1,
 	to_utf_binary/1,from_utf_binary/1
 ]).
 
@@ -34,8 +34,8 @@ test() ->
 	),
 	Term_string = "[1,2,3,4,5].",
 	Term = [1,2,3,4,5],
-	Term = from_string(Term_string),
-	Term_string = to_string(Term),
+	Term = from_utf_string(Term_string),
+	Term_string = to_utf_string(Term),
 	io:format("DONE! String functionality test passed.~n"),
 	Term_binary = <<("[1,2,3,4,5].")/utf8>>,
 	Term = from_utf_binary(Term_binary),
@@ -43,8 +43,8 @@ test() ->
 	io:format("DONE! Utf binary functionality test passed.~n"),
 	{ok,Path} = file:get_cwd(),
 	Full_path = lists:concat([Path,"/a_term.test"]),
-	{ok,Full_path} = to_file(Full_path,Term),
-	{ok,Term} = from_file(Full_path),
+	{ok,Full_path} = to_binary_file(Full_path,Term),
+	{ok,Term} = from_binary_file(Full_path),
 	ok = file:delete(Full_path),
 	io:format("DONE! Term file storing/reading functionality test passed.~n"),
 	Time_stop = a_time:current(timestamp),
@@ -64,16 +64,16 @@ test() ->
 	Term :: term().
 
 to_utf_binary(Term) ->
-	unicode:characters_to_binary(to_string(Term)).
+	unicode:characters_to_binary(to_utf_string(Term)).
 
 
 %% ----------------------------
 %% @doc Transform term to string
--spec to_string(Term) -> utf_text()
+-spec to_utf_string(Term) -> utf_text()
 	when
 	Term :: term().
 
-to_string(Term) ->
+to_utf_string(Term) ->
 	lists:concat(
 		[lists:flatten(io_lib:format("~p",[Term])),"."]
 	).
@@ -86,16 +86,16 @@ to_string(Term) ->
 	Binary :: utf_text_binary().
 
 from_utf_binary(Binary) ->
-	from_string(unicode:characters_to_list(Binary)).
+	from_utf_string(unicode:characters_to_list(Binary)).
 
 
 %% ----------------------------
 %% @doc Parse term from string
--spec from_string(String) -> term()
+-spec from_utf_string(String) -> term()
 	when
 	String :: string().
 
-from_string(String) ->
+from_utf_string(String) ->
 	{ok,Raw_term,_} = erl_scan:string(String),
 	{ok,Term} = erl_parse:parse_term(Raw_term),
 	Term.
@@ -103,12 +103,12 @@ from_string(String) ->
 
 %% ----------------------------
 %% @doc Write any term to file like binary
--spec to_file(Path,Term) -> {ok,Path} | {error,_Reason}
+-spec to_binary_file(Path,Term) -> {ok,Path} | {error,_Reason}
 	when
 	Path :: unix_path_string(),
 	Term :: term().
 
-to_file(Path,Term) ->
+to_binary_file(Path,Term) ->
 	case file:write_file(Path,term_to_binary(Term)) of
 		ok -> {ok,Path};
 		Result -> Result
@@ -117,11 +117,11 @@ to_file(Path,Term) ->
 
 %% ----------------------------
 %% @doc Read term from file
--spec from_file(Path) -> {ok,term()} | {error,_Reason}
+-spec from_binary_file(Path) -> {ok,term()} | {error,_Reason}
 	when
 	Path :: unix_path_string().
 
-from_file(Path) ->
+from_binary_file(Path) ->
 	case file:read_file(Path) of
 		{ok,Binary} -> {ok,binary_to_term(Binary)};
 		Result -> Result

@@ -247,7 +247,7 @@ test() ->
 	false = utf_by_pattern(UTF_string,"^[A]{1}$"),
 	io:format("DONE! UTF string verification test passed.~n"),
 	Time_tuple = erlang:localtime(),
-	Time_tuple_string = a_term:to_string(Time_tuple),
+	Time_tuple_string = a_term:to_utf_string(Time_tuple),
 	Time_tuple_string_wrong = "wrong_time_tuple",
 	{true,Time_tuple} = time_tuple(Time_tuple_string),
 	false = time_tuple(Time_tuple_string_wrong),
@@ -284,7 +284,7 @@ test() ->
 
 time_tuple(Binary) ->
 	try
-		{{Year,Month,Day},{Hours,Minutes,Seconds}} = a_term:from_string(Binary),
+		{{Year,Month,Day},{Hours,Minutes,Seconds}} = a_term:from_utf_string(Binary),
 		{true,{{Year,Month,Day},{Hours,Minutes,Seconds}}}
 	catch
 		_:_  -> false
@@ -571,7 +571,7 @@ ipv4(Utf_string,Return_mode) ->
 	Utf_string :: utf_text_string().
 
 term(Utf_string) ->
-	try {true,a_term:from_string(Utf_string)}
+	try {true,a_term:from_utf_string(Utf_string)}
 	catch _:_ -> false end.
 
 

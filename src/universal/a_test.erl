@@ -15,6 +15,7 @@
 	a_matrix,
 	a_node,
 	a_term,
+	a_config,
 	a_value_bin_is,
 	a_value_str_is,
 	a_structure_gb,

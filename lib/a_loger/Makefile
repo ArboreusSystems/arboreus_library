@@ -28,14 +28,15 @@ APP_NAME = a_loger
 
 all: install clean
 
-install: ensure_dir_silent
+install: clean ensure_dir_silent
 	$(call target,alog_file.erl)
 	$(call target,alog_file_handler.erl)
 	$(call target,alog_handler.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
-	$(call return_done_for_module,"Nothing for clean in module $(APP_NAME).")
+	rm -rf $(DIR_EBIN)/$(APP_NAME)/*; \
+    $(call return_done_for_module,"Cleaning for module $(APP_NAME) finished.")
 
 configure: ensure_dir
 	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished")

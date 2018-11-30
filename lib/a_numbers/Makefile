@@ -28,7 +28,7 @@ APP_NAME = a_numbers
 
 all: install clean
 
-install: ensure_dir_silent
+install: clean ensure_dir_silent
 	$(call target,a_numbers.erl)
 	$(call target,a_numbers_gb.erl)
 	$(call target,a_numbers_l.erl)
@@ -39,7 +39,8 @@ install: ensure_dir_silent
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
-	$(call return_done_for_module,"Nothing for clean in module $(APP_NAME).")
+	rm -rf $(DIR_EBIN)/$(APP_NAME)/*; \
+    $(call return_done_for_module,"Cleaning for module $(APP_NAME) finished.")
 
 configure: ensure_dir
 	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished")

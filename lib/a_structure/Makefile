@@ -28,8 +28,49 @@ APP_NAME = a_structure
 
 all: install clean
 
-install:
+install: ensure_dir_silent
+	$(call target,a_structure.erl)
+	$(call target,a_structure_gb.erl)
+	$(call target,a_structure_l.erl)
+	$(call target,a_structure_m.erl)
+	$(call target,a_structure_pl.erl)
+	$(call target,a_structure_r.erl)
+	$(call target,a_structure_t.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
-	$(call return_done_for_module,"Cleaning for module $(APP_NAME) finished.")
+	$(call return_done_for_module,"Nothing for clean in module $(APP_NAME).")
+
+configure: ensure_dir
+	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished")
+
+ensure_dir:
+	$(call ensure_dir,$(APP_DIR_EBIN))
+
+ensure_dir_silent:
+	$(call ensure_dir_silent,$(APP_DIR_EBIN))
+
+
+# ----------------------------------------------
+# Erlang modules
+
+a_structure.erl:
+	$(call build_erl,$(APP_DIR_SRC)/a_structure.erl,$(APP_DIR_EBIN))
+
+a_structure_gb.erl:
+	$(call build_erl,$(APP_DIR_SRC)/a_structure_gb.erl,$(APP_DIR_EBIN))
+
+a_structure_l.erl:
+	$(call build_erl,$(APP_DIR_SRC)/a_structure_l.erl,$(APP_DIR_EBIN))
+
+a_structure_m.erl:
+	$(call build_erl,$(APP_DIR_SRC)/a_structure_m.erl,$(APP_DIR_EBIN))
+
+a_structure_pl.erl:
+	$(call build_erl,$(APP_DIR_SRC)/a_structure_pl.erl,$(APP_DIR_EBIN))
+
+a_structure_r.erl:
+	$(call build_erl,$(APP_DIR_SRC)/a_structure_r.erl,$(APP_DIR_EBIN))
+
+a_structure_t.erl:
+	$(call build_erl,$(APP_DIR_SRC)/a_structure_t.erl,$(APP_DIR_EBIN))

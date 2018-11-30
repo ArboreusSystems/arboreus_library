@@ -37,7 +37,7 @@ install: ensure_dir_silent
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
-	$(call return_done_for_module,"Cleaning for module $(APP_NAME) finished.")
+	$(call return_done_for_module,"Nothing for clean in module $(APP_NAME).")
 
 configure: ensure_dir
 	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished")

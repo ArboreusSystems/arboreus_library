@@ -14,12 +14,12 @@
 -define(SERVER, ?MODULE).
 
 %% Data types
--include("../data_models/types/types_general.hrl").
--include("../data_models/types/types_time.hrl").
--include("../data_models/types/types_a_users.hrl").
+-include("../../data_models/types/types_general.hrl").
+-include("../../data_models/types/types_time.hrl").
+-include("../../data_models/types/types_a_users.hrl").
 
 %% Data models
--include("../data_models/records/records_a_users.hrl").
+-include("../../data_models/records/records_a_users.hrl").
 -record(state, {}).
 
 %% API

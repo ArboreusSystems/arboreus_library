@@ -22,7 +22,8 @@ include $(PWD)/make/actions.mk
 
 all: configure set_arguments install clean
 
-configure:
+configure: check_arguments
+	$(foreach MODULE,$(MODULES_FOR_ACTION),$(call module_configure,$(MODULE)))
 	$(call return_done_for_target,"Configuring procedures performed.")
 
 install: check_arguments

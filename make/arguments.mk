@@ -1,19 +1,24 @@
 # ----------------------------------------------
-# @doc Arboreus shel arguments handler
+# @doc Arboreus shell arguments handling
 # (C) Arboreus library (http://arboreus.systems)
 # (C) Alexandr Kirilov (http://alexandr.kirilov.me)
 #
 # ----------------------------------------------
 
 
-# Ebin directories
-ifeq (ensure_ebin, $(firstword $(MAKECMDGOALS)))
-  ARGUMENTS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
-  $(eval $(ARGUMENTS):;@true)
+# ----------------------------------------------
+# Setting modules for action for target "install"
+
+ifeq (install, $(firstword $(MAKECMDGOALS)))
+MODULES_FOR_ACTION := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
+$(eval $(MODULES_FOR_ACTION):;@true)
 endif
 
-# Compile
-ifeq (compile, $(firstword $(MAKECMDGOALS)))
-  ARGUMENTS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
-  $(eval $(ARGUMENTS):;@true)
+
+# ----------------------------------------------
+# Setting modules for action for target "clean"
+
+ifeq (clean, $(firstword $(MAKECMDGOALS)))
+MODULES_FOR_ACTION := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
+$(eval $(MODULES_FOR_ACTION):;@true)
 endif

@@ -23,7 +23,24 @@
 %% @doc Module test function
 -spec test() -> ok.
 
-test() -> ok.
+test() ->
+	Time_start = a_time:current(timestamp),
+	io:format("*** -------------------~n"),
+	io:format(
+		"Module (eee) testing started at:~n~p (~p)~n",
+		[a_time:from_timestamp(rfc850,Time_start),Time_start]
+	),
+	{ok,Path} = file:get_cwd(),
+	Full_path = lists:concat([Path,"/a_file.test"]),
+	
+	Time_stop = a_time:current(timestamp),
+	io:format("*** -------------------~n"),
+	io:format(
+		"Module (eee) testing finished at:~n~p (~p)~n",
+		[a_time:from_timestamp(rfc850,Time_stop),Time_stop]
+	),
+	io:format("Test time is: ~p~n", [Time_stop-Time_start]),
+	ok.
 
 
 %% ----------------------------

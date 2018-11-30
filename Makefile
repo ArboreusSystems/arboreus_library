@@ -1,35 +1,45 @@
 # ----------------------------------------------
-# Arboreus Erlang library make file
+# Arboreus library make file
 # (C) Arboreus library (http://arboreus.systems)
 # (C) Alexandr Kirilov (http://alexandr.kirilov.me)
 #
 # ----------------------------------------------
 
-.SILENT: all
+MAKEFLAGS += --silent
+.DEFAULT_GOAL: all
 
 
 # ----------------------------------------------
-# Make's variables and extentions
+# Variables and extentions
 
-include $(PWD)/make/variables.mk
-include $(PWD)/make/action_primitives.mk
+include $(PWD)/make/conf.mk
 include $(PWD)/make/arguments.mk
+include $(PWD)/make/actions.mk
 
 
 # ----------------------------------------------
-# Default targets
+# Targets
 
-all:
-	echo "Done! All targets executed."
+all: configure set_arguments install clean
 
+configure:
+	$(call return_done_for_target,"Configuring procedures performed.")
 
-# ----------------------------------------------
-# Make's modules
+install: check_arguments
+	$(foreach MODULE,$(MODULES_FOR_ACTION),$(call module_install,$(MODULE)))
+	$(call return_done_for_target,"Installing procedures performed.")
 
-include $(PWD)/make/compile.mk
-include $(PWD)/make/paths.mk
-include $(PWD)/make/backup.mk
-include $(PWD)/make/configure.mk
-include $(PWD)/make/github.mk
-include $(PWD)/make/test.mk
+clean: check_arguments
+	$(foreach MODULE,$(MODULES_FOR_ACTION),$(call module_clean,$(MODULE)))
+	$(call return_done_for_target,"Cleaning procedures performed.")
 
+package: install clean
+	$(call return_done_for_target,"Package buiding procedures performed.")
+
+check_arguments:
+ifeq ($(words $(MODULES_FOR_ACTION)),0)
+	$(eval MODULES_FOR_ACTION = $(MODULES))
+endif
+
+set_arguments:
+	$(eval MODULES_FOR_ACTION = $(MODULES))

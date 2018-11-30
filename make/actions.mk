@@ -48,6 +48,16 @@ endef
 
 
 # ----------------------------------------------
+# @doc Configure library module
+# @params
+#	$(1) - module name
+
+define module_configure
+make configure --directory $(call dir_module,$(1)) || exit;
+endef
+
+
+# ----------------------------------------------
 # @doc Return libray module root directory
 # @params
 #	$(1) - module name
@@ -98,9 +108,33 @@ endef
 #   $(2) - full path to output file
 
 define build_c
-$(COMPILLER_C) -o $(2) $(1);
+$(COMPILLER_C) -o $(2) $(1) || exit;
+echo "Done! Built C-object file: $(1)."
 endef
 
+
+# ----------------------------------------------
+# @doc Compile Erlang file (*.erl) from source to specified directory
+# @params
+#	$(1) - full path to source file
+#   $(2) - output directory
+
+define build_erl
+$(COMPILLER_ERL) -o $(2) $(1) || exit;
+echo "Done! Built Erlang file: $(1)."
+endef
+
+
+# ----------------------------------------------
+# @doc Copy Erlang app file (*.app) from source to specified directory
+# @params
+#	$(1) - full path to source file
+#   $(2) - output directory
+
+define build_app
+cp $(1) $(2) || exit; \
+echo "Done! Erlang app-file copied: $(1)."
+endef
 
 # ----------------------------------------------
 # @doc Run target from receipe
@@ -109,4 +143,34 @@ endef
 
 define target
 @$(MAKE) -f $(THIS_FILE) $(1)
+endef
+
+
+# ----------------------------------------------
+# @doc Ensure directory
+# @params
+#	$(1) - dir path
+
+define ensure_dir
+mkdir -p $(1); \
+if [ -d $(1) ]; then \
+echo "Done! Directory exists: $(1)"; \
+else \
+echo "Error! Directory not exists: $(1)"; \
+exit; \
+fi;
+endef
+
+
+# ----------------------------------------------
+# @doc Ensure directory silent
+# @params
+#	$(1) - dir path
+
+define ensure_dir_silent
+mkdir -p $(1); \
+if [ ! -d $(1) ]; then \
+echo "Error! Directory not exists: $(1)"; \
+exit; \
+fi;
 endef

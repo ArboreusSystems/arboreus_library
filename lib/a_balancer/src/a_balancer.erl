@@ -34,19 +34,19 @@ test() -> ok.
 
 %% ----------------------------
 %% @doc Application start phases handler
--spec start_phase(Phase, Type, Arguments) -> any()
+-spec start_phase(Phase,Type,Arguments) -> any()
 	when
 	Phase :: term(),
 	Type :: normal,
 	Arguments :: list().
 
-start_phase(Phase, Type, Arguments) ->
+start_phase(Phase,Type,Arguments) ->
 	io:format("start_phase(~p,~p,~p).~n", [Phase, Type, Arguments]).
 
 
 %% ----------------------------
 %% @doc Application start
--spec start(Start_type, _Start_arguments) ->
+-spec start(Start_type,Start_arguments) ->
 	{ok, pid()} | {ok, pid(), State :: term()} | {error, Reason :: term()}
 	when
 	Start_type :: normal | {takeover, node()} | {failover, node()},

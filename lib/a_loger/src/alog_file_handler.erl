@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% System include
--include("../data_models/types/types_general.hrl").
+-include("../../data_models/types/types_general.hrl").
 
 %% Constants
 -define(SERVER,?MODULE).

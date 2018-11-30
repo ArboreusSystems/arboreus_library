@@ -28,8 +28,41 @@ APP_NAME = a_structure_tree
 
 all: install clean
 
-install:
+install: ensure_dir_silent
+	$(call target,astr_alias.erl)
+	$(call target,astr_link.erl)
+	$(call target,astr_mdb.erl)
+	$(call target,astr_point.erl)
+	$(call target,astr_test.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
-	$(call return_done_for_module,"Cleaning for module $(APP_NAME) finished.")
+	$(call return_done_for_module,"Nothing for clean in module $(APP_NAME).")
+
+configure: ensure_dir
+	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished")
+
+ensure_dir:
+	$(call ensure_dir,$(APP_DIR_EBIN))
+
+ensure_dir_silent:
+	$(call ensure_dir_silent,$(APP_DIR_EBIN))
+
+
+# ----------------------------------------------
+# Erlang modules
+
+astr_alias.erl:
+	$(call build_erl,$(APP_DIR_SRC)/astr_alias.erl,$(APP_DIR_EBIN))
+
+astr_link.erl:
+	$(call build_erl,$(APP_DIR_SRC)/astr_link.erl,$(APP_DIR_EBIN))
+
+astr_mdb.erl:
+	$(call build_erl,$(APP_DIR_SRC)/astr_mdb.erl,$(APP_DIR_EBIN))
+
+astr_point.erl:
+	$(call build_erl,$(APP_DIR_SRC)/astr_point.erl,$(APP_DIR_EBIN))
+
+astr_test.erl:
+	$(call build_erl,$(APP_DIR_SRC)/astr_test.erl,$(APP_DIR_EBIN))

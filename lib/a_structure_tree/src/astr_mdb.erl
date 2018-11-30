@@ -10,11 +10,11 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% Data types
--include("../data_models/types/types_general.hrl").
--include("../data_models/types/types_a_structure_tree.hrl").
+-include("../../data_models/types/types_general.hrl").
+-include("../../data_models/types/types_a_structure_tree.hrl").
 
 %% Data models
--include("../data_models/records/records_a_structure_tree.hrl").
+-include("../../data_models/records/records_a_structure_tree.hrl").
 
 %% API
 -export([

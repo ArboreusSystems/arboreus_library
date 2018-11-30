@@ -28,8 +28,33 @@ APP_NAME = a_loger
 
 all: install clean
 
-install:
+install: ensure_dir_silent
+	$(call target,alog_file.erl)
+	$(call target,alog_file_handler.erl)
+	$(call target,alog_handler.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
-	$(call return_done_for_module,"Cleaning for module $(APP_NAME) finished.")
+	$(call return_done_for_module,"Nothing for clean in module $(APP_NAME).")
+
+configure: ensure_dir
+	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished")
+
+ensure_dir:
+	$(call ensure_dir,$(APP_DIR_EBIN))
+
+ensure_dir_silent:
+	$(call ensure_dir_silent,$(APP_DIR_EBIN))
+
+
+# ----------------------------------------------
+# Erlang modules
+
+alog_file.erl:
+	$(call build_erl,$(APP_DIR_SRC)/alog_file.erl,$(APP_DIR_EBIN))
+
+alog_file_handler.erl:
+	$(call build_erl,$(APP_DIR_SRC)/alog_file_handler.erl,$(APP_DIR_EBIN))
+
+alog_handler.erl:
+	$(call build_erl,$(APP_DIR_SRC)/alog_handler.erl,$(APP_DIR_EBIN))

@@ -31,6 +31,7 @@ all: install clean
 install: ensure_dir_silent
 	$(call target,aest_btree.erl)
 	$(call target,aest_handler.erl)
+	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
 	$(call return_done_for_module,"Nothing for clean in module $(APP_NAME).")

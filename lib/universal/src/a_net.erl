@@ -10,8 +10,8 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% System include
--include("../data_models/types/types_general.hrl").
--include("../data_models/types/types_network.hrl").
+-include("../../data_models/types/types_general.hrl").
+-include("../../data_models/types/types_network.hrl").
 
 %% API
 -export([

@@ -9,8 +9,8 @@
 -module(a_time).
 -author("Alexandr KIRILOV (http://alexandr.kirilov.me)").
 
--include("../data_models/types/types_general.hrl").
--include("../data_models/types/types_time.hrl").
+-include("../../data_models/types/types_general.hrl").
+-include("../../data_models/types/types_time.hrl").
 
 %% Module API
 -export([

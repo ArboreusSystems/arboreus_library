@@ -12,9 +12,9 @@
 %% Constants
 
 %% Data types
--include("../data_models/types/types_general.hrl").
--include("../data_models/types/types_network.hrl").
--include("../data_models/types/types_time.hrl").
+-include("../../data_models/types/types_general.hrl").
+-include("../../data_models/types/types_network.hrl").
+-include("../../data_models/types/types_time.hrl").
 
 %% Data models
 

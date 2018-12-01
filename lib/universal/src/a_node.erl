@@ -12,11 +12,11 @@
 %% Constants
 
 %% Data types
--include("../data_models/types/types_general.hrl").
--include("../data_models/types/types_a_balancer.hrl").
+-include("../../data_models/types/types_general.hrl").
+-include("../../data_models/types/types_a_balancer.hrl").
 
 %% Data models
--include("../data_models/records/records_a_balancer.hrl").
+-include("../../data_models/records/records_a_balancer.hrl").
 
 %% API
 -export([

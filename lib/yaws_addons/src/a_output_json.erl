@@ -10,8 +10,8 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% System include
--include("../data_models/types/types_general.hrl").
--include("../constants/constants_general.hrl").
+-include("../../data_models/types/types_general.hrl").
+-include("../../constants/constants_general.hrl").
 
 %% API
 -export([
@@ -99,10 +99,10 @@ json_from_proplist([{Key_in,Value_in}|List],Json_inner) when is_atom(Key_in) ->
 	Json_inner_out = fun() ->
 		if
 			List /= [] ->
-				<<Json_inner/binary,("\"")/utf8,(a:to_binary(Key_in))/binary,
+				<<Json_inner/binary,("\"")/utf8,(a_var:to_binary(Key_in))/binary,
 					("\":")/utf8,(a_output:value(Value_in))/binary,(",")/utf8>>;
 			true ->
-				<<Json_inner/binary,("\"")/utf8,(a:to_binary(Key_in))/binary,
+				<<Json_inner/binary,("\"")/utf8,(a_var:to_binary(Key_in))/binary,
 					("\":")/utf8,(a_output:value(Value_in))/binary>>
 		end
 	end,

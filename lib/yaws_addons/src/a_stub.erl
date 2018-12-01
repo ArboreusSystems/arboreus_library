@@ -45,7 +45,7 @@ set(html) ->
 				{'h1',[],?STUB_HEADER},
 				{'div',[],?STUB_TEXT},
 				["<br>"],
-				{'div',[],[{'a',[{'href',"http://arboreus.systems/"}],"Arboreus Library (C) 2014-2016"}]}
+				{'div',[],[{'a',[{'href',"http://arboreus.systems/"}],"Arboreus Library (C) 2014-2019"}]}
 			]}
 		]}
 	];

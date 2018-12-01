@@ -41,7 +41,7 @@ cross_domain() -> cross_domain("*").
 -spec cross_domain(Domain::any()) -> list().
 
 cross_domain(Domain) when is_list(Domain) -> [{header,["Access-Control-Allow-Origin:",Domain]}];
-cross_domain(Domain) -> cross_domain(a:to_string(Domain)).
+cross_domain(Domain) -> cross_domain(a_var:to_string(Domain)).
 
 
 %%-----------------------------------
@@ -54,7 +54,7 @@ cross_domain(Domain) -> cross_domain(a:to_string(Domain)).
 last_modified(Timestamp) when is_integer(Timestamp), Timestamp > 0 ->
 	[{header,[
 		"Last-Modified:",
-		a:to_string(a_time:format(rfc822,{timestamp_tuple,a_time:timestamp_to_tuple(Timestamp)}))
+		a_var:to_string(a_time:format(rfc822,{timestamp_tuple,a_time:timestamp_to_tuple(Timestamp)}))
 	]}];
 last_modified({{Year,Month,Day},{Hour,Minute,Second}})
 	when
@@ -66,7 +66,7 @@ last_modified({{Year,Month,Day},{Hour,Minute,Second}})
 		is_integer(Second) == true, Second >= 0, Second =< 59 ->
 	[{header,[
 		"Last-Modified:",
-		a:to_string(a_time:format(rfc822,{date_tuple,{{Year,Month,Day},{Hour,Minute,Second}}}))
+		a_var:to_string(a_time:format(rfc822,{date_tuple,{{Year,Month,Day},{Hour,Minute,Second}}}))
 	]}];
 last_modified(current) -> last_modified(erlang:localtime()).
 
@@ -81,7 +81,7 @@ last_modified(current) -> last_modified(erlang:localtime()).
 expires(Timestamp) when is_integer(Timestamp) == true, Timestamp > 0 ->
 	[{header,[
 		"Expires:",
-		a:to_string(a_time:format(rfc822,{timestamp_tuple,a_time:timestamp_to_tuple(Timestamp)}))
+		a_var:to_string(a_time:format(rfc822,{timestamp_tuple,a_time:timestamp_to_tuple(Timestamp)}))
 	]}];
 expires({{Year,Month,Day},{Hour,Minute,Second}})
 	when
@@ -93,7 +93,7 @@ expires({{Year,Month,Day},{Hour,Minute,Second}})
 		is_integer(Second) == true, Second >= 0, Second =< 59 ->
 	[{header,[
 		"Expires:",
-		a:to_string(a_time:format(rfc822,{date_tuple,{{Year,Month,Day},{Hour,Minute,Second}}}))
+		a_var:to_string(a_time:format(rfc822,{date_tuple,{{Year,Month,Day},{Hour,Minute,Second}}}))
 	]}];
 expires(current) -> expires(erlang:localtime()).
 

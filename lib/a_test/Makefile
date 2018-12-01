@@ -28,7 +28,7 @@ APP_NAME = a_test
 
 all: install clean
 
-install: clean ensure_dir_silent link_objects
+install: backup clean ensure_dir_silent link_objects
 	$(call target,a_test.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
@@ -56,6 +56,18 @@ link_objects: build_objects
 
 build_objects: a_test_main.c
 	$(call return_done_for_module,"Objects built for module $(APP_NAME).")
+
+backup:
+	rm -rf $(APP_DIR_BACKUP_EBIN)/*; \
+	rm -rf $(APP_DIR_BACKUP_BIN)/*; \
+	rm -rf $(APP_DIR_BACKUP_BUILD)/*; \
+    $(call ensure_dir_silent,$(APP_DIR_BACKUP_EBIN)) \
+    $(call ensure_dir_silent,$(APP_DIR_BACKUP_BIN)) \
+    $(call ensure_dir_silent,$(APP_DIR_BACKUP_BUILD)) \
+    cp -Rf $(APP_DIR_BIN)/* $(APP_DIR_BACKUP_BIN) || exit; \
+    cp -Rf $(APP_DIR_EBIN)/* $(APP_DIR_BACKUP_EBIN) || exit; \
+    cp -Rf $(APP_DIR_BUILD)/* $(APP_DIR_BACKUP_BUILD) || exit; \
+    $(call return_done_for_module,"Backup procedures for $(APP_NAME) finished.")
 
 
 # ----------------------------------------------

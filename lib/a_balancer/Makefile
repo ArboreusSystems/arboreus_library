@@ -28,7 +28,7 @@ APP_NAME = a_balancer
 
 all: install clean
 
-install: clean ensure_dir_silent
+install: backup clean ensure_dir_silent
 	$(call target,a_balancer.erl)
 	$(call target,a_balancer_supervisor.erl)
 	$(call target,abal_client.erl)
@@ -41,13 +41,19 @@ clean:
     $(call return_done_for_module,"Cleaning for module $(APP_NAME) finished.")
 
 configure: ensure_dir
-	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished")
+	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished.")
 
 ensure_dir:
 	$(call ensure_dir,$(APP_DIR_EBIN))
 
 ensure_dir_silent:
 	$(call ensure_dir_silent,$(APP_DIR_EBIN))
+
+backup:
+	rm -rf $(APP_DIR_BACKUP_EBIN)/*; \
+    $(call ensure_dir_silent,$(APP_DIR_BACKUP_EBIN)) \
+    cp -Rf $(APP_DIR_EBIN)/* $(APP_DIR_BACKUP_EBIN) || exit; \
+    $(call return_done_for_module,"Backup procedures for $(APP_NAME) finished.")
 
 
 # ----------------------------------------------

@@ -37,6 +37,10 @@ clean: check_arguments
 package: install clean
 	$(call return_done_for_target,"Package buiding procedures performed.")
 
+backup:
+	$(foreach MODULE,$(MODULES_FOR_ACTION),$(call module_backup,$(MODULE)))
+	$(call return_done_for_target,"Backup procedures performed.")
+
 check_arguments:
 ifeq ($(words $(MODULES_FOR_ACTION)),0)
 	$(eval MODULES_FOR_ACTION = $(MODULES))

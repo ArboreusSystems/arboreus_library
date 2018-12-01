@@ -58,6 +58,16 @@ endef
 
 
 # ----------------------------------------------
+# @doc Backup library module
+# @params
+#	$(1) - module name
+
+define module_backup
+make backup --directory $(call dir_module,$(1)) || exit;
+endef
+
+
+# ----------------------------------------------
 # @doc Return libray module root directory
 # @params
 #	$(1) - module name

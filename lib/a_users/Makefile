@@ -28,7 +28,7 @@ APP_NAME = a_users
 
 all: install clean
 
-install: clean ensure_dir_silent
+install: backup clean ensure_dir_silent
 	$(call target,a_user.erl)
 	$(call target,a_user_properties.erl)
 	$(call target,a_users.erl)
@@ -54,6 +54,12 @@ ensure_dir:
 
 ensure_dir_silent:
 	$(call ensure_dir_silent,$(APP_DIR_EBIN))
+
+backup:
+	rm -rf $(APP_DIR_BACKUP_EBIN)/*; \
+    $(call ensure_dir_silent,$(APP_DIR_BACKUP_EBIN)) \
+    cp -Rf $(APP_DIR_EBIN)/* $(APP_DIR_BACKUP_EBIN) || exit; \
+    $(call return_done_for_module,"Backup procedures for $(APP_NAME) finished.")
 
 
 # ----------------------------------------------

@@ -29,6 +29,7 @@ APP_NAME = a_test
 all: install clean
 
 install: clean ensure_dir_silent link_objects
+	$(call target,a_test.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
@@ -39,10 +40,12 @@ configure: ensure_dir
 	$(call return_done_for_module,"Configuring procedures for $(APP_NAME) finished")
 
 ensure_dir:
+	$(call ensure_dir,$(APP_DIR_EBIN))
 	$(call ensure_dir,$(APP_DIR_BIN))
 	$(call ensure_dir,$(APP_DIR_BUILD))
 
 ensure_dir_silent:
+	$(call ensure_dir,$(APP_DIR_EBIN))
 	$(call ensure_dir_silent,$(APP_DIR_BIN))
 	$(call ensure_dir_silent,$(APP_DIR_BUILD))
 
@@ -60,3 +63,10 @@ build_objects: a_test_main.c
 
 a_test_main.c:
 	$(call build_o,a_test_main,$(APP_NAME))
+
+
+# ----------------------------------------------
+# Erlang modules
+
+a_test.erl:
+	$(call build_erl,$(APP_DIR_SRC)/a_test.erl,$(APP_DIR_EBIN))

@@ -35,7 +35,7 @@
 ]).
 
 %% Data types
--include("../data_models/types/types_general.hrl").
+-include("../../data_models/types/types_general.hrl").
 
 %% Data models
 

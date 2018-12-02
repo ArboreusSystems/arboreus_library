@@ -66,34 +66,34 @@ backup:
 # Erlang modules
 
 a_user.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_user.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_user)
 
 a_user_properties.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_user_properties.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_user_properties)
 
 a_users.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_users.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_users)
 
 a_users_supervisor.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_users_supervisor.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_users_supervisor)
 
 ause_auth.erl:
-	$(call build_erl,$(APP_DIR_SRC)/ause_auth.erl,$(APP_DIR_EBIN))
+	$(call build_erl,ause_auth)
 
 ause_login.erl:
-	$(call build_erl,$(APP_DIR_SRC)/ause_login.erl,$(APP_DIR_EBIN))
+	$(call build_erl,ause_login)
 
 ause_login_kind.erl:
-	$(call build_erl,$(APP_DIR_SRC)/ause_login_kind.erl,$(APP_DIR_EBIN))
+	$(call build_erl,ause_login_kind)
 
 ause_mdb.erl:
-	$(call build_erl,$(APP_DIR_SRC)/ause_mdb.erl,$(APP_DIR_EBIN))
+	$(call build_erl,ause_mdb)
 
 ause_properties.erl:
-	$(call build_erl,$(APP_DIR_SRC)/ause_properties.erl,$(APP_DIR_EBIN))
+	$(call build_erl,ause_properties)
 
 ause_user.erl:
-	$(call build_erl,$(APP_DIR_SRC)/ause_user.erl,$(APP_DIR_EBIN))
+	$(call build_erl,ause_user)
 
 a_users.app:
-	$(call build_app,$(APP_DIR_SRC)/a_users.app,$(APP_DIR_EBIN))
+	$(call build_app,a_users)

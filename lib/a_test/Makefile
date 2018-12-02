@@ -45,7 +45,7 @@ ensure_dir:
 	$(call ensure_dir,$(APP_DIR_BUILD))
 
 ensure_dir_silent:
-	$(call ensure_dir,$(APP_DIR_EBIN))
+	$(call ensure_dir_silent,$(APP_DIR_EBIN))
 	$(call ensure_dir_silent,$(APP_DIR_BIN))
 	$(call ensure_dir_silent,$(APP_DIR_BUILD))
 
@@ -64,9 +64,9 @@ backup:
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_EBIN)) \
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_BIN)) \
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_BUILD)) \
-    cp -Rf $(APP_DIR_BIN)/* $(APP_DIR_BACKUP_BIN) || exit; \
-    cp -Rf $(APP_DIR_EBIN)/* $(APP_DIR_BACKUP_EBIN) || exit; \
-    cp -Rf $(APP_DIR_BUILD)/* $(APP_DIR_BACKUP_BUILD) || exit; \
+    cp -Rf $(APP_DIR_BIN)/* $(APP_DIR_BACKUP_BIN); \
+    cp -Rf $(APP_DIR_EBIN)/* $(APP_DIR_BACKUP_EBIN); \
+    cp -Rf $(APP_DIR_BUILD)/* $(APP_DIR_BACKUP_BUILD); \
     $(call return_done_for_module,"Backup procedures for $(APP_NAME) finished.")
 
 
@@ -74,11 +74,11 @@ backup:
 # C modules
 
 a_test_main.c:
-	$(call build_o,a_test_main,$(APP_NAME))
+	$(call build_o,a_test_main)
 
 
 # ----------------------------------------------
 # Erlang modules
 
 a_test.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_test.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_test)

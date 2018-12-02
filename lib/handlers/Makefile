@@ -57,7 +57,7 @@ backup:
 # Erlang modules
 
 a.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a)
 
 a_stat.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_stat.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_stat)

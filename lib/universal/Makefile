@@ -74,58 +74,58 @@ backup:
 # Erlang modules
 
 a_code.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_code.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_code)
 
 a_config.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_config.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_config)
 
 a_file.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_file.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_file)
 
 a_list.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_list.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_list)
 
 a_lpath.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_lpath.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_lpath)
 
 a_matrix.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_matrix.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_matrix)
 
 a_mnesia.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_mnesia.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_mnesia)
 
 a_net.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_net.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_net)
 
 a_node.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_node.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_node)
 
 a_proplists.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_proplists.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_proplists)
 
 a_qlc.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_qlc.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_qlc)
 
 a_rpc.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_rpc.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_rpc)
 
 a_sequence.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_sequence.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_sequence)
 
 a_term.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_term.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_term)
 
 a_text.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_text.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_text)
 
 a_time.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_time.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_time)
 
 a_value_bin_is.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_value_bin_is.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_value_bin_is)
 
 a_value_str_is.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_value_str_is.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_value_str_is)
 
 a_var.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_var.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_var)

@@ -104,10 +104,10 @@ endef
 #   $(2) - application name
 
 define build_o
-$(eval SOURCE = $(call dir_module_src,$(2))/$(1).c)
-$(eval OUTPUT = $(call dir_module_build,$(2))/$(1).o)
+$(eval SOURCE = $(call dir_module_src,$(APP_NAME))/$(1).c)
+$(eval OUTPUT = $(call dir_module_build,$(APP_NAME))/$(1).o)
 $(COMPILLER_C) -c -o $(OUTPUT) $(SOURCE) || exit; \
-echo "Done! File built: $(1).o";
+echo "Done! File built: $(1).o in $(call dir_module_build,$(APP_NAME))";
 endef
 
 
@@ -130,8 +130,12 @@ endef
 #   $(2) - output directory
 
 define build_erl
-$(COMPILLER_ERL) -o $(2) $(1) || exit;
-echo "Done! Built Erlang file: $(1)."
+$(COMPILLER_ERL) -o $(APP_DIR_EBIN) $(APP_DIR_SRC)/$(1).erl || exit; \
+if [ ! -e $(APP_DIR_EBIN)/$(1).beam ]; then \
+echo "Error! No BEAM file for $(1) in $(APP_DIR_EBIN)." && exit; \
+else \
+echo "Done! Built $(1).erl in $(APP_DIR_EBIN)/$(1).beam"; \
+fi;
 endef
 
 
@@ -142,8 +146,12 @@ endef
 #   $(2) - output directory
 
 define build_app
-cp $(1) $(2) || exit; \
-echo "Done! Erlang app-file copied: $(1)."
+cp $(APP_DIR_SRC)/$(1).app $(APP_DIR_EBIN) || exit; \
+if [ ! -e $(APP_DIR_EBIN)/$(1).app ]; then \
+echo "Error! No $(1).app file in $(APP_DIR_EBIN)." && exit; \
+else \
+echo "Done! Erlang app-file copied $(1).app to $(APP_DIR_EBIN)"; \
+fi;
 endef
 
 # ----------------------------------------------

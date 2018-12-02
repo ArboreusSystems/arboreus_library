@@ -60,16 +60,16 @@ backup:
 # Erlang modules
 
 a_balancer.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_balancer.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_balancer)
 
 a_balancer_supervisor.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_balancer_supervisor.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_balancer_supervisor)
 
 abal_client.erl:
-	$(call build_erl,$(APP_DIR_SRC)/abal_client.erl,$(APP_DIR_EBIN))
+	$(call build_erl,abal_client)
 
 abal_server.erl:
-	$(call build_erl,$(APP_DIR_SRC)/abal_server.erl,$(APP_DIR_EBIN))
+	$(call build_erl,abal_server)
 
 a_balancer.app:
-	$(call build_app,$(APP_DIR_SRC)/a_balancer.app,$(APP_DIR_EBIN))
+	$(call build_app,a_balancer)

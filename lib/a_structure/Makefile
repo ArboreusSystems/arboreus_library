@@ -62,22 +62,22 @@ backup:
 # Erlang modules
 
 a_structure.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_structure.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_structure)
 
 a_structure_gb.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_structure_gb.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_structure_gb)
 
 a_structure_l.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_structure_l.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_structure_l)
 
 a_structure_m.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_structure_m.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_structure_m)
 
 a_structure_pl.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_structure_pl.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_structure_pl)
 
 a_structure_r.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_structure_r.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_structure_r)
 
 a_structure_t.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_structure_t.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_structure_t)

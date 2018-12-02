@@ -62,22 +62,22 @@ backup:
 # Erlang modules
 
 a_http_headers.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_http_headers.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_http_headers)
 
 a_output.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_output.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_output)
 
 a_output_dsv.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_output_dsv.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_output_dsv)
 
 a_output_json.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_output_json.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_output_json)
 
 a_output_xml.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_output_xml.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_output_xml)
 
 a_params.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_params.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_params)
 
 a_stub.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_stub.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_stub)

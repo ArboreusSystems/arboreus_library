@@ -57,7 +57,7 @@ backup:
 # Erlang modules
 
 aest_btree.erl:
-	$(call build_erl,$(APP_DIR_SRC)/aest_btree.erl,$(APP_DIR_EBIN))
+	$(call build_erl,aest_btree)
 
 aest_handler.erl:
-	$(call build_erl,$(APP_DIR_SRC)/aest_handler.erl,$(APP_DIR_EBIN))
+	$(call build_erl,aest_handler)

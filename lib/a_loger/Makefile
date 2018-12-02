@@ -58,10 +58,10 @@ backup:
 # Erlang modules
 
 alog_file.erl:
-	$(call build_erl,$(APP_DIR_SRC)/alog_file.erl,$(APP_DIR_EBIN))
+	$(call build_erl,alog_file)
 
 alog_file_handler.erl:
-	$(call build_erl,$(APP_DIR_SRC)/alog_file_handler.erl,$(APP_DIR_EBIN))
+	$(call build_erl,alog_file_handler)
 
 alog_handler.erl:
-	$(call build_erl,$(APP_DIR_SRC)/alog_handler.erl,$(APP_DIR_EBIN))
+	$(call build_erl,alog_handler)

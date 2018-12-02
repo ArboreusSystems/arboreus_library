@@ -60,16 +60,16 @@ backup:
 # Erlang modules
 
 astr_alias.erl:
-	$(call build_erl,$(APP_DIR_SRC)/astr_alias.erl,$(APP_DIR_EBIN))
+	$(call build_erl,astr_alias)
 
 astr_link.erl:
-	$(call build_erl,$(APP_DIR_SRC)/astr_link.erl,$(APP_DIR_EBIN))
+	$(call build_erl,astr_link)
 
 astr_mdb.erl:
-	$(call build_erl,$(APP_DIR_SRC)/astr_mdb.erl,$(APP_DIR_EBIN))
+	$(call build_erl,astr_mdb)
 
 astr_point.erl:
-	$(call build_erl,$(APP_DIR_SRC)/astr_point.erl,$(APP_DIR_EBIN))
+	$(call build_erl,astr_point)
 
 astr_test.erl:
-	$(call build_erl,$(APP_DIR_SRC)/astr_test.erl,$(APP_DIR_EBIN))
+	$(call build_erl,astr_test)

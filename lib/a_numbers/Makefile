@@ -62,22 +62,22 @@ backup:
 # Erlang modules
 
 a_numbers.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_numbers.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_numbers)
 
 a_numbers_gb.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_numbers_gb.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_numbers_gb)
 
 a_numbers_l.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_numbers_l.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_numbers_l)
 
 a_numbers_m.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_numbers_m.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_numbers_m)
 
 a_numbers_pl.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_numbers_pl.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_numbers_pl)
 
 a_numbers_r.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_numbers_r.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_numbers_r)
 
 a_numbers_t.erl:
-	$(call build_erl,$(APP_DIR_SRC)/a_numbers_t.erl,$(APP_DIR_EBIN))
+	$(call build_erl,a_numbers_t)

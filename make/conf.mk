@@ -16,6 +16,7 @@ MODULES += a_numbers
 MODULES += a_structure
 MODULES += a_structure_tree
 MODULES += a_test
+MODULES += a_time
 MODULES += a_users
 MODULES += handlers
 MODULES += universal

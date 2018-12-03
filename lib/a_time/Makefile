@@ -1,5 +1,5 @@
 # ----------------------------------------------
-# @doc Arboreus Tests handler
+# @doc Arboreus time handler
 # (C) Arboreus library (http://arboreus.systems)
 # (C) Alexandr Kirilov (http://alexandr.kirilov.me)
 #
@@ -20,7 +20,7 @@ include ../../make/actions.mk
 # ----------------------------------------------
 # Variables
 
-APP_NAME = a_test
+APP_NAME = a_time
 
 
 # ----------------------------------------------
@@ -29,7 +29,7 @@ APP_NAME = a_test
 all: install clean
 
 install: backup clean ensure_dir_silent link_objects
-	$(call target,a_test.erl)
+	$(call target,a_time.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
@@ -50,12 +50,13 @@ ensure_dir_silent:
 	$(call ensure_dir_silent,$(APP_DIR_BUILD))
 
 link_objects: build_objects
-	$(COMPILLER_C) -o $(DIR_BIN)/$(APP_NAME)/a_test \
-	 $(call dir_module_build,$(APP_NAME))/a_test_main.o \
+	$(COMPILLER_C) -o $(DIR_BIN)/$(APP_NAME)/a_time \
+	 $(call dir_module_build,$(APP_NAME))/a_time.o \
+	 $(call dir_module_build,$(APP_NAME))/a_time_handler.o \
 	 || exit; \
-	 $(call return_done_for_module,"Objects llinked for module $(APP_NAME).")
+	 $(call return_done_for_module,"Objects linked for module $(APP_NAME).")
 
-build_objects: a_test_main.c
+build_objects: a_time.c a_time_handler.c
 	$(call return_done_for_module,"Objects built for module $(APP_NAME).")
 
 backup:
@@ -74,12 +75,15 @@ backup:
 # ----------------------------------------------
 # C modules
 
-a_test_main.c:
-	$(call build_o,a_test_main)
+a_time.c:
+	$(call build_o,a_time)
+
+a_time_handler.c:
+	$(call build_o,a_time_handler)
 
 
 # ----------------------------------------------
 # Erlang modules
 
-a_test.erl:
-	$(call build_erl,a_test)
+a_time.erl:
+	$(call build_erl,a_time)

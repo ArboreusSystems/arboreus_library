@@ -8,7 +8,6 @@
 
 
 // System includes
-#include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/timeb.h>

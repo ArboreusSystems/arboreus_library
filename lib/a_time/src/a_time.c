@@ -8,10 +8,6 @@
 
 // System includes
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <sys/timeb.h>
-#include <sys/time.h>
 #include <string.h>
 #include <err.h>
 

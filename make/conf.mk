@@ -7,6 +7,12 @@
 
 
 # ----------------------------------------------
+# Operation System Type
+
+UNAME := $(shell uname)
+
+
+# ----------------------------------------------
 # Arboreus Library modules list
 
 MODULES += a_balancer
@@ -28,12 +34,14 @@ MODULES += yaws_addons
 
 DIR = $(PWD)
 DIR_BIN = $(PWD)/bin
+DIR_NIF = $(PWD)/nif
 DIR_EBIN = $(PWD)/ebin
 DIR_LIB = $(PWD)/lib
 DIR_MAKE = $(PWD)/make
 DIR_BUILD = $(PWD)/build
 DIR_BACKUP = $(PWD)/backup
 DIR_BACKUP_BIN = $(DIR_BACKUP)/bin
+DIR_BACKUP_NIF = $(DIR_BACKUP)/nif
 DIR_BACKUP_EBIN = $(DIR_BACKUP)/ebin
 
 
@@ -46,6 +54,7 @@ APP_DIR_EBIN = $(DIR_EBIN)/$(APP_NAME)
 APP_DIR_BIN = $(DIR_BIN)/$(APP_NAME)
 APP_DIR_NIF = $(DIR_NIF)/$(APP_NAME)
 APP_DIR_BACKUP_BIN = $(DIR_BACKUP)/bin/$(APP_NAME)
+APP_DIR_BACKUP_NIF = $(DIR_BACKUP)/nif/$(APP_NAME)
 APP_DIR_BACKUP_EBIN = $(DIR_BACKUP)/ebin/$(APP_NAME)
 APP_DIR_BACKUP_BUILD = $(DIR_BACKUP)/build/$(APP_NAME)
 
@@ -55,3 +64,8 @@ APP_DIR_BACKUP_BUILD = $(DIR_BACKUP)/build/$(APP_NAME)
 
 COMPILLER_C = clang -Werror
 COMPILLER_ERL = erlc -Werror
+ifeq ($(UNAME),Darwin)
+COMPILLER_NIF = clang -fpic -Werror -shared -undefined dynamic_lookup
+else
+COMPILLER_NIF = clang -fpic -Werror -shared
+endif

@@ -28,7 +28,7 @@ APP_NAME = a_time
 
 all: install clean
 
-install: backup clean ensure_dir_silent link_objects
+install: backup clean ensure_dir_silent link_objects build_nifs
 	$(call target,a_time.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
@@ -42,11 +42,13 @@ configure: ensure_dir
 ensure_dir:
 	$(call ensure_dir,$(APP_DIR_EBIN))
 	$(call ensure_dir,$(APP_DIR_BIN))
+	$(call ensure_dir,$(APP_DIR_NIF))
 	$(call ensure_dir,$(APP_DIR_BUILD))
 
 ensure_dir_silent:
 	$(call ensure_dir_silent,$(APP_DIR_EBIN))
 	$(call ensure_dir_silent,$(APP_DIR_BIN))
+	$(call ensure_dir_silent,$(APP_DIR_NIF))
 	$(call ensure_dir_silent,$(APP_DIR_BUILD))
 
 link_objects: build_objects
@@ -59,15 +61,21 @@ link_objects: build_objects
 build_objects: a_time.c a_time_handler.c
 	$(call return_done_for_module,"Objects built for module $(APP_NAME).")
 
+build_nifs: a_time_nif.c
+	$(call return_done_for_module,"Erlang NIFs built for module $(APP_NAME).")
+
 backup:
 	rm -rf $(APP_DIR_BACKUP_EBIN)/*; \
 	rm -rf $(APP_DIR_BACKUP_BIN)/*; \
+	rm -rf $(APP_DIR_BACKUP_NIF)/*; \
 	rm -rf $(APP_DIR_BACKUP_BUILD)/*; \
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_EBIN)) \
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_BIN)) \
+    $(call ensure_dir_silent,$(APP_DIR_BACKUP_NIF)) \
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_BUILD)) \
-    cp -Rf $(APP_DIR_BIN)/* $(APP_DIR_BACKUP_BIN); \
     cp -Rf $(APP_DIR_EBIN)/* $(APP_DIR_BACKUP_EBIN); \
+    cp -Rf $(APP_DIR_BIN)/* $(APP_DIR_BACKUP_BIN); \
+    cp -Rf $(APP_DIR_NIF)/* $(APP_DIR_BACKUP_NIF); \
     cp -Rf $(APP_DIR_BUILD)/* $(APP_DIR_BACKUP_BUILD); \
     $(call return_done_for_module,"Backup procedures for $(APP_NAME) finished.")
 
@@ -87,3 +95,10 @@ a_time_handler.c:
 
 a_time.erl:
 	$(call build_erl,a_time)
+
+
+# ----------------------------------------------
+# Erlang NIF modules
+
+a_time_nif.c:
+	$(call build_nif,$(call dir_module_src,$(APP_NAME))/a_time_nif.c,$(call dir_module_nif,$(APP_NAME))/a_time_nif.so)

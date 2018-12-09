@@ -15,6 +15,8 @@
 %% Module API
 -export([
 	test/0,
+	load_nif/1,
+	now_seconds/0,now_milliseconds/0,now_microseconds/0,
 	current_date/0,current_year/1,current_month/0,current_day/0,current_dow/1,
 	current/0,current/1,
 	timestamp/0,timestamp/1,timestamp_to_tuple/1,from_timestamp/2,
@@ -36,6 +38,34 @@
 -spec test() -> ok.
 
 test() -> ok.
+
+
+%%-----------------------------------
+%% @doc Load NIF part for this module
+-spec now_seconds() -> a_timestamp() | false.
+
+load_nif(Path) -> erlang:load_nif(Path,0).
+
+
+%%-----------------------------------
+%% @doc Return current UNIX timestamp in seconds. Wrapper for NIF function
+-spec now_seconds() -> a_timestamp() | false.
+
+now_seconds() -> no_nif.
+
+
+%%-----------------------------------
+%% @doc Return current UNIX timestamp in milliseconds. Wrapper for NIF function
+-spec now_milliseconds() -> a_timestamp() | false.
+
+now_milliseconds() -> no_nif.
+
+
+%%-----------------------------------
+%% @doc Return current UNIX timestamp in microseconds. Wrapper for NIF function
+-spec now_microseconds() -> a_timestamp() | false.
+
+now_microseconds() -> no_nif.
 
 
 %%-----------------------------------

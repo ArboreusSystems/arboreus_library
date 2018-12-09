@@ -98,6 +98,16 @@ endef
 
 
 # ----------------------------------------------
+# @doc Return nif module build directory
+# @params
+#	$(1) - module name
+
+define dir_module_nif
+$(DIR_NIF)/$(1)
+endef
+
+
+# ----------------------------------------------
 # @doc Build object file (*.o) from source to specified directory
 # @params
 #	$(1) - module name
@@ -153,6 +163,19 @@ else \
 echo "Done! Erlang app-file copied $(1).app to $(APP_DIR_EBIN)"; \
 fi;
 endef
+
+
+# ----------------------------------------------
+# @doc Compile Erlang NIF file (*.so) from source to specified directory
+# @params
+#	$(1) - full path to source file
+#   $(2) - full path to output file
+
+define build_nif
+$(COMPILLER_C) -fpic -shared -undefined dynamic_lookup -o $(2) $(1) || exit;
+echo "Done! Built Erlang NIF file: $(1)."
+endef
+
 
 # ----------------------------------------------
 # @doc Run target from receipe

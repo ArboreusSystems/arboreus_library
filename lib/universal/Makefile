@@ -44,7 +44,6 @@ install: backup clean ensure_dir_silent
 	$(call target,a_sequence.erl)
 	$(call target,a_term.erl)
 	$(call target,a_text.erl)
-	$(call target,a_time.erl)
 	$(call target,a_value_bin_is.erl)
 	$(call target,a_value_str_is.erl)
 	$(call target,a_var.erl)
@@ -117,9 +116,6 @@ a_term.erl:
 
 a_text.erl:
 	$(call build_erl,a_text)
-
-a_time.erl:
-	$(call build_erl,a_time)
 
 a_value_bin_is.erl:
 	$(call build_erl,a_value_bin_is)

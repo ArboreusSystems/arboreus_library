@@ -23,6 +23,7 @@ static ErlNifFunc nif_funcs[] =
 		{"now_milliseconds",0,now_milliseconds},
 		{"now_microseconds",0,now_microseconds},
 		{"now_date_int",0,now_date_int},
+		{"now_full_int",0,now_full_int},
 	};
 
 
@@ -65,6 +66,7 @@ static ERL_NIF_TERM now_microseconds(ErlNifEnv* env, int argc, const ERL_NIF_TER
 }
 
 
+// Return date integer
 static ERL_NIF_TERM now_date_int(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
 	long long int Date_int = 0;
@@ -73,6 +75,19 @@ static ERL_NIF_TERM now_date_int(ErlNifEnv* env, int argc, const ERL_NIF_TERM ar
 		return enif_make_atom(env,"false");
 	} else {
 		return enif_make_uint64(env,Date_int);
+	}
+}
+
+
+// Return full time integer
+static ERL_NIF_TERM now_full_int(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
+	
+	long long int Full_int = 0;
+	a_time_full_int(&Full_int);
+	if (Full_int == 0){
+		return enif_make_atom(env,"false");
+	} else {
+		return enif_make_uint64(env,Full_int);
 	}
 }
 

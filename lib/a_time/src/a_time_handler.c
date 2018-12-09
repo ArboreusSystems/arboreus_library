@@ -74,3 +74,22 @@ int a_time_date_int(long long int *Pointer){
 	
 	SUCCESS;
 }
+
+
+// Return full time integer
+int a_time_full_int(long long int *Pointer){
+	
+	time_t Time;
+	struct tm *Today;
+	time(&Time);
+	Today = localtime(&Time);
+	*Pointer =
+		((long long int)Today->tm_year+1900)*10000000000 +
+		((long long int)Today->tm_mon+1)*100000000 +
+		(long long int)Today->tm_mday*1000000 +
+		(long long int)Today->tm_hour*10000 +
+		(long long int)Today->tm_min*100 +
+		(long long int)Today->tm_sec;
+		
+	SUCCESS;
+}

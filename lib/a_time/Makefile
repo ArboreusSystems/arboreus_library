@@ -61,7 +61,7 @@ link_objects: build_objects
 build_objects: a_time.c a_time_handler.c
 	$(call return_done_for_module,"Objects built for module $(APP_NAME).")
 
-build_nifs: a_time_nif.c
+build_nifs: a_time_nif.so
 	$(call return_done_for_module,"Erlang NIFs built for module $(APP_NAME).")
 
 backup:
@@ -100,5 +100,8 @@ a_time.erl:
 # ----------------------------------------------
 # Erlang NIF modules
 
-a_time_nif.c:
-	$(call build_nif,$(call dir_module_src,$(APP_NAME))/a_time_nif.c,$(call dir_module_nif,$(APP_NAME))/a_time_nif.so)
+a_time_nif.so:
+	$(COMPILLER_NIF) -o $(call dir_module_nif,$(APP_NAME))/a_time_nif.so \
+	$(call dir_module_src,$(APP_NAME))/a_time_nif.c \
+	$(call dir_module_src,$(APP_NAME))/a_time_handler.c \
+	|| exit;

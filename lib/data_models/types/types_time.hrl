@@ -17,4 +17,5 @@
 -type a_time() :: {hour(),minute(),second()}.
 -type local_time() :: {a_date(),a_time()}.
 -type a_timestamp() :: pos_integer().
+-type a_date_int() :: pos_integer().
 -type a_date_integer() :: pos_integer().

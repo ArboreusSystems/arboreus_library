@@ -16,7 +16,7 @@
 -export([
 	test/0,
 	load_nif/1,
-	now_seconds/0,now_milliseconds/0,now_microseconds/0,
+	now_seconds/0,now_milliseconds/0,now_microseconds/0,now_date_int/0,
 	current_date/0,current_year/1,current_month/0,current_day/0,current_dow/1,
 	current/0,current/1,
 	timestamp/0,timestamp/1,timestamp_to_tuple/1,from_timestamp/2,
@@ -42,7 +42,9 @@ test() -> ok.
 
 %%-----------------------------------
 %% @doc Load NIF part for this module
--spec now_seconds() -> a_timestamp() | false.
+-spec load_nif(Path) -> ok
+	when
+	Path :: unix_path().
 
 load_nif(Path) -> erlang:load_nif(Path,0).
 
@@ -66,6 +68,13 @@ now_milliseconds() -> no_nif.
 -spec now_microseconds() -> a_timestamp() | false.
 
 now_microseconds() -> no_nif.
+
+
+%%-----------------------------------
+%% @doc Return current date like integer. Wrapper for NIF function
+-spec now_date_int() -> a_date_int() | false.
+
+now_date_int() -> no_nif.
 
 
 %%-----------------------------------

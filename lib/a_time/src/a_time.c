@@ -27,6 +27,8 @@ int main(int Number,char *Arguments[]){
 			a_time_milliseconds(&Time);
 		} else if (!strcmp("microseconds",Arguments[1])){
 			a_time_microseconds(&Time);
+		} else if (!strcmp("date_int",Arguments[1])){
+			a_time_date_int(&Time);
 		} else {
 			Time = -1;
 		}

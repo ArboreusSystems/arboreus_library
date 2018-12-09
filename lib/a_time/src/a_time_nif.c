@@ -13,12 +13,11 @@
 
 // Application includes
 #include "a_time_nif.h"
-#include "a_time_handler.h"
 
 
 // Return time in seconds
-static ERL_NIF_TERM now_seconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
-{
+static ERL_NIF_TERM now_seconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
+	
 	long long int Seconds = 0;
 	
 	time_t Time;
@@ -33,8 +32,7 @@ static ERL_NIF_TERM now_seconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM arg
 
 
 // Return time in milliseconds
-static ERL_NIF_TERM now_milliseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
-{
+static ERL_NIF_TERM now_milliseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 
 	long long int Milliseconds = 0;
 	
@@ -52,8 +50,7 @@ static ERL_NIF_TERM now_milliseconds(ErlNifEnv* env, int argc, const ERL_NIF_TER
 
 
 // Return time in microseconds
-static ERL_NIF_TERM now_microseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
-{
+static ERL_NIF_TERM now_microseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
 	long long int Microseconds = 0;
 	
@@ -70,12 +67,34 @@ static ERL_NIF_TERM now_microseconds(ErlNifEnv* env, int argc, const ERL_NIF_TER
 }
 
 
+static ERL_NIF_TERM now_date_int(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
+	
+	long long int Date_int = 0;
+	
+	time_t Time;
+	struct tm *Today;
+	time(&Time);
+	Today = localtime(&Time);
+	Date_int =
+		((long long int)Today->tm_year+1900)*10000 +
+		((long long int)Today->tm_mon+1)*100 +
+		Today->tm_mday;
+	
+	if (Date_int == 0){
+		return enif_make_atom(env,"false");
+	} else {
+		return enif_make_uint64(env,Date_int);
+	}
+}
+
+
 // Module function list
 static ErlNifFunc nif_funcs[] =
 	{
 		{"now_seconds",0,now_seconds},
 		{"now_milliseconds",0,now_milliseconds},
-		{"now_microseconds",0,now_microseconds}
+		{"now_microseconds",0,now_microseconds},
+		{"now_date_int",0,now_date_int},
 	};
 
 

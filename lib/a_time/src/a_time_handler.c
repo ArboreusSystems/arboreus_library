@@ -33,7 +33,9 @@ int a_time_milliseconds(long long int *Pointer){
 	
 	struct timeb Time;
 	if (!ftime(&Time)) {
-		*Pointer = ((long long int)Time.time)*1000ll + (long long int)Time.millitm;
+		*Pointer =
+			((long long int)Time.time)*1000ll +
+			(long long int)Time.millitm;
 	} else {
 		*Pointer = -1;
 	}
@@ -47,10 +49,28 @@ int a_time_microseconds(long long int *Pointer){
 	
 	struct timeval Time;
 	if (!gettimeofday(&Time, NULL)) {
-		*Pointer = ((long long int)Time.tv_sec)*1000000ll + (long long int)Time.tv_usec;
+		*Pointer =
+			((long long int)Time.tv_sec)*1000000ll +
+			(long long int)Time.tv_usec;
 	} else {
 		*Pointer = -1;
 	}
+	
+	SUCCESS;
+}
+
+
+// Return date integer
+int a_time_date_int(long long int *Pointer){
+	
+	time_t Time;
+	struct tm *Today;
+	time(&Time);
+	Today = localtime(&Time);
+	*Pointer =
+		((long long int)Today->tm_year+1900)*10000 +
+		((long long int)Today->tm_mon+1)*100 +
+		Today->tm_mday;
 	
 	SUCCESS;
 }

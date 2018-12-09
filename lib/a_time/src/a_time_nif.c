@@ -38,7 +38,9 @@ static ERL_NIF_TERM now_milliseconds(ErlNifEnv* env, int argc, const ERL_NIF_TER
 	
 	struct timeb Time;
 	if (!ftime(&Time)) {
-		Milliseconds = ((long long int)Time.time)*1000ll + (long long int)Time.millitm;
+		Milliseconds =
+			((long long int)Time.time)*1000ll +
+			(long long int)Time.millitm;
 	}
 	
 	if (Milliseconds == 0){
@@ -56,7 +58,9 @@ static ERL_NIF_TERM now_microseconds(ErlNifEnv* env, int argc, const ERL_NIF_TER
 	
 	struct timeval Time;
 	if (!gettimeofday(&Time, NULL)) {
-		Microseconds = ((long long int)Time.tv_sec)*1000000ll + (long long int)Time.tv_usec;
+		Microseconds =
+			((long long int)Time.tv_sec)*1000000ll +
+			(long long int)Time.tv_usec;
 	}
 	
 	if (Microseconds == 0){

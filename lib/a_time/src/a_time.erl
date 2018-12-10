@@ -17,7 +17,7 @@
 	test/0,
 	load_nif/1,
 	now_seconds/0,now_milliseconds/0,now_microseconds/0,
-	now_date_int/0,now_full_int/0,
+	now_date_int/0,now_full_int/0,now_int/0,
 	current_date/0,current_year/1,current_month/0,current_day/0,current_dow/1,
 	current/0,current/1,
 	timestamp/0,timestamp/1,timestamp_to_tuple/1,from_timestamp/2,
@@ -83,6 +83,13 @@ now_date_int() -> no_nif.
 -spec now_full_int() -> a_date_int() | false.
 
 now_full_int() -> no_nif.
+
+
+%%-----------------------------------
+%% @doc Return current time like integer. Wrapper for NIF function
+-spec now_int() -> a_date_int() | false.
+
+now_int() -> no_nif.
 
 
 %%-----------------------------------

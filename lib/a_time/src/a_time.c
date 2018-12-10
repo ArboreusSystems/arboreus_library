@@ -31,6 +31,8 @@ int main(int Number,char *Arguments[]){
 			a_time_date_int(&Time);
 		} else if (!strcmp("full_int",Arguments[1])){
 			a_time_full_int(&Time);
+		} else if (!strcmp("int",Arguments[1])){
+			a_time_int(&Time);
 		} else {
 			Time = -1;
 		}

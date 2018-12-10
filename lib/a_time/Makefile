@@ -102,7 +102,6 @@ a_time.erl:
 # Erlang NIF modules
 
 a_time_nif.so:
-	echo $(COMPILLER_NIF)
 	$(COMPILLER_NIF) -o $(call dir_module_nif,$(APP_NAME))/a_time_nif.so \
 	$(call dir_module_src,$(APP_NAME))/a_time_nif.c \
 	$(call dir_module_src,$(APP_NAME))/a_time_handler.c \

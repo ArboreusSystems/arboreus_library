@@ -109,3 +109,17 @@ int a_time_int(long long int *Pointer){
 	
 	SUCCESS;
 }
+
+
+int a_time_date(int Pointer[3]){
+	
+	time_t Time;
+	struct tm *Today;
+	time(&Time);
+	Today = localtime(&Time);
+	Pointer[0] = Today->tm_year+1900;
+	Pointer[1] = Today->tm_mon+1;
+	Pointer[2] = Today->tm_mday;
+	
+	SUCCESS;
+}

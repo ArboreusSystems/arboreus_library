@@ -16,5 +16,6 @@ int a_time_microseconds(long long int *Pointer);
 int a_time_date_int(long long int *Pointer);
 int a_time_full_int(long long int *Pointer);
 int a_time_int(long long int *Pointer);
+int a_time_date(int Pointer[3]);
 
 #endif

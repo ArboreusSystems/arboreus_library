@@ -13,5 +13,6 @@ static ERL_NIF_TERM now_microseconds(ErlNifEnv* env, int argc, const ERL_NIF_TER
 static ERL_NIF_TERM now_date_int(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]);
 static ERL_NIF_TERM now_full_int(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]);
 static ERL_NIF_TERM now_int(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]);
+static ERL_NIF_TERM now_date(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]);
 
 #endif

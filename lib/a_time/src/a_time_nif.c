@@ -25,7 +25,8 @@ static ErlNifFunc nif_funcs[] =
 		{"now_date_int",0,now_date_int},
 		{"now_full_int",0,now_full_int},
 		{"now_int",0,now_int},
-		{"now_date",0,now_date}
+		{"now_date",0,now_date},
+		{"now",0,now}
 	};
 
 
@@ -107,7 +108,7 @@ static ERL_NIF_TERM now_int(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 }
 
 
-// Return tuple with year, month, day
+// Return tuple within year, month, day
 static ERL_NIF_TERM now_date(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
 	int Date[] = {0,0,0};
@@ -116,6 +117,19 @@ static ERL_NIF_TERM now_date(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]
 		enif_make_int(env,Date[0]),
 		enif_make_int(env,Date[1]),
 		enif_make_int(env,Date[2])
+	);
+}
+
+
+// Return tuple within hours, minutes, seconds
+static ERL_NIF_TERM now(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
+	
+	int Time[] = {0,0,0};
+	a_time_now(Time);
+	return enif_make_tuple(env,3,
+		enif_make_int(env,Time[0]),
+		enif_make_int(env,Time[1]),
+		enif_make_int(env,Time[2])
 	);
 }
 

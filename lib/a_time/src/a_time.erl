@@ -19,7 +19,8 @@
 	now_seconds/0,now_milliseconds/0,now_microseconds/0,
 	now_date_int/0,now_full_int/0,now_int/0,
 	now_date/0,
-	current_date/0,current_year/1,current_month/0,current_day/0,current_dow/1,
+	now/0,
+	current_year/1,current_month/0,current_day/0,current_dow/1,
 	current/0,current/1,
 	timestamp/0,timestamp/1,timestamp_to_tuple/1,from_timestamp/2,
 	second/1,
@@ -94,20 +95,17 @@ now_int() -> no_nif.
 
 
 %%-----------------------------------
-%% @doc Return current time like integer. Wrapper for NIF function
--spec now_date() -> a_date() | false.
+%% @doc Return tuple within year, month, day. Wrapper for NIF function
+-spec now_date() -> {year(),month(),day()} | false.
 
 now_date() -> no_nif.
 
 
-
 %%-----------------------------------
-%% @doc Return a Date() within a tuple() :: {Year,Month,Day}, the part of erlang:localtime()
--spec current_date() -> a_date().
+%% @doc Return tuple within hours, minutes, seconds. Wrapper for NIF function
+-spec now() -> {hour(),minute(),second()} | false.
 
-current_date() ->
-	{Date,_} = erlang:localtime(),
-	Date.
+now() -> no_nif.
 
 
 %%-----------------------------------
@@ -125,7 +123,7 @@ date_to_integer({Type,String}) ->
 	{Date,_} = from_formated(Type,String,tuple),
 	date_to_integer(Date);
 date_to_integer(current) ->
-	date_to_integer(current_date());
+	date_to_integer(a_time:now());
 date_to_integer({Year,Month,Day}) ->
 	Year * 10000 + Month * 100 + Day.
 
@@ -137,7 +135,7 @@ date_to_integer({Year,Month,Day}) ->
 	Output_type :: full | short .
 
 current_year(full) ->
-	{Year,_,_} = current_date(), Year;
+	{Year,_,_} = a_time:now_date(), Year;
 current_year(short) ->
 	current_year(full) - trunc(current_year(full)/100)*100.
 
@@ -147,7 +145,7 @@ current_year(short) ->
 -spec current_month() -> month().
 
 current_month() ->
-	{_,Month,_} = current_date(),
+	{_,Month,_} = a_time:now_date(),
 	Month.
 
 
@@ -156,7 +154,7 @@ current_month() ->
 -spec current_day() -> day().
 
 current_day() ->
-	{_,_,Day} = current_date(),
+	{_,_,Day} = a_time:now_date(),
 	Day.
 
 
@@ -167,7 +165,7 @@ current_day() ->
 	View :: full | alpha2 | alpha3.
 
 current_dow(View) when View == full; View == alpha2; View == alpha3 ->
-	dow(calendar:day_of_the_week(current_date()),View).
+	dow(calendar:day_of_the_week(a_time:now_date()),View).
 
 
 %%-----------------------------------

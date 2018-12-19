@@ -10,9 +10,10 @@
 #ifndef ARBOREUS_CONSTANTS_GENERAL_H
 #define ARBOREUS_CONSTANTS_GENERAL_H
 
-#define SUCCESS return 0
-#define FAIL_VALUE(Value) return Value
-#define FAIL_ERROR(Value,Message) err(Value,"%s",Message)
-#define FAIL_EXIT(Value) exit(Value)
+#include <stdlib.h>
+
+#define SUCCESS return EXIT_SUCCESS
+#define FAILURE return EXIT_FAILURE
+#define FAILURE_ERROR(Value,Message) err(Value,"%s",Message)
 
 #endif

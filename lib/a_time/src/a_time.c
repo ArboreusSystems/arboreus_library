@@ -44,6 +44,6 @@ int main(int Number,char *Arguments[]){
 		printf("%lld\n",Time);
 		SUCCESS;
 	} else {
-		FAIL_ERROR(1,"Wrong parameter");
+		FAILURE_ERROR(1,"Wrong parameter");
 	}
 }

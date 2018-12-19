@@ -12,7 +12,7 @@ MAKEFLAGS += --silent
 # ----------------------------------------------
 # Variables and extentions
 
-include $(PWD)/make/erlang.conf.mk
+include $(PWD)/make/directories.conf.mk
 include $(PWD)/make/conf.mk
 include $(PWD)/make/arguments.mk
 include $(PWD)/make/actions.mk

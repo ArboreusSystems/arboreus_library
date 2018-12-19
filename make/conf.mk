@@ -65,7 +65,7 @@ APP_DIR_BACKUP_BUILD = $(DIR_BACKUP)/build/$(APP_NAME)
 COMPILLER_C = clang -Werror
 COMPILLER_ERL = erlc -Werror
 ifeq ($(UNAME),Darwin)
-COMPILLER_NIF = $(COMPILLER_C) $(ERL_DIRECTORIES) -fpic -shared -undefined dynamic_lookup
+COMPILLER_NIF = $(COMPILLER_C) $(H_DIRECTORIES) -fpic -shared -undefined dynamic_lookup
 else
-COMPILLER_NIF = $(COMPILLER_C) $(ERL_DIRECTORIES) -fpic -shared
+COMPILLER_NIF = $(COMPILLER_C) $(H_DIRECTORIES) -fpic -shared
 endif

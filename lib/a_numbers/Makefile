@@ -13,7 +13,7 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 # ----------------------------------------------
 # Extentions
 
-include ../../make/erlang.conf.mk
+include ../../make/directories.conf.mk
 include ../../make/conf.mk
 include ../../make/actions.mk
 

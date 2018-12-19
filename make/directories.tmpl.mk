@@ -5,7 +5,7 @@
 #
 # ----------------------------------------------
 
-ERL_DIRECTORIES = \
+H_DIRECTORIES = \
 	-I/path/to/headers1 \
 	-I/path/to/headers2 \
 	-I/path/to/headers3

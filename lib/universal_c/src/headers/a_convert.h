@@ -11,5 +11,6 @@
 
 char acnv_cipher_to_char(int Cipher);
 int acnv_char_to_cipher(char Char);
+int acnv_integer_to_string(long long int Number, char **String);
 
 #endif //ARBOREUS_A_CONVERT_H

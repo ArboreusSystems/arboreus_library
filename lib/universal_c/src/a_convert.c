@@ -18,6 +18,34 @@
 
 
 
+// Convert string to integer
+int acnv_string_to_integer(char *String, long long int *Number){
+	
+	size_t Size = strlen(String);
+	int i = 0;
+	int Sign = 1;
+	int Cipher = 0;
+	
+	if (Size < 20){
+		if (String[0] == '-'){
+			Sign = -1; i++;
+		}
+		for(;i < Size; i++){
+			Cipher = acnv_char_to_cipher((int)String[i]);
+			if (Cipher < 0){
+				return -3;
+			} else {
+				*Number = *Number * 10 + Cipher;
+			}
+		}
+		*Number = *Number * Sign;
+		SUCCESS;
+	} else {
+		return -2;
+	}
+}
+
+
 // Convert integer to string
 int acnv_integer_to_string(long long int Number, char **String){
 	
@@ -53,6 +81,15 @@ char acnv_cipher_to_char(int Cipher){
 
 
 // Convert unicode char to cipher
-int acnv_char_to_cipher(char Char){
-	return (Char - '0');
+int acnv_char_to_cipher(int Char){
+	
+	int Cipher = Char - '0';
+	
+	if (Cipher < 0){
+		return -1;
+	} else if(Cipher > 9){
+		return -1;
+	} else {
+		return (Char - '0');
+	}
 }

@@ -70,8 +70,7 @@ int acnv_integer_to_zstring(long long int Number, char **String, int Length){
 	} while ((Sign /= 10) > 0);
 	if (Counter_b < Length){
 		while (Counter_b < Length){
-			Buffer[Counter_b] = '0';
-			Counter_b++;
+			Buffer[Counter_b++] = '0';
 		};
 	}
 	if (Number < 0){

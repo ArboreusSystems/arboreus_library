@@ -83,7 +83,7 @@ int acnv_integer_to_zstring(long long int Number, char **String, int Length){
 		for (; Counter_o < (Length + Sign); Counter_o++){
 			Output[Counter_o] = Buffer[--Counter_b];
 		}
-		Output[Counter_o++] = '\0';
+		Output[Counter_o] = '\0';
 		*String = malloc(Counter_o * sizeof(char));
 		if (*String != NULL){
 			strcpy(*String,Output);

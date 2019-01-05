@@ -76,7 +76,9 @@ int acnv_integer_to_zstring(long long int Number, char **String, int Length){
 	if (Number < 0){
 		Buffer[Counter_b++] = '-';
 		Sign = 1;
-	} else {Sign = 0;}
+	} else {
+		Sign = 0;
+	}
 	Size = Length + (int)Sign - 1;
 	for (; Size >= 0; Counter_o++, Size--){
 		Output[Counter_o] = Buffer[--Counter_b];

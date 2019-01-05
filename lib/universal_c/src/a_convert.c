@@ -46,6 +46,66 @@ int acnv_string_to_integer(char *String, long long int *Number){
 }
 
 
+// Convert integer to string within zero
+int acnv_integer_to_zstring(long long int Number, char **String, int Length){
+	
+	int Max_length = 18;
+	int Max_size = Max_length + 2;
+	
+	if (Length > Max_length){
+		FAILURE;
+	}
+	
+	char Buffer[Max_size];
+	char Output[Max_size];
+	long long int Sign = 0;
+	int Counter_b = 0;
+	int Counter_o = 0;
+	
+	if ((Sign = Number) < 0){
+		Sign = -Sign;
+	}
+	do {
+		Buffer[Counter_b++] = acnv_cipher_to_char((int)(Sign % 10));
+	} while ((Sign /= 10) > 0);
+	if (Counter_b < Length){
+		while (Counter_b < Length){
+			Buffer[Counter_b] = '0';
+			Counter_b++;
+		};
+	}
+	if (Number < 0){
+		Buffer[Counter_b++] = '-';
+		Sign = 1;
+	} else {
+		Sign = 0;
+	}
+	if ((Counter_b - Sign) > Length){
+		for (; Counter_o < (Length + Sign); Counter_o++){
+			Output[Counter_o] = Buffer[--Counter_b];
+		}
+		Output[Counter_o++] = '\0';
+		*String = malloc(Counter_o * sizeof(char));
+		if (*String != NULL){
+			strcpy(*String,Output);
+			SUCCESS;
+		} else {
+			FAILURE;
+		}
+	} else {
+		Buffer[Counter_b] = '\0';
+		astr_reverse(Buffer);
+		*String = malloc(Counter_b * sizeof(char));
+		if (*String != NULL){
+			strcpy(*String,Buffer);
+			SUCCESS;
+		} else {
+			FAILURE;
+		}
+	}
+}
+
+
 // Convert integer to string
 int acnv_integer_to_string(long long int Number, char **String){
 	

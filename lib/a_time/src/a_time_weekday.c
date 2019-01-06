@@ -129,14 +129,56 @@ const char *atwd_alpha3_to_numeric(char *Pointer){
 }
 
 
-// Return weekday number from full name string
-int atwd_full_to_integer(char *Pointer[]){
+// Return weekday Alpha3 from Full
+const char *atwd_full_to_alpha3(char *Pointer){
 	
-	if (!strcmp("Monday",*Pointer)){return 1;} else
-	if (!strcmp("Tuesday",*Pointer)){return 2;} else
-	if (!strcmp("Wednesday",*Pointer)){return 3;} else
-	if (!strcmp("Thursday",*Pointer)){return 4;} else
-	if (!strcmp("Friday",*Pointer)){return 5;} else
-	if (!strcmp("Saturday",*Pointer)){return 6;} else
-	{return 7;}
+	if (!strcmp("Monday",Pointer)){return "Mon";} else
+	if (!strcmp("Tuesday",Pointer)){return "Tue";} else
+	if (!strcmp("Wednesday",Pointer)){return "Wed";} else
+	if (!strcmp("Thursday",Pointer)){return "Thu";} else
+	if (!strcmp("Friday",Pointer)){return "Fri";} else
+	if (!strcmp("Saturday",Pointer)){return "Sat";} else
+	if (!strcmp("Sunday",Pointer)){return "Sun";} else
+	{return "Not";}
+}
+
+
+// Return weekday Alpha3 from Full
+const char *atwd_full_to_alpha2(char *Pointer){
+	
+	if (!strcmp("Monday",Pointer)){return "Mo";} else
+	if (!strcmp("Tuesday",Pointer)){return "Tu";} else
+	if (!strcmp("Wednesday",Pointer)){return "We";} else
+	if (!strcmp("Thursday",Pointer)){return "Th";} else
+	if (!strcmp("Friday",Pointer)){return "Fr";} else
+	if (!strcmp("Saturday",Pointer)){return "Sa";} else
+	if (!strcmp("Sunday",Pointer)){return "Su";} else
+	{return "No";}
+}
+
+
+// Return weekday number from full name string
+int atwd_full_to_integer(char *Pointer){
+	
+	if (!strcmp("Monday",Pointer)){return 1;} else
+	if (!strcmp("Tuesday",Pointer)){return 2;} else
+	if (!strcmp("Wednesday",Pointer)){return 3;} else
+	if (!strcmp("Thursday",Pointer)){return 4;} else
+	if (!strcmp("Friday",Pointer)){return 5;} else
+	if (!strcmp("Saturday",Pointer)){return 6;} else
+	if (!strcmp("Sunday",Pointer)){return 7;} else
+	{return -1;}
+}
+
+
+const char *atwd_full_to_numeric(char *Pointer){
+	
+	if (!strcmp("Monday",Pointer)){return "01";} else
+	if (!strcmp("Tuesday",Pointer)){return "02";} else
+	if (!strcmp("Wednesday",Pointer)){return "03";} else
+	if (!strcmp("Thursday",Pointer)){return "04";} else
+	if (!strcmp("Friday",Pointer)){return "05";} else
+	if (!strcmp("Saturday",Pointer)){return "06";} else
+	if (!strcmp("Sunday",Pointer)){return "07";} else
+	{return "00";}
 }

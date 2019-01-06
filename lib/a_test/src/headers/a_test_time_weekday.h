@@ -11,5 +11,6 @@
 
 int atst_weekday_from_integer();
 int atst_weekday_from_alpha3();
+int atst_weekday_from_full();
 
 #endif //ARBOREUS_TEST_H

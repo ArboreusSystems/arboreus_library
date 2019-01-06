@@ -65,6 +65,7 @@ const char *atwd_integer_to_numeric(int Month){
 	if (Month <= 0){return "00";}
 	
 	char *Numeric;
+	
 	if (!acnv_integer_to_zstring(Month,&Numeric,2)){
 		return Numeric;
 	} else {
@@ -171,6 +172,7 @@ int atwd_full_to_integer(char *Pointer){
 }
 
 
+// Return weekday numeric from full
 const char *atwd_full_to_numeric(char *Pointer){
 	
 	if (!strcmp("Monday",Pointer)){return "01";} else

@@ -18,6 +18,82 @@
 #include "../../universal_c/src/headers/a_convert.h"
 
 
+// Return integer month from numeric
+int atmn_numeric_to_integer(char *Numeric){
+	
+	if (!strcmp("01",Numeric)){return 1;}
+	if (!strcmp("02",Numeric)){return 2;}
+	if (!strcmp("03",Numeric)){return 3;}
+	if (!strcmp("04",Numeric)){return 4;}
+	if (!strcmp("05",Numeric)){return 5;}
+	if (!strcmp("06",Numeric)){return 6;}
+	if (!strcmp("07",Numeric)){return 7;}
+	if (!strcmp("08",Numeric)){return 8;}
+	if (!strcmp("09",Numeric)){return 9;}
+	if (!strcmp("10",Numeric)){return 10;}
+	if (!strcmp("11",Numeric)){return 11;}
+	if (!strcmp("12",Numeric)){return 12;}
+	return -1;
+}
+
+
+// Return alpha3 month from numeric
+const char *atmn_numeric_to_alpha3(char *Numeric){
+	
+	if (!strcmp("01",Numeric)){return "Jan";}
+	if (!strcmp("02",Numeric)){return "Feb";}
+	if (!strcmp("03",Numeric)){return "Mar";}
+	if (!strcmp("04",Numeric)){return "Apr";}
+	if (!strcmp("05",Numeric)){return "May";}
+	if (!strcmp("06",Numeric)){return "Jun";}
+	if (!strcmp("07",Numeric)){return "Jul";}
+	if (!strcmp("08",Numeric)){return "Aug";}
+	if (!strcmp("09",Numeric)){return "Sep";}
+	if (!strcmp("10",Numeric)){return "Oct";}
+	if (!strcmp("11",Numeric)){return "Nov";}
+	if (!strcmp("12",Numeric)){return "Dec";}
+	return "Not";
+}
+
+
+// Return alpha2 month from numeric
+const char *atmn_numeric_to_alpha2(char *Numeric){
+	
+	if (!strcmp("01",Numeric)){return "Ja";}
+	if (!strcmp("02",Numeric)){return "Fb";}
+	if (!strcmp("03",Numeric)){return "Mr";}
+	if (!strcmp("04",Numeric)){return "Ap";}
+	if (!strcmp("05",Numeric)){return "Ma";}
+	if (!strcmp("06",Numeric)){return "Jn";}
+	if (!strcmp("07",Numeric)){return "Jl";}
+	if (!strcmp("08",Numeric)){return "Ag";}
+	if (!strcmp("09",Numeric)){return "Sp";}
+	if (!strcmp("10",Numeric)){return "Oc";}
+	if (!strcmp("11",Numeric)){return "No";}
+	if (!strcmp("12",Numeric)){return "De";}
+	return "Nt";
+}
+
+
+// Return full month from numeric
+const char *atmn_numeric_to_full(char *Numeric){
+	
+	if (!strcmp("01",Numeric)){return "January";}
+	if (!strcmp("02",Numeric)){return "February";}
+	if (!strcmp("03",Numeric)){return "March";}
+	if (!strcmp("04",Numeric)){return "April";}
+	if (!strcmp("05",Numeric)){return "May";}
+	if (!strcmp("06",Numeric)){return "June";}
+	if (!strcmp("07",Numeric)){return "July";}
+	if (!strcmp("08",Numeric)){return "August";}
+	if (!strcmp("09",Numeric)){return "September";}
+	if (!strcmp("10",Numeric)){return "October";}
+	if (!strcmp("11",Numeric)){return "November";}
+	if (!strcmp("12",Numeric)){return "December";}
+	return "Notamonth";
+}
+
+
 // Return integer month from alpha2
 int atmn_alpha2_to_integer(char *Alpha2){
 	
@@ -128,7 +204,7 @@ const char *atmn_alpha3_to_alpha2(char *Alpha3){
 	if (!strcmp("Oct",Alpha3)){return "Oc";}
 	if (!strcmp("Nov",Alpha3)){return "No";}
 	if (!strcmp("Dec",Alpha3)){return "De";}
-	return "No";
+	return "Nt";
 }
 
 
@@ -204,7 +280,7 @@ const char *atmn_integer_to_alpha2(int Month){
 	if (Month == 10) {return "Oc";} else
 	if (Month == 11) {return "No";} else
 	if (Month == 12) {return "De";} else
-	{return "No";}
+	{return "Nt";}
 };
 
 

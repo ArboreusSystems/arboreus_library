@@ -32,6 +32,123 @@ int atmn_month_from_alpha2(){
 
 // Test month name from alpha3
 int atmn_month_from_alpha3(){
+	
+	if (strcmp("01",atmn_alpha3_to_numeric("Jan")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for January.\n");
+	if (strcmp("02",atmn_alpha3_to_numeric("Feb")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for February.\n");
+	if (strcmp("03",atmn_alpha3_to_numeric("Mar")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for March.\n");
+	if (strcmp("04",atmn_alpha3_to_numeric("Apr")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for April.\n");
+	if (strcmp("05",atmn_alpha3_to_numeric("May")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for May.\n");
+	if (strcmp("06",atmn_alpha3_to_numeric("Jun")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for June.\n");
+	if (strcmp("07",atmn_alpha3_to_numeric("Jul")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for July.\n");
+	if (strcmp("08",atmn_alpha3_to_numeric("Aug")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for August.\n");
+	if (strcmp("09",atmn_alpha3_to_numeric("Sep")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for September.\n");
+	if (strcmp("10",atmn_alpha3_to_numeric("Oct")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for October.\n");
+	if (strcmp("11",atmn_alpha3_to_numeric("Nov")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for November.\n");
+	if (strcmp("12",atmn_alpha3_to_numeric("Dec")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for December.\n");
+	if (strcmp("00",atmn_alpha3_to_numeric("Notamonth")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Numeric month test passed for Notamonth.\n");
+	
+	printf("\n");
+	
+	if (strcmp("January",atmn_alpha3_to_full("Jan")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for January.\n");
+	if (strcmp("February",atmn_alpha3_to_full("Feb")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for February.\n");
+	if (strcmp("March",atmn_alpha3_to_full("Mar")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for March.\n");
+	if (strcmp("April",atmn_alpha3_to_full("Apr")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for April.\n");
+	if (strcmp("May",atmn_alpha3_to_full("May")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for May.\n");
+	if (strcmp("June",atmn_alpha3_to_full("Jun")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for June.\n");
+	if (strcmp("July",atmn_alpha3_to_full("Jul")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for July.\n");
+	if (strcmp("August",atmn_alpha3_to_full("Aug")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for August.\n");
+	if (strcmp("September",atmn_alpha3_to_full("Sep")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for September.\n");
+	if (strcmp("October",atmn_alpha3_to_full("Oct")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for October.\n");
+	if (strcmp("November",atmn_alpha3_to_full("Nov")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for November.\n");
+	if (strcmp("December",atmn_alpha3_to_full("Dec")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for December.\n");
+	if (strcmp("Notamonth",atmn_alpha3_to_full("Notamonth")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Full month test passed for Notamonth.\n");
+	
+	printf("\n");
+	
+	if (strcmp("Ja",atmn_alpha3_to_alpha2("Jan")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for January.\n");
+	if (strcmp("Fb",atmn_alpha3_to_alpha2("Feb")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for February.\n");
+	if (strcmp("Mr",atmn_alpha3_to_alpha2("Mar")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for March.\n");
+	if (strcmp("Ap",atmn_alpha3_to_alpha2("Apr")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for April.\n");
+	if (strcmp("Ma",atmn_alpha3_to_alpha2("May")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for May.\n");
+	if (strcmp("Jn",atmn_alpha3_to_alpha2("Jun")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for June.\n");
+	if (strcmp("Jl",atmn_alpha3_to_alpha2("Jul")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for July.\n");
+	if (strcmp("Ag",atmn_alpha3_to_alpha2("Aug")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for August.\n");
+	if (strcmp("Sp",atmn_alpha3_to_alpha2("Sep")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for September.\n");
+	if (strcmp("Oc",atmn_alpha3_to_alpha2("Oct")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for October.\n");
+	if (strcmp("No",atmn_alpha3_to_alpha2("Nov")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for November.\n");
+	if (strcmp("De",atmn_alpha3_to_alpha2("Dec")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for December.\n");
+	if (strcmp("No",atmn_alpha3_to_alpha2("Notamonth")) != 0){FAILURE;}
+	printf("Done! Alpha3 to Alpha2 month test passed for Notamonth.\n");
+	
+	printf("\n");
+	
+	if (atmn_alpha3_to_integer("Jan") != 1){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for January.\n");
+	if (atmn_alpha3_to_integer("Feb") != 2){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for February.\n");
+	if (atmn_alpha3_to_integer("Mar") != 3){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for March.\n");
+	if (atmn_alpha3_to_integer("Apr") != 4){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for April.\n");
+	if (atmn_alpha3_to_integer("May") != 5){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for May.\n");
+	if (atmn_alpha3_to_integer("Jun") != 6){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for June.\n");
+	if (atmn_alpha3_to_integer("Jul") != 7){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for July.\n");
+	if (atmn_alpha3_to_integer("Aug") != 8){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for August.\n");
+	if (atmn_alpha3_to_integer("Sep") != 9){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for September.\n");
+	if (atmn_alpha3_to_integer("Oct") != 10){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for October.\n");
+	if (atmn_alpha3_to_integer("Nov") != 11){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for November.\n");
+	if (atmn_alpha3_to_integer("Dec") != 12){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for December.\n");
+	if (atmn_alpha3_to_integer("Not") != -1){FAILURE;}
+	printf("Done! Alpha3 to Integer month test passed for Notamonth.\n");
+	
+	printf("\n");
+	
 	SUCCESS;
 };
 

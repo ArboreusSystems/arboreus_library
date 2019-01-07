@@ -19,4 +19,9 @@ const char *atmn_alpha3_to_alpha2(char *Alpha3);
 const char *atmn_alpha3_to_full(char *Alpha3);
 const char *atmn_alpha3_to_numeric(char *Alpha3);
 
+int atmn_alpha2_to_integer(char *Alpha2);
+const char *atmn_alpha2_to_alpha3(char *Alpha2);
+const char *atmn_alpha2_to_full(char *Alpha2);
+const char *atmn_alpha2_to_numeric(char *Alpha2);
+
 #endif //ARBOREUS_A_TIME_MONTH_H

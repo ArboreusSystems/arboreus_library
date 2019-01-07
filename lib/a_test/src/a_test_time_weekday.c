@@ -17,6 +17,88 @@
 #include "../../a_time/src/headers/a_time_weekday.h"
 
 
+// Test weekday conversion from numeric
+int atst_weekday_from_numeric(){
+	
+	if (atwd_numeric_to_integer("01") != 1){FAILURE;}
+	printf("Done! Numeric to Integer weekday test passed for Monday.\n");
+	if (atwd_numeric_to_integer("02") != 2){FAILURE;}
+	printf("Done! Numeric to Integer weekday test passed for Tuesday.\n");
+	if (atwd_numeric_to_integer("03") != 3){FAILURE;}
+	printf("Done! Numeric to Integer weekday test passed for Wednesday.\n");
+	if (atwd_numeric_to_integer("04") != 4){FAILURE;}
+	printf("Done! Numeric to Integer weekday test passed for Thursday.\n");
+	if (atwd_numeric_to_integer("05") != 5){FAILURE;}
+	printf("Done! Numeric to Integer weekday test passed for Friday.\n");
+	if (atwd_numeric_to_integer("06") != 6){FAILURE;}
+	printf("Done! Numeric to Integer weekday test passed for Saturday.\n");
+	if (atwd_numeric_to_integer("07") != 7){FAILURE;}
+	printf("Done! Numeric to Integer weekday test passed for Sunday.\n");
+	if (atwd_numeric_to_integer("00") >= 0){FAILURE;}
+	printf("Done! Numeric to Integer weekday test passed for Not-a-weekday.\n");
+	
+	printf("\n");
+	
+	if (strcmp("Mon",atwd_numeric_to_alpha3("01")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha3 weekday test passed for Monday.\n");
+	if (strcmp("Tue",atwd_numeric_to_alpha3("02")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha3 weekday test passed for Tuesday.\n");
+	if (strcmp("Wed",atwd_numeric_to_alpha3("03")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha3 weekday test passed for Wednesday.\n");
+	if (strcmp("Thu",atwd_numeric_to_alpha3("04")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha3 weekday test passed for Thursday.\n");
+	if (strcmp("Fri",atwd_numeric_to_alpha3("05")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha3 weekday test passed for Friday.\n");
+	if (strcmp("Sat",atwd_numeric_to_alpha3("06")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha3 weekday test passed for Saturday.\n");
+	if (strcmp("Sun",atwd_numeric_to_alpha3("07")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha3 weekday test passed for Sunday.\n");
+	if (strcmp("Not",atwd_numeric_to_alpha3("00")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha3 weekday test passed for Not-a-weekday.\n");
+	
+	printf("\n");
+	
+	if (strcmp("Mo",atwd_numeric_to_alpha2("01")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha2 weekday test passed for Monday.\n");
+	if (strcmp("Tu",atwd_numeric_to_alpha2("02")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha2 weekday test passed for Tuesday.\n");
+	if (strcmp("We",atwd_numeric_to_alpha2("03")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha2 weekday test passed for Wednesday.\n");
+	if (strcmp("Th",atwd_numeric_to_alpha2("04")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha2 weekday test passed for Thursday.\n");
+	if (strcmp("Fr",atwd_numeric_to_alpha2("05")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha2 weekday test passed for Friday.\n");
+	if (strcmp("Sa",atwd_numeric_to_alpha2("06")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha2 weekday test passed for Saturday.\n");
+	if (strcmp("Su",atwd_numeric_to_alpha2("07")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha2 weekday test passed for Sunday.\n");
+	if (strcmp("No",atwd_numeric_to_alpha2("00")) != 0){FAILURE;}
+	printf("Done! Numeric to Alpha2 weekday test passed for Not-a-weekday.\n");
+	
+	printf("\n");
+	
+	if (strcmp("Monday",atwd_numeric_to_full("01")) != 0){FAILURE;}
+	printf("Done! Numeric to Full weekday test passed for Monday.\n");
+	if (strcmp("Tuesday",atwd_numeric_to_full("02")) != 0){FAILURE;}
+	printf("Done! Numeric to Full weekday test passed for Tuesday.\n");
+	if (strcmp("Wednesday",atwd_numeric_to_full("03")) != 0){FAILURE;}
+	printf("Done! Numeric to Full weekday test passed for Wednesday.\n");
+	if (strcmp("Thursday",atwd_numeric_to_full("04")) != 0){FAILURE;}
+	printf("Done! Numeric to Full weekday test passed for Thursday.\n");
+	if (strcmp("Friday",atwd_numeric_to_full("05")) != 0){FAILURE;}
+	printf("Done! Numeric to Full weekday test passed for Friday.\n");
+	if (strcmp("Saturday",atwd_numeric_to_full("06")) != 0){FAILURE;}
+	printf("Done! Numeric to Full weekday test passed for Saturday.\n");
+	if (strcmp("Sunday",atwd_numeric_to_full("07")) != 0){FAILURE;}
+	printf("Done! Numeric to Full weekday test passed for Sunday.\n");
+	if (strcmp("Notaweekday",atwd_numeric_to_full("00")) != 0){FAILURE;}
+	printf("Done! Numeric to Full weekday test passed for Not-a-weekday.\n");
+	
+	printf("\n");
+	
+	SUCCESS;
+}
+
 // Test weekday conversion from Full
 int atst_weekday_from_full(){
 	

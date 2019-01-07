@@ -21,6 +21,7 @@ int a_test_time_run(){
 	if (atst_weekday_from_integer() != EXIT_SUCCESS){FAILURE;}
 	if (atst_weekday_from_alpha3() != EXIT_SUCCESS){FAILURE;}
 	if (atst_weekday_from_full() != EXIT_SUCCESS){FAILURE;}
+	if (atst_weekday_from_numeric() != EXIT_SUCCESS){FAILURE;}
 	printf("*** DONE! Tests for a_time module passed.\n\n");
 	
 	

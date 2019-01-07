@@ -19,9 +19,14 @@ const char *atwd_alpha3_to_alpha2(char *Pointer);
 const char *atwd_alpha3_to_full(char *Pointer);
 const char *atwd_alpha3_to_numeric(char *Pointer);
 
+int atwd_full_to_integer(char *Pointer);
 const char *atwd_full_to_alpha3(char *Pointer);
 const char *atwd_full_to_alpha2(char *Pointer);
-int atwd_full_to_integer(char *Pointer);
 const char *atwd_full_to_numeric(char *Pointer);
+
+int atwd_numeric_to_integer(char *Pointer);
+const char *atwd_numeric_to_alpha3(char *Pointer);
+const char *atwd_numeric_to_alpha2(char *Pointer);
+const char *atwd_numeric_to_full(char *Pointer);
 
 #endif //ARBOREUS_A_TIME_WEEKDAY_H

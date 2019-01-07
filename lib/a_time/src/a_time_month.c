@@ -18,6 +18,82 @@
 #include "../../universal_c/src/headers/a_convert.h"
 
 
+// Return month integer from alpha3
+int atmn_alpha3_to_integer(char *Alpha3){
+	
+	if (!strcmp("Jan",Alpha3)){return 1;}
+	if (!strcmp("Feb",Alpha3)){return 2;}
+	if (!strcmp("Mar",Alpha3)){return 3;}
+	if (!strcmp("Apr",Alpha3)){return 4;}
+	if (!strcmp("May",Alpha3)){return 5;}
+	if (!strcmp("Jun",Alpha3)){return 6;}
+	if (!strcmp("Jul",Alpha3)){return 7;}
+	if (!strcmp("Aug",Alpha3)){return 8;}
+	if (!strcmp("Sep",Alpha3)){return 9;}
+	if (!strcmp("Oct",Alpha3)){return 10;}
+	if (!strcmp("Nov",Alpha3)){return 11;}
+	if (!strcmp("Dec",Alpha3)){return 12;}
+	return -1;
+}
+
+
+// Return month alpha2 from alpha3
+const char *atmn_alpha3_to_alpha2(char *Alpha3){
+	
+	if (!strcmp("Jan",Alpha3)){return "Ja";}
+	if (!strcmp("Feb",Alpha3)){return "Fb";}
+	if (!strcmp("Mar",Alpha3)){return "Mr";}
+	if (!strcmp("Apr",Alpha3)){return "Ap";}
+	if (!strcmp("May",Alpha3)){return "Ma";}
+	if (!strcmp("Jun",Alpha3)){return "Jn";}
+	if (!strcmp("Jul",Alpha3)){return "Jl";}
+	if (!strcmp("Aug",Alpha3)){return "Ag";}
+	if (!strcmp("Sep",Alpha3)){return "Sp";}
+	if (!strcmp("Oct",Alpha3)){return "Oc";}
+	if (!strcmp("Nov",Alpha3)){return "No";}
+	if (!strcmp("Dec",Alpha3)){return "De";}
+	return "No";
+}
+
+
+// Return month full from alpha3
+const char *atmn_alpha3_to_full(char *Alpha3){
+	
+	if (!strcmp("Jan",Alpha3)){return "January";}
+	if (!strcmp("Feb",Alpha3)){return "February";}
+	if (!strcmp("Mar",Alpha3)){return "March";}
+	if (!strcmp("Apr",Alpha3)){return "April";}
+	if (!strcmp("May",Alpha3)){return "May";}
+	if (!strcmp("Jun",Alpha3)){return "June";}
+	if (!strcmp("Jul",Alpha3)){return "July";}
+	if (!strcmp("Aug",Alpha3)){return "August";}
+	if (!strcmp("Sep",Alpha3)){return "September";}
+	if (!strcmp("Oct",Alpha3)){return "October";}
+	if (!strcmp("Nov",Alpha3)){return "November";}
+	if (!strcmp("Dec",Alpha3)){return "December";}
+	return "Notamonth";
+};
+
+
+// Return month numeric from alpha3
+const char *atmn_alpha3_to_numeric(char *Alpha3){
+	
+	if (!strcmp("Jan",Alpha3)){return "01";}
+	if (!strcmp("Feb",Alpha3)){return "02";}
+	if (!strcmp("Mar",Alpha3)){return "03";}
+	if (!strcmp("Apr",Alpha3)){return "04";}
+	if (!strcmp("May",Alpha3)){return "05";}
+	if (!strcmp("Jun",Alpha3)){return "06";}
+	if (!strcmp("Jul",Alpha3)){return "07";}
+	if (!strcmp("Aug",Alpha3)){return "08";}
+	if (!strcmp("Sep",Alpha3)){return "09";}
+	if (!strcmp("Oct",Alpha3)){return "10";}
+	if (!strcmp("Nov",Alpha3)){return "11";}
+	if (!strcmp("Dec",Alpha3)){return "12";}
+	return "00";
+};
+
+
 // Return month alpha3 from integer
 const char *atmn_integer_to_alpha3(int Month){
 	

@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------
 // @author Alexandr KIRILOV
 // @copyright (C) 2019, http://arboreus.system
-// @doc Arboreus C part testing functionality
+// @doc Arboeus library testing procedures: weekday name testing (headers)
 //
 // @end
 // Created : 01/06/2019 at 17:49

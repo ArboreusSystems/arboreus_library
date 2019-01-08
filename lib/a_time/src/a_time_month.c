@@ -21,246 +21,246 @@
 // Return integer month from numeric
 int atmn_numeric_to_integer(char *Numeric){
 	
-	if (!strcmp("01",Numeric)){return 1;}
-	if (!strcmp("02",Numeric)){return 2;}
-	if (!strcmp("03",Numeric)){return 3;}
-	if (!strcmp("04",Numeric)){return 4;}
-	if (!strcmp("05",Numeric)){return 5;}
-	if (!strcmp("06",Numeric)){return 6;}
-	if (!strcmp("07",Numeric)){return 7;}
-	if (!strcmp("08",Numeric)){return 8;}
-	if (!strcmp("09",Numeric)){return 9;}
-	if (!strcmp("10",Numeric)){return 10;}
-	if (!strcmp("11",Numeric)){return 11;}
-	if (!strcmp("12",Numeric)){return 12;}
-	return -1;
+	if (!strcmp(A_MONTH_NUMERIC_JANUARY,Numeric)){return A_MONTH_INT_JANUARY;}
+	if (!strcmp(A_MONTH_NUMERIC_FEBRUARY,Numeric)){return A_MONTH_INT_FEBRUARY;}
+	if (!strcmp(A_MONTH_NUMERIC_MARCH,Numeric)){return A_MONTH_INT_MARCH;}
+	if (!strcmp(A_MONTH_NUMERIC_APRIL,Numeric)){return A_MONTH_INT_APRIL;}
+	if (!strcmp(A_MONTH_NUMERIC_MAY,Numeric)){return A_MONTH_INT_MAY;}
+	if (!strcmp(A_MONTH_NUMERIC_JUNE,Numeric)){return A_MONTH_INT_JUNE;}
+	if (!strcmp(A_MONTH_NUMERIC_JULY,Numeric)){return A_MONTH_INT_JULY;}
+	if (!strcmp(A_MONTH_NUMERIC_AUGUST,Numeric)){return A_MONTH_INT_AUGUST;}
+	if (!strcmp(A_MONTH_NUMERIC_SEPTEMBER,Numeric)){return A_MONTH_INT_SEPTEMBER;}
+	if (!strcmp(A_MONTH_NUMERIC_OCTOBER,Numeric)){return A_MONTH_INT_OCTOBER;}
+	if (!strcmp(A_MONTH_NUMERIC_NOVEMBER,Numeric)){return A_MONTH_INT_NOVEMBER;}
+	if (!strcmp(A_MONTH_NUMERIC_DECEMBER,Numeric)){return A_MONTH_INT_DECEMBER;}
+	return A_MONTH_INT_NOTAMONTH;
 }
 
 
 // Return alpha3 month from numeric
 const char *atmn_numeric_to_alpha3(char *Numeric){
 	
-	if (!strcmp("01",Numeric)){return "Jan";}
-	if (!strcmp("02",Numeric)){return "Feb";}
-	if (!strcmp("03",Numeric)){return "Mar";}
-	if (!strcmp("04",Numeric)){return "Apr";}
-	if (!strcmp("05",Numeric)){return "May";}
-	if (!strcmp("06",Numeric)){return "Jun";}
-	if (!strcmp("07",Numeric)){return "Jul";}
-	if (!strcmp("08",Numeric)){return "Aug";}
-	if (!strcmp("09",Numeric)){return "Sep";}
-	if (!strcmp("10",Numeric)){return "Oct";}
-	if (!strcmp("11",Numeric)){return "Nov";}
-	if (!strcmp("12",Numeric)){return "Dec";}
-	return "Not";
+	if (!strcmp(A_MONTH_NUMERIC_JANUARY,Numeric)){return A_MONTH_ALPHA3_JANUARY;}
+	if (!strcmp(A_MONTH_NUMERIC_FEBRUARY,Numeric)){return A_MONTH_ALPHA3_FEBRUARY;}
+	if (!strcmp(A_MONTH_NUMERIC_MARCH,Numeric)){return A_MONTH_ALPHA3_MARCH;}
+	if (!strcmp(A_MONTH_NUMERIC_APRIL,Numeric)){return A_MONTH_ALPHA3_APRIL;}
+	if (!strcmp(A_MONTH_NUMERIC_MAY,Numeric)){return A_MONTH_ALPHA3_MAY;}
+	if (!strcmp(A_MONTH_NUMERIC_JUNE,Numeric)){return A_MONTH_ALPHA3_JUNE;}
+	if (!strcmp(A_MONTH_NUMERIC_JULY,Numeric)){return A_MONTH_ALPHA3_JULY;}
+	if (!strcmp(A_MONTH_NUMERIC_AUGUST,Numeric)){return A_MONTH_ALPHA3_AUGUST;}
+	if (!strcmp(A_MONTH_NUMERIC_SEPTEMBER,Numeric)){return A_MONTH_ALPHA3_SEPTEMBER;}
+	if (!strcmp(A_MONTH_NUMERIC_OCTOBER,Numeric)){return A_MONTH_ALPHA3_OCTOBER;}
+	if (!strcmp(A_MONTH_NUMERIC_NOVEMBER,Numeric)){return A_MONTH_ALPHA3_NOVEMBER;}
+	if (!strcmp(A_MONTH_NUMERIC_DECEMBER,Numeric)){return A_MONTH_ALPHA3_DECEMBER;}
+	return A_MONTH_ALPHA3_NOTAMONTH;
 }
 
 
 // Return alpha2 month from numeric
 const char *atmn_numeric_to_alpha2(char *Numeric){
 	
-	if (!strcmp("01",Numeric)){return "Ja";}
-	if (!strcmp("02",Numeric)){return "Fb";}
-	if (!strcmp("03",Numeric)){return "Mr";}
-	if (!strcmp("04",Numeric)){return "Ap";}
-	if (!strcmp("05",Numeric)){return "Ma";}
-	if (!strcmp("06",Numeric)){return "Jn";}
-	if (!strcmp("07",Numeric)){return "Jl";}
-	if (!strcmp("08",Numeric)){return "Ag";}
-	if (!strcmp("09",Numeric)){return "Sp";}
-	if (!strcmp("10",Numeric)){return "Oc";}
-	if (!strcmp("11",Numeric)){return "No";}
-	if (!strcmp("12",Numeric)){return "De";}
-	return "Nt";
+	if (!strcmp(A_MONTH_NUMERIC_JANUARY,Numeric)){return A_MONTH_ALPHA2_JANUARY;}
+	if (!strcmp(A_MONTH_NUMERIC_FEBRUARY,Numeric)){return A_MONTH_ALPHA2_FEBRUARY;}
+	if (!strcmp(A_MONTH_NUMERIC_MARCH,Numeric)){return A_MONTH_ALPHA2_MARCH;}
+	if (!strcmp(A_MONTH_NUMERIC_APRIL,Numeric)){return A_MONTH_ALPHA2_APRIL;}
+	if (!strcmp(A_MONTH_NUMERIC_MAY,Numeric)){return A_MONTH_ALPHA2_MAY;}
+	if (!strcmp(A_MONTH_NUMERIC_JUNE,Numeric)){return A_MONTH_ALPHA2_JUNE;}
+	if (!strcmp(A_MONTH_NUMERIC_JULY,Numeric)){return A_MONTH_ALPHA2_JULY;}
+	if (!strcmp(A_MONTH_NUMERIC_AUGUST,Numeric)){return A_MONTH_ALPHA2_AUGUST;}
+	if (!strcmp(A_MONTH_NUMERIC_SEPTEMBER,Numeric)){return A_MONTH_ALPHA2_SEPTEMBER;}
+	if (!strcmp(A_MONTH_NUMERIC_OCTOBER,Numeric)){return A_MONTH_ALPHA2_OCTOBER;}
+	if (!strcmp(A_MONTH_NUMERIC_NOVEMBER,Numeric)){return A_MONTH_ALPHA2_NOVEMBER;}
+	if (!strcmp(A_MONTH_NUMERIC_DECEMBER,Numeric)){return A_MONTH_ALPHA2_DECEMBER;}
+	return A_MONTH_ALPHA2_NOTAMONTH;
 }
 
 
 // Return full month from numeric
 const char *atmn_numeric_to_full(char *Numeric){
 	
-	if (!strcmp("01",Numeric)){return "January";}
-	if (!strcmp("02",Numeric)){return "February";}
-	if (!strcmp("03",Numeric)){return "March";}
-	if (!strcmp("04",Numeric)){return "April";}
-	if (!strcmp("05",Numeric)){return "May";}
-	if (!strcmp("06",Numeric)){return "June";}
-	if (!strcmp("07",Numeric)){return "July";}
-	if (!strcmp("08",Numeric)){return "August";}
-	if (!strcmp("09",Numeric)){return "September";}
-	if (!strcmp("10",Numeric)){return "October";}
-	if (!strcmp("11",Numeric)){return "November";}
-	if (!strcmp("12",Numeric)){return "December";}
-	return "Notamonth";
+	if (!strcmp(A_MONTH_NUMERIC_JANUARY,Numeric)){return A_MONTH_FULL_JANUARY;}
+	if (!strcmp(A_MONTH_NUMERIC_FEBRUARY,Numeric)){return A_MONTH_FULL_FEBRUARY;}
+	if (!strcmp(A_MONTH_NUMERIC_MARCH,Numeric)){return A_MONTH_FULL_MARCH;}
+	if (!strcmp(A_MONTH_NUMERIC_APRIL,Numeric)){return A_MONTH_FULL_APRIL;}
+	if (!strcmp(A_MONTH_NUMERIC_MAY,Numeric)){return A_MONTH_FULL_MAY;}
+	if (!strcmp(A_MONTH_NUMERIC_JUNE,Numeric)){return A_MONTH_FULL_JUNE;}
+	if (!strcmp(A_MONTH_NUMERIC_JULY,Numeric)){return A_MONTH_FULL_JULY;}
+	if (!strcmp(A_MONTH_NUMERIC_AUGUST,Numeric)){return A_MONTH_FULL_AUGUST;}
+	if (!strcmp(A_MONTH_NUMERIC_SEPTEMBER,Numeric)){return A_MONTH_FULL_SEPTEMBER;}
+	if (!strcmp(A_MONTH_NUMERIC_OCTOBER,Numeric)){return A_MONTH_FULL_OCTOBER;}
+	if (!strcmp(A_MONTH_NUMERIC_NOVEMBER,Numeric)){return A_MONTH_FULL_NOVEMBER;}
+	if (!strcmp(A_MONTH_NUMERIC_DECEMBER,Numeric)){return A_MONTH_FULL_DECEMBER;}
+	return A_MONTH_FULL_NOTAMONTH;
 }
 
 
 // Return integer month from alpha2
 int atmn_alpha2_to_integer(char *Alpha2){
 	
-	if (!strcmp("Ja",Alpha2)){return 1;}
-	if (!strcmp("Fb",Alpha2)){return 2;}
-	if (!strcmp("Mr",Alpha2)){return 3;}
-	if (!strcmp("Ap",Alpha2)){return 4;}
-	if (!strcmp("Ma",Alpha2)){return 5;}
-	if (!strcmp("Jn",Alpha2)){return 6;}
-	if (!strcmp("Jl",Alpha2)){return 7;}
-	if (!strcmp("Ag",Alpha2)){return 8;}
-	if (!strcmp("Sp",Alpha2)){return 9;}
-	if (!strcmp("Oc",Alpha2)){return 10;}
-	if (!strcmp("No",Alpha2)){return 11;}
-	if (!strcmp("De",Alpha2)){return 12;}
-	return -1;
+	if (!strcmp(A_MONTH_ALPHA2_JANUARY,Alpha2)){return A_MONTH_INT_JANUARY;}
+	if (!strcmp(A_MONTH_ALPHA2_FEBRUARY,Alpha2)){return A_MONTH_INT_FEBRUARY;}
+	if (!strcmp(A_MONTH_ALPHA2_MARCH,Alpha2)){return A_MONTH_INT_MARCH;}
+	if (!strcmp(A_MONTH_ALPHA2_APRIL,Alpha2)){return A_MONTH_INT_APRIL;}
+	if (!strcmp(A_MONTH_ALPHA2_MAY,Alpha2)){return A_MONTH_INT_MAY;}
+	if (!strcmp(A_MONTH_ALPHA2_JUNE,Alpha2)){return A_MONTH_INT_JUNE;}
+	if (!strcmp(A_MONTH_ALPHA2_JULY,Alpha2)){return A_MONTH_INT_JULY;}
+	if (!strcmp(A_MONTH_ALPHA2_AUGUST,Alpha2)){return A_MONTH_INT_AUGUST;}
+	if (!strcmp(A_MONTH_ALPHA2_SEPTEMBER,Alpha2)){return A_MONTH_INT_SEPTEMBER;}
+	if (!strcmp(A_MONTH_ALPHA2_OCTOBER,Alpha2)){return A_MONTH_INT_OCTOBER;}
+	if (!strcmp(A_MONTH_ALPHA2_NOVEMBER,Alpha2)){return A_MONTH_INT_NOVEMBER;}
+	if (!strcmp(A_MONTH_ALPHA2_DECEMBER,Alpha2)){return A_MONTH_INT_DECEMBER;}
+	return A_MONTH_INT_NOTAMONTH;
 }
 
 
 // Return alpha3 month from alpha2
 const char *atmn_alpha2_to_alpha3(char *Alpha2){
 	
-	if (!strcmp("Ja",Alpha2)){return "Jan";}
-	if (!strcmp("Fb",Alpha2)){return "Feb";}
-	if (!strcmp("Mr",Alpha2)){return "Mar";}
-	if (!strcmp("Ap",Alpha2)){return "Apr";}
-	if (!strcmp("Ma",Alpha2)){return "May";}
-	if (!strcmp("Jn",Alpha2)){return "Jun";}
-	if (!strcmp("Jl",Alpha2)){return "Jul";}
-	if (!strcmp("Ag",Alpha2)){return "Aug";}
-	if (!strcmp("Sp",Alpha2)){return "Sep";}
-	if (!strcmp("Oc",Alpha2)){return "Oct";}
-	if (!strcmp("No",Alpha2)){return "Nov";}
-	if (!strcmp("De",Alpha2)){return "Dec";}
-	return "Not";
+	if (!strcmp(A_MONTH_ALPHA2_JANUARY,Alpha2)){return A_MONTH_ALPHA3_JANUARY;}
+	if (!strcmp(A_MONTH_ALPHA2_FEBRUARY,Alpha2)){return A_MONTH_ALPHA3_FEBRUARY;}
+	if (!strcmp(A_MONTH_ALPHA2_MARCH,Alpha2)){return A_MONTH_ALPHA3_MARCH;}
+	if (!strcmp(A_MONTH_ALPHA2_APRIL,Alpha2)){return A_MONTH_ALPHA3_APRIL;}
+	if (!strcmp(A_MONTH_ALPHA2_MAY,Alpha2)){return A_MONTH_ALPHA3_MAY;}
+	if (!strcmp(A_MONTH_ALPHA2_JUNE,Alpha2)){return A_MONTH_ALPHA3_JUNE;}
+	if (!strcmp(A_MONTH_ALPHA2_JULY,Alpha2)){return A_MONTH_ALPHA3_JULY;}
+	if (!strcmp(A_MONTH_ALPHA2_AUGUST,Alpha2)){return A_MONTH_ALPHA3_AUGUST;}
+	if (!strcmp(A_MONTH_ALPHA2_SEPTEMBER,Alpha2)){return A_MONTH_ALPHA3_SEPTEMBER;}
+	if (!strcmp(A_MONTH_ALPHA2_OCTOBER,Alpha2)){return A_MONTH_ALPHA3_OCTOBER;}
+	if (!strcmp(A_MONTH_ALPHA2_NOVEMBER,Alpha2)){return A_MONTH_ALPHA3_NOVEMBER;}
+	if (!strcmp(A_MONTH_ALPHA2_DECEMBER,Alpha2)){return A_MONTH_ALPHA3_DECEMBER;}
+	return A_MONTH_ALPHA3_NOTAMONTH;
 }
 
 
 // Return full month from alpha2
 const char *atmn_alpha2_to_full(char *Alpha2){
 	
-	if (!strcmp("Ja",Alpha2)){return "January";}
-	if (!strcmp("Fb",Alpha2)){return "February";}
-	if (!strcmp("Mr",Alpha2)){return "March";}
-	if (!strcmp("Ap",Alpha2)){return "April";}
-	if (!strcmp("Ma",Alpha2)){return "May";}
-	if (!strcmp("Jn",Alpha2)){return "June";}
-	if (!strcmp("Jl",Alpha2)){return "July";}
-	if (!strcmp("Ag",Alpha2)){return "August";}
-	if (!strcmp("Sp",Alpha2)){return "September";}
-	if (!strcmp("Oc",Alpha2)){return "October";}
-	if (!strcmp("No",Alpha2)){return "November";}
-	if (!strcmp("De",Alpha2)){return "December";}
-	return "Notamonth";
+	if (!strcmp(A_MONTH_ALPHA2_JANUARY,Alpha2)){return A_MONTH_FULL_JANUARY;}
+	if (!strcmp(A_MONTH_ALPHA2_FEBRUARY,Alpha2)){return A_MONTH_FULL_FEBRUARY;}
+	if (!strcmp(A_MONTH_ALPHA2_MARCH,Alpha2)){return A_MONTH_FULL_MARCH;}
+	if (!strcmp(A_MONTH_ALPHA2_APRIL,Alpha2)){return A_MONTH_FULL_APRIL;}
+	if (!strcmp(A_MONTH_ALPHA2_MAY,Alpha2)){return A_MONTH_FULL_MAY;}
+	if (!strcmp(A_MONTH_ALPHA2_JUNE,Alpha2)){return A_MONTH_FULL_JUNE;}
+	if (!strcmp(A_MONTH_ALPHA2_JULY,Alpha2)){return A_MONTH_FULL_JULY;}
+	if (!strcmp(A_MONTH_ALPHA2_AUGUST,Alpha2)){return A_MONTH_FULL_AUGUST;}
+	if (!strcmp(A_MONTH_ALPHA2_SEPTEMBER,Alpha2)){return A_MONTH_FULL_SEPTEMBER;}
+	if (!strcmp(A_MONTH_ALPHA2_OCTOBER,Alpha2)){return A_MONTH_FULL_OCTOBER;}
+	if (!strcmp(A_MONTH_ALPHA2_NOVEMBER,Alpha2)){return A_MONTH_FULL_NOVEMBER;}
+	if (!strcmp(A_MONTH_ALPHA2_DECEMBER,Alpha2)){return A_MONTH_FULL_DECEMBER;}
+	return A_MONTH_FULL_NOTAMONTH;
 }
 
 
 // Return numeric month from alpha2
 const char *atmn_alpha2_to_numeric(char *Alpha2){
 	
-	if (!strcmp("Ja",Alpha2)){return "01";}
-	if (!strcmp("Fb",Alpha2)){return "02";}
-	if (!strcmp("Mr",Alpha2)){return "03";}
-	if (!strcmp("Ap",Alpha2)){return "04";}
-	if (!strcmp("Ma",Alpha2)){return "05";}
-	if (!strcmp("Jn",Alpha2)){return "06";}
-	if (!strcmp("Jl",Alpha2)){return "07";}
-	if (!strcmp("Ag",Alpha2)){return "08";}
-	if (!strcmp("Sp",Alpha2)){return "09";}
-	if (!strcmp("Oc",Alpha2)){return "10";}
-	if (!strcmp("No",Alpha2)){return "11";}
-	if (!strcmp("De",Alpha2)){return "12";}
-	return "00";
+	if (!strcmp(A_MONTH_ALPHA2_JANUARY,Alpha2)){return A_MONTH_NUMERIC_JANUARY;}
+	if (!strcmp(A_MONTH_ALPHA2_FEBRUARY,Alpha2)){return A_MONTH_NUMERIC_FEBRUARY;}
+	if (!strcmp(A_MONTH_ALPHA2_MARCH,Alpha2)){return A_MONTH_NUMERIC_MARCH;}
+	if (!strcmp(A_MONTH_ALPHA2_APRIL,Alpha2)){return A_MONTH_NUMERIC_APRIL;}
+	if (!strcmp(A_MONTH_ALPHA2_MAY,Alpha2)){return A_MONTH_NUMERIC_MAY;}
+	if (!strcmp(A_MONTH_ALPHA2_JUNE,Alpha2)){return A_MONTH_NUMERIC_JUNE;}
+	if (!strcmp(A_MONTH_ALPHA2_JULY,Alpha2)){return A_MONTH_NUMERIC_JULY;}
+	if (!strcmp(A_MONTH_ALPHA2_AUGUST,Alpha2)){return A_MONTH_NUMERIC_AUGUST;}
+	if (!strcmp(A_MONTH_ALPHA2_SEPTEMBER,Alpha2)){return A_MONTH_NUMERIC_SEPTEMBER;}
+	if (!strcmp(A_MONTH_ALPHA2_OCTOBER,Alpha2)){return A_MONTH_NUMERIC_OCTOBER;}
+	if (!strcmp(A_MONTH_ALPHA2_NOVEMBER,Alpha2)){return A_MONTH_NUMERIC_NOVEMBER;}
+	if (!strcmp(A_MONTH_ALPHA2_DECEMBER,Alpha2)){return A_MONTH_NUMERIC_DECEMBER;}
+	return A_MONTH_NUMERIC_NOTAMONTH;
 }
 
 
 // Return month integer from alpha3
 int atmn_alpha3_to_integer(char *Alpha3){
 	
-	if (!strcmp("Jan",Alpha3)){return 1;}
-	if (!strcmp("Feb",Alpha3)){return 2;}
-	if (!strcmp("Mar",Alpha3)){return 3;}
-	if (!strcmp("Apr",Alpha3)){return 4;}
-	if (!strcmp("May",Alpha3)){return 5;}
-	if (!strcmp("Jun",Alpha3)){return 6;}
-	if (!strcmp("Jul",Alpha3)){return 7;}
-	if (!strcmp("Aug",Alpha3)){return 8;}
-	if (!strcmp("Sep",Alpha3)){return 9;}
-	if (!strcmp("Oct",Alpha3)){return 10;}
-	if (!strcmp("Nov",Alpha3)){return 11;}
-	if (!strcmp("Dec",Alpha3)){return 12;}
-	return -1;
+	if (!strcmp(A_MONTH_ALPHA3_JANUARY,Alpha3)){return A_MONTH_INT_JANUARY;}
+	if (!strcmp(A_MONTH_ALPHA3_FEBRUARY,Alpha3)){return A_MONTH_INT_FEBRUARY;}
+	if (!strcmp(A_MONTH_ALPHA3_MARCH,Alpha3)){return A_MONTH_INT_MARCH;}
+	if (!strcmp(A_MONTH_ALPHA3_APRIL,Alpha3)){return A_MONTH_INT_APRIL;}
+	if (!strcmp(A_MONTH_ALPHA3_MAY,Alpha3)){return A_MONTH_INT_MAY;}
+	if (!strcmp(A_MONTH_ALPHA3_JUNE,Alpha3)){return A_MONTH_INT_JUNE;}
+	if (!strcmp(A_MONTH_ALPHA3_JULY,Alpha3)){return A_MONTH_INT_JULY;}
+	if (!strcmp(A_MONTH_ALPHA3_AUGUST,Alpha3)){return A_MONTH_INT_AUGUST;}
+	if (!strcmp(A_MONTH_ALPHA3_SEPTEMBER,Alpha3)){return A_MONTH_INT_SEPTEMBER;}
+	if (!strcmp(A_MONTH_ALPHA3_OCTOBER,Alpha3)){return A_MONTH_INT_OCTOBER;}
+	if (!strcmp(A_MONTH_ALPHA3_NOVEMBER,Alpha3)){return A_MONTH_INT_NOVEMBER;}
+	if (!strcmp(A_MONTH_ALPHA3_DECEMBER,Alpha3)){return A_MONTH_INT_DECEMBER;}
+	return A_MONTH_INT_NOTAMONTH;
 }
 
 
 // Return month alpha2 from alpha3
 const char *atmn_alpha3_to_alpha2(char *Alpha3){
 	
-	if (!strcmp("Jan",Alpha3)){return "Ja";}
-	if (!strcmp("Feb",Alpha3)){return "Fb";}
-	if (!strcmp("Mar",Alpha3)){return "Mr";}
-	if (!strcmp("Apr",Alpha3)){return "Ap";}
-	if (!strcmp("May",Alpha3)){return "Ma";}
-	if (!strcmp("Jun",Alpha3)){return "Jn";}
-	if (!strcmp("Jul",Alpha3)){return "Jl";}
-	if (!strcmp("Aug",Alpha3)){return "Ag";}
-	if (!strcmp("Sep",Alpha3)){return "Sp";}
-	if (!strcmp("Oct",Alpha3)){return "Oc";}
-	if (!strcmp("Nov",Alpha3)){return "No";}
-	if (!strcmp("Dec",Alpha3)){return "De";}
-	return "Nt";
+	if (!strcmp(A_MONTH_ALPHA3_JANUARY,Alpha3)){return A_MONTH_ALPHA2_JANUARY;}
+	if (!strcmp(A_MONTH_ALPHA3_FEBRUARY,Alpha3)){return A_MONTH_ALPHA2_FEBRUARY;}
+	if (!strcmp(A_MONTH_ALPHA3_MARCH,Alpha3)){return A_MONTH_ALPHA2_MARCH;}
+	if (!strcmp(A_MONTH_ALPHA3_APRIL,Alpha3)){return A_MONTH_ALPHA2_APRIL;}
+	if (!strcmp(A_MONTH_ALPHA3_MAY,Alpha3)){return A_MONTH_ALPHA2_MAY;}
+	if (!strcmp(A_MONTH_ALPHA3_JUNE,Alpha3)){return A_MONTH_ALPHA2_JUNE;}
+	if (!strcmp(A_MONTH_ALPHA3_JULY,Alpha3)){return A_MONTH_ALPHA2_JULY;}
+	if (!strcmp(A_MONTH_ALPHA3_AUGUST,Alpha3)){return A_MONTH_ALPHA2_AUGUST;}
+	if (!strcmp(A_MONTH_ALPHA3_SEPTEMBER,Alpha3)){return A_MONTH_ALPHA2_SEPTEMBER;}
+	if (!strcmp(A_MONTH_ALPHA3_OCTOBER,Alpha3)){return A_MONTH_ALPHA2_OCTOBER;}
+	if (!strcmp(A_MONTH_ALPHA3_NOVEMBER,Alpha3)){return A_MONTH_ALPHA2_NOVEMBER;}
+	if (!strcmp(A_MONTH_ALPHA3_DECEMBER,Alpha3)){return A_MONTH_ALPHA2_DECEMBER;}
+	return A_MONTH_ALPHA2_NOTAMONTH;
 }
 
 
 // Return month full from alpha3
 const char *atmn_alpha3_to_full(char *Alpha3){
 	
-	if (!strcmp("Jan",Alpha3)){return "January";}
-	if (!strcmp("Feb",Alpha3)){return "February";}
-	if (!strcmp("Mar",Alpha3)){return "March";}
-	if (!strcmp("Apr",Alpha3)){return "April";}
-	if (!strcmp("May",Alpha3)){return "May";}
-	if (!strcmp("Jun",Alpha3)){return "June";}
-	if (!strcmp("Jul",Alpha3)){return "July";}
-	if (!strcmp("Aug",Alpha3)){return "August";}
-	if (!strcmp("Sep",Alpha3)){return "September";}
-	if (!strcmp("Oct",Alpha3)){return "October";}
-	if (!strcmp("Nov",Alpha3)){return "November";}
-	if (!strcmp("Dec",Alpha3)){return "December";}
-	return "Notamonth";
+	if (!strcmp(A_MONTH_ALPHA3_JANUARY,Alpha3)){return A_MONTH_FULL_JANUARY;}
+	if (!strcmp(A_MONTH_ALPHA3_FEBRUARY,Alpha3)){return A_MONTH_FULL_FEBRUARY;}
+	if (!strcmp(A_MONTH_ALPHA3_MARCH,Alpha3)){return A_MONTH_FULL_MARCH;}
+	if (!strcmp(A_MONTH_ALPHA3_APRIL,Alpha3)){return A_MONTH_FULL_APRIL;}
+	if (!strcmp(A_MONTH_ALPHA3_MAY,Alpha3)){return A_MONTH_FULL_MAY;}
+	if (!strcmp(A_MONTH_ALPHA3_JUNE,Alpha3)){return A_MONTH_FULL_JUNE;}
+	if (!strcmp(A_MONTH_ALPHA3_JULY,Alpha3)){return A_MONTH_FULL_JULY;}
+	if (!strcmp(A_MONTH_ALPHA3_AUGUST,Alpha3)){return A_MONTH_FULL_AUGUST;}
+	if (!strcmp(A_MONTH_ALPHA3_SEPTEMBER,Alpha3)){return A_MONTH_FULL_SEPTEMBER;}
+	if (!strcmp(A_MONTH_ALPHA3_OCTOBER,Alpha3)){return A_MONTH_FULL_OCTOBER;}
+	if (!strcmp(A_MONTH_ALPHA3_NOVEMBER,Alpha3)){return A_MONTH_FULL_NOVEMBER;}
+	if (!strcmp(A_MONTH_ALPHA3_DECEMBER,Alpha3)){return A_MONTH_FULL_DECEMBER;}
+	return A_MONTH_FULL_NOTAMONTH;
 };
 
 
 // Return month numeric from alpha3
 const char *atmn_alpha3_to_numeric(char *Alpha3){
 	
-	if (!strcmp("Jan",Alpha3)){return "01";}
-	if (!strcmp("Feb",Alpha3)){return "02";}
-	if (!strcmp("Mar",Alpha3)){return "03";}
-	if (!strcmp("Apr",Alpha3)){return "04";}
-	if (!strcmp("May",Alpha3)){return "05";}
-	if (!strcmp("Jun",Alpha3)){return "06";}
-	if (!strcmp("Jul",Alpha3)){return "07";}
-	if (!strcmp("Aug",Alpha3)){return "08";}
-	if (!strcmp("Sep",Alpha3)){return "09";}
-	if (!strcmp("Oct",Alpha3)){return "10";}
-	if (!strcmp("Nov",Alpha3)){return "11";}
-	if (!strcmp("Dec",Alpha3)){return "12";}
-	return "00";
+	if (!strcmp(A_MONTH_ALPHA3_JANUARY,Alpha3)){return A_MONTH_NUMERIC_JANUARY;}
+	if (!strcmp(A_MONTH_ALPHA3_FEBRUARY,Alpha3)){return A_MONTH_NUMERIC_FEBRUARY;}
+	if (!strcmp(A_MONTH_ALPHA3_MARCH,Alpha3)){return A_MONTH_NUMERIC_MARCH;}
+	if (!strcmp(A_MONTH_ALPHA3_APRIL,Alpha3)){return A_MONTH_NUMERIC_APRIL;}
+	if (!strcmp(A_MONTH_ALPHA3_MAY,Alpha3)){return A_MONTH_NUMERIC_MAY;}
+	if (!strcmp(A_MONTH_ALPHA3_JUNE,Alpha3)){return A_MONTH_NUMERIC_JUNE;}
+	if (!strcmp(A_MONTH_ALPHA3_JULY,Alpha3)){return A_MONTH_NUMERIC_JULY;}
+	if (!strcmp(A_MONTH_ALPHA3_AUGUST,Alpha3)){return A_MONTH_NUMERIC_AUGUST;}
+	if (!strcmp(A_MONTH_ALPHA3_SEPTEMBER,Alpha3)){return A_MONTH_NUMERIC_SEPTEMBER;}
+	if (!strcmp(A_MONTH_ALPHA3_OCTOBER,Alpha3)){return A_MONTH_NUMERIC_OCTOBER;}
+	if (!strcmp(A_MONTH_ALPHA3_NOVEMBER,Alpha3)){return A_MONTH_NUMERIC_NOVEMBER;}
+	if (!strcmp(A_MONTH_ALPHA3_DECEMBER,Alpha3)){return A_MONTH_NUMERIC_DECEMBER;}
+	return A_MONTH_NUMERIC_NOTAMONTH;
 };
 
 
 // Return month alpha3 from integer
 const char *atmn_integer_to_alpha3(int Month){
 	
-	if (Month == 1) {return "Jan";} else
-	if (Month == 2) {return "Feb";} else
-	if (Month == 3) {return "Mar";} else
-	if (Month == 4) {return "Apr";} else
-	if (Month == 5) {return "May";} else
-	if (Month == 6) {return "Jun";} else
-	if (Month == 7) {return "Jul";} else
-	if (Month == 8) {return "Aug";} else
-	if (Month == 9) {return "Sep";} else
-	if (Month == 10) {return "Oct";} else
-	if (Month == 11) {return "Nov";} else
-	if (Month == 12) {return "Dec";} else
+	if (Month == A_MONTH_INT_JANUARY) {return A_MONTH_ALPHA3_JANUARY;} else
+	if (Month == A_MONTH_INT_FEBRUARY) {return A_MONTH_ALPHA3_FEBRUARY;} else
+	if (Month == A_MONTH_INT_MARCH) {return A_MONTH_ALPHA3_MARCH;} else
+	if (Month == A_MONTH_INT_APRIL) {return A_MONTH_ALPHA3_APRIL;} else
+	if (Month == A_MONTH_INT_MAY) {return A_MONTH_ALPHA3_MAY;} else
+	if (Month == A_MONTH_INT_JUNE) {return A_MONTH_ALPHA3_JUNE;} else
+	if (Month == A_MONTH_INT_JULY) {return A_MONTH_ALPHA3_JULY;} else
+	if (Month == A_MONTH_INT_AUGUST) {return A_MONTH_ALPHA3_AUGUST;} else
+	if (Month == A_MONTH_INT_SEPTEMBER) {return A_MONTH_ALPHA3_SEPTEMBER;} else
+	if (Month == A_MONTH_INT_OCTOBER) {return A_MONTH_ALPHA3_OCTOBER;} else
+	if (Month == A_MONTH_INT_NOVEMBER) {return A_MONTH_ALPHA3_NOVEMBER;} else
+	if (Month == A_MONTH_INT_DECEMBER) {return A_MONTH_ALPHA3_DECEMBER;} else
 	{return "Not";}
 };
 
@@ -268,52 +268,52 @@ const char *atmn_integer_to_alpha3(int Month){
 // Return month alpha2 from integer
 const char *atmn_integer_to_alpha2(int Month){
 	
-	if (Month == 1) {return "Ja";} else
-	if (Month == 2) {return "Fb";} else
-	if (Month == 3) {return "Mr";} else
-	if (Month == 4) {return "Ap";} else
-	if (Month == 5) {return "Ma";} else
-	if (Month == 6) {return "Jn";} else
-	if (Month == 7) {return "Jl";} else
-	if (Month == 8) {return "Ag";} else
-	if (Month == 9) {return "Sp";} else
-	if (Month == 10) {return "Oc";} else
-	if (Month == 11) {return "No";} else
-	if (Month == 12) {return "De";} else
-	{return "Nt";}
+	if (Month == A_MONTH_INT_JANUARY) {return A_MONTH_ALPHA2_JANUARY;} else
+	if (Month == A_MONTH_INT_FEBRUARY) {return A_MONTH_ALPHA2_FEBRUARY;} else
+	if (Month == A_MONTH_INT_MARCH) {return A_MONTH_ALPHA2_MARCH;} else
+	if (Month == A_MONTH_INT_APRIL) {return A_MONTH_ALPHA2_APRIL;} else
+	if (Month == A_MONTH_INT_MAY) {return A_MONTH_ALPHA2_MAY;} else
+	if (Month == A_MONTH_INT_JUNE) {return A_MONTH_ALPHA2_JUNE;} else
+	if (Month == A_MONTH_INT_JULY) {return A_MONTH_ALPHA2_JULY;} else
+	if (Month == A_MONTH_INT_AUGUST) {return A_MONTH_ALPHA2_AUGUST;} else
+	if (Month == A_MONTH_INT_SEPTEMBER) {return A_MONTH_ALPHA2_SEPTEMBER;} else
+	if (Month == A_MONTH_INT_OCTOBER) {return A_MONTH_ALPHA2_OCTOBER;} else
+	if (Month == A_MONTH_INT_NOVEMBER) {return A_MONTH_ALPHA2_NOVEMBER;} else
+	if (Month == A_MONTH_INT_DECEMBER) {return A_MONTH_ALPHA2_DECEMBER;} else
+	{return A_MONTH_ALPHA2_NOTAMONTH;}
 };
 
 
 // Return month full from integer
 const char *atmn_integer_to_full(int Month){
 	
-	if (Month == 1) {return "January";} else
-	if (Month == 2) {return "February";} else
-	if (Month == 3) {return "March";} else
-	if (Month == 4) {return "April";} else
-	if (Month == 5) {return "May";} else
-	if (Month == 6) {return "June";} else
-	if (Month == 7) {return "July";} else
-	if (Month == 8) {return "August";} else
-	if (Month == 9) {return "September";} else
-	if (Month == 10) {return "October";} else
-	if (Month == 11) {return "November";} else
-	if (Month == 12) {return "December";} else
-	{return "Notamonth";}
+	if (Month == A_MONTH_INT_JANUARY) {return A_MONTH_FULL_JANUARY;} else
+	if (Month == A_MONTH_INT_FEBRUARY) {return A_MONTH_FULL_FEBRUARY;} else
+	if (Month == A_MONTH_INT_MARCH) {return A_MONTH_FULL_MARCH;} else
+	if (Month == A_MONTH_INT_APRIL) {return A_MONTH_FULL_APRIL;} else
+	if (Month == A_MONTH_INT_MAY) {return A_MONTH_FULL_MAY;} else
+	if (Month == A_MONTH_INT_JUNE) {return A_MONTH_FULL_JUNE;} else
+	if (Month == A_MONTH_INT_JULY) {return A_MONTH_FULL_JULY;} else
+	if (Month == A_MONTH_INT_AUGUST) {return A_MONTH_FULL_AUGUST;} else
+	if (Month == A_MONTH_INT_SEPTEMBER) {return A_MONTH_FULL_SEPTEMBER;} else
+	if (Month == A_MONTH_INT_OCTOBER) {return A_MONTH_FULL_OCTOBER;} else
+	if (Month == A_MONTH_INT_NOVEMBER) {return A_MONTH_FULL_NOVEMBER;} else
+	if (Month == A_MONTH_INT_DECEMBER) {return A_MONTH_FULL_DECEMBER;} else
+	{return A_MONTH_FULL_NOTAMONTH;}
 };
 
 
 // Return month numeric from integer
 const char *atmn_integer_to_numeric(int Month){
 	
-	if (Month > 12){return "00";}
-	if (Month < 1){return "00";}
+	if (Month > A_MONTH_INT_DECEMBER){return A_MONTH_NUMERIC_NOTAMONTH;}
+	if (Month < A_MONTH_INT_JANUARY){return A_MONTH_NUMERIC_NOTAMONTH;}
 	
 	char *Numeric;
 	
 	if (acnv_integer_to_zstring(Month,&Numeric,2) == EXIT_SUCCESS){
 		return Numeric;
 	} else {
-		return "00";
+		return A_MONTH_NUMERIC_NOTAMONTH;
 	}
 };

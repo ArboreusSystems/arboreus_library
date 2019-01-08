@@ -20,56 +20,56 @@
 // Return weekday in Alpha3 format
 const char *atwd_integer_to_alpha3(int Month){
 	
-	if (Month == 1) {return "Mon";} else
-	if (Month == 2) {return "Tue";} else
-	if (Month == 3) {return "Wed";} else
-	if (Month == 4) {return "Thu";} else
-	if (Month == 5) {return "Fri";} else
-	if (Month == 6) {return "Sat";} else
-	if (Month == 7) {return "Sun";} else
-	{return "Not";}
+	if (Month == A_WEEKDAY_INT_MONDAY){return A_WEEKDAY_ALPHA3_MONDAY;}
+	if (Month == A_WEEKDAY_INT_TUESDAY){return A_WEEKDAY_ALPHA3_TUESDAY;}
+	if (Month == A_WEEKDAY_INT_WEDNESDAY){return A_WEEKDAY_ALPHA3_WEDNESDAY;}
+	if (Month == A_WEEKDAY_INT_THURSDAY){return A_WEEKDAY_ALPHA3_THURSDAY;}
+	if (Month == A_WEEKDAY_INT_FRIDAY){return A_WEEKDAY_ALPHA3_FRIDAY;}
+	if (Month == A_WEEKDAY_INT_SATURDAY){return A_WEEKDAY_ALPHA3_SATURDAY;}
+	if (Month == A_WEEKDAY_INT_SUNDAY){return A_WEEKDAY_ALPHA3_SUNDAY;}
+	return A_WEEKDAY_ALPHA3_NOTAWEEKDAY;
 }
 
 
 // Return weekday in Alpha2 format
 const char *atwd_integer_to_alpha2(int Month){
 	
-	if (Month == 1) {return "Mo";} else
-	if (Month == 2) {return "Tu";} else
-	if (Month == 3) {return "We";} else
-	if (Month == 4) {return "Th";} else
-	if (Month == 5) {return "Fr";} else
-	if (Month == 6) {return "Sa";} else
-	if (Month == 7) {return "Su";} else
-	{return "No";}
+	if (Month == A_WEEKDAY_INT_MONDAY){return A_WEEKDAY_ALPHA2_MONDAY;}
+	if (Month == A_WEEKDAY_INT_TUESDAY){return A_WEEKDAY_ALPHA2_TUESDAY;}
+	if (Month == A_WEEKDAY_INT_WEDNESDAY){return A_WEEKDAY_ALPHA2_WEDNESDAY;}
+	if (Month == A_WEEKDAY_INT_THURSDAY){return A_WEEKDAY_ALPHA2_THURSDAY;}
+	if (Month == A_WEEKDAY_INT_FRIDAY){return A_WEEKDAY_ALPHA2_FRIDAY;}
+	if (Month == A_WEEKDAY_INT_SATURDAY){return A_WEEKDAY_ALPHA2_SATURDAY;}
+	if (Month == A_WEEKDAY_INT_SUNDAY){return A_WEEKDAY_ALPHA2_SUNDAY;}
+	return A_WEEKDAY_ALPHA2_NOTAWEEKDAY;
 }
 
 
 // Return weekday in Full format
 const char *atwd_integer_to_full(int Month){
 	
-	if (Month == 1){return "Monday";} else
-	if (Month == 2){return "Tuesday";} else
-	if (Month == 3){return "Wednesday";} else
-	if (Month == 4){return "Thursday";} else
-	if (Month == 5){return "Friday";} else
-	if (Month == 6){return "Saturday";} else
-	if (Month == 7){return "Sunday";} else
-	{return "Notaweekday";}
+	if (Month == A_WEEKDAY_INT_MONDAY){return A_WEEKDAY_FULL_MONDAY;}
+	if (Month == A_WEEKDAY_INT_TUESDAY){return A_WEEKDAY_FULL_TUESDAY;}
+	if (Month == A_WEEKDAY_INT_WEDNESDAY){return A_WEEKDAY_FULL_WEDNESDAY;}
+	if (Month == A_WEEKDAY_INT_THURSDAY){return A_WEEKDAY_FULL_THURSDAY;}
+	if (Month == A_WEEKDAY_INT_FRIDAY){return A_WEEKDAY_FULL_FRIDAY;}
+	if (Month == A_WEEKDAY_INT_SATURDAY){return A_WEEKDAY_FULL_SATURDAY;}
+	if (Month == A_WEEKDAY_INT_SUNDAY){return A_WEEKDAY_FULL_SUNDAY;}
+	return A_WEEKDAY_FULL_NOTAWEEKDAY;
 }
 
 // Return weekday in Numeric format
-const char *atwd_integer_to_numeric(int Month){
+const char *atwd_integer_to_numeric(int Weekday){
 	
-	if (Month > 7){return "00";}
-	if (Month <= 0){return "00";}
+	if (Weekday > A_WEEKDAY_INT_SUNDAY){return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;}
+	if (Weekday < A_WEEKDAY_INT_MONDAY){return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;}
 	
 	char *Numeric;
 	
-	if (acnv_integer_to_zstring(Month,&Numeric,2) == EXIT_SUCCESS){
+	if (acnv_integer_to_zstring(Weekday,&Numeric,2) == EXIT_SUCCESS){
 		return Numeric;
 	} else {
-		return "00";
+		return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;
 	}
 }
 
@@ -77,166 +77,166 @@ const char *atwd_integer_to_numeric(int Month){
 // Return weekday number from Alpha3 string
 int atwd_alpha3_to_integer(char *Pointer){
 	
-	if (!strcmp("Mon",Pointer)){return 1;} else
-	if (!strcmp("Tue",Pointer)){return 2;} else
-	if (!strcmp("Wed",Pointer)){return 3;} else
-	if (!strcmp("Thu",Pointer)){return 4;} else
-	if (!strcmp("Fri",Pointer)){return 5;} else
-	if (!strcmp("Sat",Pointer)){return 6;} else
-	if (!strcmp("Sun",Pointer)){return 7;} else
-	{return -1;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_MONDAY,Pointer)){return A_WEEKDAY_INT_MONDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_TUESDAY,Pointer)){return A_WEEKDAY_INT_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_WEDNESDAY,Pointer)){return A_WEEKDAY_INT_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_THURSDAY,Pointer)){return A_WEEKDAY_INT_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_FRIDAY,Pointer)){return A_WEEKDAY_INT_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_SATURDAY,Pointer)){return A_WEEKDAY_INT_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_SUNDAY,Pointer)){return A_WEEKDAY_INT_SUNDAY;}
+	return A_WEEKDAY_INT_NOTAWEEKDAY;
 }
 
 
 // Return weekday Alpha2 from Alpha3
 const char *atwd_alpha3_to_alpha2(char *Pointer){
 	
-	if (!strcmp("Mon",Pointer)){return "Mo";} else
-	if (!strcmp("Tue",Pointer)){return "Tu";} else
-	if (!strcmp("Wed",Pointer)){return "We";} else
-	if (!strcmp("Thu",Pointer)){return "Th";} else
-	if (!strcmp("Fri",Pointer)){return "Fr";} else
-	if (!strcmp("Sat",Pointer)){return "Sa";} else
-	if (!strcmp("Sun",Pointer)){return "Su";} else
-	{return "No";}
+	if (!strcmp(A_WEEKDAY_ALPHA3_MONDAY,Pointer)){return A_WEEKDAY_ALPHA2_MONDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA2_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_WEDNESDAY,Pointer)){return A_WEEKDAY_ALPHA2_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_THURSDAY,Pointer)){return A_WEEKDAY_ALPHA2_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_FRIDAY,Pointer)){return A_WEEKDAY_ALPHA2_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_SATURDAY,Pointer)){return A_WEEKDAY_ALPHA2_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_SUNDAY,Pointer)){return A_WEEKDAY_ALPHA2_SUNDAY;}
+	return A_WEEKDAY_ALPHA2_NOTAWEEKDAY;
 }
 
 
 // Return weekday Full from Alpha3
 const char *atwd_alpha3_to_full(char *Pointer){
 	
-	if (!strcmp("Mon",Pointer)){return "Monday";} else
-	if (!strcmp("Tue",Pointer)){return "Tuesday";} else
-	if (!strcmp("Wed",Pointer)){return "Wednesday";} else
-	if (!strcmp("Thu",Pointer)){return "Thursday";} else
-	if (!strcmp("Fri",Pointer)){return "Friday";} else
-	if (!strcmp("Sat",Pointer)){return "Saturday";} else
-	if (!strcmp("Sun",Pointer)){return "Sunday";} else
-	{return "Notaweekday";}
+	if (!strcmp(A_WEEKDAY_ALPHA3_MONDAY,Pointer)){return A_WEEKDAY_FULL_MONDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_TUESDAY,Pointer)){return A_WEEKDAY_FULL_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_WEDNESDAY,Pointer)){return A_WEEKDAY_FULL_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_THURSDAY,Pointer)){return A_WEEKDAY_FULL_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_FRIDAY,Pointer)){return A_WEEKDAY_FULL_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_SATURDAY,Pointer)){return A_WEEKDAY_FULL_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_SUNDAY,Pointer)){return A_WEEKDAY_FULL_SUNDAY;}
+	return A_WEEKDAY_FULL_NOTAWEEKDAY;
 }
 
 
 // Return weekday Numeric from Alpha3
 const char *atwd_alpha3_to_numeric(char *Pointer){
 	
-	if (!strcmp("Mon",Pointer)){return "01";} else
-	if (!strcmp("Tue",Pointer)){return "02";} else
-	if (!strcmp("Wed",Pointer)){return "03";} else
-	if (!strcmp("Thu",Pointer)){return "04";} else
-	if (!strcmp("Fri",Pointer)){return "05";} else
-	if (!strcmp("Sat",Pointer)){return "06";} else
-	if (!strcmp("Sun",Pointer)){return "07";} else
-	{return "00";}
+	if (!strcmp(A_WEEKDAY_ALPHA3_MONDAY,Pointer)){return A_WEEKDAY_NUMERIC_MONDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_TUESDAY,Pointer)){return A_WEEKDAY_NUMERIC_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_WEDNESDAY,Pointer)){return A_WEEKDAY_NUMERIC_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_THURSDAY,Pointer)){return A_WEEKDAY_NUMERIC_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_FRIDAY,Pointer)){return A_WEEKDAY_NUMERIC_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_SATURDAY,Pointer)){return A_WEEKDAY_NUMERIC_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_ALPHA3_SUNDAY,Pointer)){return A_WEEKDAY_NUMERIC_SUNDAY;}
+	return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;
 }
 
 
 // Return weekday Alpha3 from Full
 const char *atwd_full_to_alpha3(char *Pointer){
 	
-	if (!strcmp("Monday",Pointer)){return "Mon";} else
-	if (!strcmp("Tuesday",Pointer)){return "Tue";} else
-	if (!strcmp("Wednesday",Pointer)){return "Wed";} else
-	if (!strcmp("Thursday",Pointer)){return "Thu";} else
-	if (!strcmp("Friday",Pointer)){return "Fri";} else
-	if (!strcmp("Saturday",Pointer)){return "Sat";} else
-	if (!strcmp("Sunday",Pointer)){return "Sun";} else
-	{return "Not";}
+	if (!strcmp(A_WEEKDAY_FULL_MONDAY,Pointer)){return A_WEEKDAY_ALPHA3_MONDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA3_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_WEDNESDAY,Pointer)){return A_WEEKDAY_ALPHA3_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_THURSDAY,Pointer)){return A_WEEKDAY_ALPHA3_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_FRIDAY,Pointer)){return A_WEEKDAY_ALPHA3_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_SATURDAY,Pointer)){return A_WEEKDAY_ALPHA3_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_SUNDAY,Pointer)){return A_WEEKDAY_ALPHA3_SUNDAY;}
+	return A_WEEKDAY_ALPHA3_NOTAWEEKDAY;
 }
 
 
 // Return weekday Alpha3 from Full
 const char *atwd_full_to_alpha2(char *Pointer){
 	
-	if (!strcmp("Monday",Pointer)){return "Mo";} else
-	if (!strcmp("Tuesday",Pointer)){return "Tu";} else
-	if (!strcmp("Wednesday",Pointer)){return "We";} else
-	if (!strcmp("Thursday",Pointer)){return "Th";} else
-	if (!strcmp("Friday",Pointer)){return "Fr";} else
-	if (!strcmp("Saturday",Pointer)){return "Sa";} else
-	if (!strcmp("Sunday",Pointer)){return "Su";} else
-	{return "No";}
+	if (!strcmp(A_WEEKDAY_FULL_MONDAY,Pointer)){return A_WEEKDAY_ALPHA2_MONDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA2_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_WEDNESDAY,Pointer)){return A_WEEKDAY_ALPHA2_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_THURSDAY,Pointer)){return A_WEEKDAY_ALPHA2_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_FRIDAY,Pointer)){return A_WEEKDAY_ALPHA2_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_SATURDAY,Pointer)){return A_WEEKDAY_ALPHA2_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_SUNDAY,Pointer)){return A_WEEKDAY_ALPHA2_SUNDAY;}
+	return A_WEEKDAY_ALPHA2_NOTAWEEKDAY;
 }
 
 
 // Return weekday number from full name string
 int atwd_full_to_integer(char *Pointer){
 	
-	if (!strcmp("Monday",Pointer)){return 1;} else
-	if (!strcmp("Tuesday",Pointer)){return 2;} else
-	if (!strcmp("Wednesday",Pointer)){return 3;} else
-	if (!strcmp("Thursday",Pointer)){return 4;} else
-	if (!strcmp("Friday",Pointer)){return 5;} else
-	if (!strcmp("Saturday",Pointer)){return 6;} else
-	if (!strcmp("Sunday",Pointer)){return 7;} else
-	{return -1;}
+	if (!strcmp(A_WEEKDAY_FULL_MONDAY,Pointer)){return A_WEEKDAY_INT_MONDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_TUESDAY,Pointer)){return A_WEEKDAY_INT_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_WEDNESDAY,Pointer)){return A_WEEKDAY_INT_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_THURSDAY,Pointer)){return A_WEEKDAY_INT_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_FRIDAY,Pointer)){return A_WEEKDAY_INT_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_SATURDAY,Pointer)){return A_WEEKDAY_INT_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_SUNDAY,Pointer)){return A_WEEKDAY_INT_SUNDAY;}
+	return A_WEEKDAY_INT_NOTAWEEKDAY;
 }
 
 
 // Return weekday numeric from full
 const char *atwd_full_to_numeric(char *Pointer){
 	
-	if (!strcmp("Monday",Pointer)){return "01";} else
-	if (!strcmp("Tuesday",Pointer)){return "02";} else
-	if (!strcmp("Wednesday",Pointer)){return "03";} else
-	if (!strcmp("Thursday",Pointer)){return "04";} else
-	if (!strcmp("Friday",Pointer)){return "05";} else
-	if (!strcmp("Saturday",Pointer)){return "06";} else
-	if (!strcmp("Sunday",Pointer)){return "07";} else
-	{return "00";}
+	if (!strcmp(A_WEEKDAY_FULL_MONDAY,Pointer)){return A_WEEKDAY_NUMERIC_MONDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_TUESDAY,Pointer)){return A_WEEKDAY_NUMERIC_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_WEDNESDAY,Pointer)){return A_WEEKDAY_NUMERIC_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_THURSDAY,Pointer)){return A_WEEKDAY_NUMERIC_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_FRIDAY,Pointer)){return A_WEEKDAY_NUMERIC_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_SATURDAY,Pointer)){return A_WEEKDAY_NUMERIC_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_FULL_SUNDAY,Pointer)){return A_WEEKDAY_NUMERIC_SUNDAY;}
+	return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;
 }
 
 
 // Return weekday integer from numeric
 int atwd_numeric_to_integer(char *Pointer){
 	
-	if (!strcmp("01",Pointer)){return 1;} else
-	if (!strcmp("02",Pointer)){return 2;} else
-	if (!strcmp("03",Pointer)){return 3;} else
-	if (!strcmp("04",Pointer)){return 4;} else
-	if (!strcmp("05",Pointer)){return 5;} else
-	if (!strcmp("06",Pointer)){return 6;} else
-	if (!strcmp("07",Pointer)){return 7;} else
-	{return -1;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_MONDAY,Pointer)){return A_WEEKDAY_INT_MONDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_TUESDAY,Pointer)){return A_WEEKDAY_INT_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_WEDNESDAY,Pointer)){return A_WEEKDAY_INT_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_THURSDAY,Pointer)){return A_WEEKDAY_INT_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_FRIDAY,Pointer)){return A_WEEKDAY_INT_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_SATURDAY,Pointer)){return A_WEEKDAY_INT_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_SUNDAY,Pointer)){return A_WEEKDAY_INT_SUNDAY;}
+	return A_WEEKDAY_INT_NOTAWEEKDAY;
 }
 
 
 // Return weekday alpha3 from numeric
 const char *atwd_numeric_to_alpha3(char *Pointer){
 	
-	if (!strcmp("01",Pointer)){return "Mon";} else
-	if (!strcmp("02",Pointer)){return "Tue";} else
-	if (!strcmp("03",Pointer)){return "Wed";} else
-	if (!strcmp("04",Pointer)){return "Thu";} else
-	if (!strcmp("05",Pointer)){return "Fri";} else
-	if (!strcmp("06",Pointer)){return "Sat";} else
-	if (!strcmp("07",Pointer)){return "Sun";} else
-	{return "Not";}
+	if (!strcmp(A_WEEKDAY_NUMERIC_MONDAY,Pointer)){return A_WEEKDAY_ALPHA3_MONDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA3_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_WEDNESDAY,Pointer)){return A_WEEKDAY_ALPHA3_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_THURSDAY,Pointer)){return A_WEEKDAY_ALPHA3_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_FRIDAY,Pointer)){return A_WEEKDAY_ALPHA3_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_SATURDAY,Pointer)){return A_WEEKDAY_ALPHA3_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_SUNDAY,Pointer)){return A_WEEKDAY_ALPHA3_SUNDAY;}
+	return A_WEEKDAY_ALPHA3_NOTAWEEKDAY;
 }
 
 
 // Return weekday alpha2 from numeric
 const char *atwd_numeric_to_alpha2(char *Pointer){
 	
-	if (!strcmp("01",Pointer)){return "Mo";} else
-	if (!strcmp("02",Pointer)){return "Tu";} else
-	if (!strcmp("03",Pointer)){return "We";} else
-	if (!strcmp("04",Pointer)){return "Th";} else
-	if (!strcmp("05",Pointer)){return "Fr";} else
-	if (!strcmp("06",Pointer)){return "Sa";} else
-	if (!strcmp("07",Pointer)){return "Su";} else
-	{return "No";}
+	if (!strcmp(A_WEEKDAY_NUMERIC_MONDAY,Pointer)){return A_WEEKDAY_ALPHA2_MONDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA2_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_WEDNESDAY,Pointer)){return A_WEEKDAY_ALPHA2_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_THURSDAY,Pointer)){return A_WEEKDAY_ALPHA2_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_FRIDAY,Pointer)){return A_WEEKDAY_ALPHA2_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_SATURDAY,Pointer)){return A_WEEKDAY_ALPHA2_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_SUNDAY,Pointer)){return A_WEEKDAY_ALPHA2_SUNDAY;}
+	return A_WEEKDAY_ALPHA2_NOTAWEEKDAY;
 }
 
 
 // Return weekday full from numeric
 const char *atwd_numeric_to_full(char *Pointer){
 	
-	if (!strcmp("01",Pointer)){return "Monday";} else
-	if (!strcmp("02",Pointer)){return "Tuesday";} else
-	if (!strcmp("03",Pointer)){return "Wednesday";} else
-	if (!strcmp("04",Pointer)){return "Thursday";} else
-	if (!strcmp("05",Pointer)){return "Friday";} else
-	if (!strcmp("06",Pointer)){return "Saturday";} else
-	if (!strcmp("07",Pointer)){return "Sunday";} else
-	{return "Notaweekday";}
+	if (!strcmp(A_WEEKDAY_NUMERIC_MONDAY,Pointer)){return A_WEEKDAY_FULL_MONDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_TUESDAY,Pointer)){return A_WEEKDAY_FULL_TUESDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_WEDNESDAY,Pointer)){return A_WEEKDAY_FULL_WEDNESDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_THURSDAY,Pointer)){return A_WEEKDAY_FULL_THURSDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_FRIDAY,Pointer)){return A_WEEKDAY_FULL_FRIDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_SATURDAY,Pointer)){return A_WEEKDAY_FULL_SATURDAY;}
+	if (!strcmp(A_WEEKDAY_NUMERIC_SUNDAY,Pointer)){return A_WEEKDAY_FULL_SUNDAY;}
+	return A_WEEKDAY_FULL_NOTAWEEKDAY;
 }

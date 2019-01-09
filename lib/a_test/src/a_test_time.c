@@ -16,6 +16,7 @@
 #include "headers/a_test_time.h"
 #include "headers/a_test_time_weekday.h"
 #include "headers/a_test_time_month.h"
+#include "headers/a_test_time_rfc822.h"
 
 int a_test_time_run(){
 	
@@ -28,6 +29,8 @@ int a_test_time_run(){
 	if (atmn_month_from_alpha3() != EXIT_SUCCESS){FAILURE;}
 	if (atmn_month_from_alpha2() != EXIT_SUCCESS){FAILURE;}
 	if (atmn_month_from_numeric() != EXIT_SUCCESS){FAILURE;}
+
+	if (atrfc_822() != EXIT_SUCCESS){FAILURE;}
 	
 	printf("*** DONE! Tests for a_time module passed.\n\n");
 	

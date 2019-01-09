@@ -311,7 +311,7 @@ const char *atmn_integer_to_numeric(int Month){
 	
 	char *Numeric;
 	
-	if (acnv_integer_to_zstring(Month,&Numeric,2) == EXIT_SUCCESS){
+	if (acnv_integer_to_zstring(Month + 1,&Numeric,2) == EXIT_SUCCESS){
 		return Numeric;
 	} else {
 		return A_MONTH_NUMERIC_NOTAMONTH;

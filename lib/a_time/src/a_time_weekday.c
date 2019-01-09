@@ -61,8 +61,8 @@ const char *atwd_integer_to_full(int Month){
 // Return weekday in Numeric format
 const char *atwd_integer_to_numeric(int Weekday){
 	
-	if (Weekday > A_WEEKDAY_INT_SUNDAY){return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;}
-	if (Weekday < A_WEEKDAY_INT_MONDAY){return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;}
+	if (Weekday > A_WEEKDAY_INT_SATURDAY){return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;}
+	if (Weekday < A_WEEKDAY_INT_SUNDAY){return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;}
 	
 	char *Numeric;
 	

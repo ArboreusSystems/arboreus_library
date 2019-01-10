@@ -12,9 +12,9 @@
 #include <string.h>
 
 // Application includes
-#include "../../constants/constants_general.h"
+#include "../../../constants/constants_general.h"
 #include "headers/a_test_time_rfc822.h"
-#include "../../a_time/src/headers/a_time_rfc822.h"
+#include "../../../a_time/src/headers/a_time_rfc822.h"
 
 
 int atrfc_822(){

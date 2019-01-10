@@ -13,9 +13,9 @@
 #include <string.h>
 
 // Application includes
-#include "../../constants/constants_general.h"
+#include "../../../constants/constants_general.h"
 #include "headers/a_test_time_month.h"
-#include "../../a_time/src/headers/a_time_month.h"
+#include "../../../a_time/src/headers/a_time_month.h"
 
 
 // Test month name from numeric

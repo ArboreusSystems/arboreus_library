@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------
 // @author Alexandr KIRILOV
 // @copyright (C) 2019, http://arboreus.system
-// @doc
+// @doc Arboreus testing RFC822 string generating headers
 //
 // @end
 // Created : 01/07/2019 at 16:45

@@ -18,6 +18,7 @@
 #include "headers/a_test_time_month.h"
 #include "headers/a_test_time_rfc822.h"
 #include "headers/a_test_time_rfc850.h"
+#include "headers/a_test_time_ansi.h"
 
 
 int a_test_time_run(){
@@ -34,6 +35,7 @@ int a_test_time_run(){
 
 	if (atrfc_822() != EXIT_SUCCESS){FAILURE;}
 	if (atrfc_850() != EXIT_SUCCESS){FAILURE;}
+	if (atansi() != EXIT_SUCCESS){FAILURE;}
 	
 	printf("\n");
 	printf("*** DONE! Tests for a_time module passed.\n\n");

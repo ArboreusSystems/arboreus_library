@@ -23,7 +23,6 @@ int atrfc_822(){
 	char *RFC_822_ethalon = "Thu, 01 Jan 1970 03:00:00 GMT";
 	if (strcmp(RFC_822_ethalon,RFC_822) != 0){FAILURE;}
 	printf("Done! Generating RFC822 from UNIX-timestamp test passed.\n");
-	printf("\n");
 	
 	SUCCESS;
 }

@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------
 // @author Alexandr KIRILOV
 // @copyright (C) 2019, http://arboreus.system
-// @doc
+// @doc Arboreus RFC850 time format handler headers
 //
 // @end
 // Created : 01/09/2019 at 19:02

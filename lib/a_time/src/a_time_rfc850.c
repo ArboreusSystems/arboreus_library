@@ -19,6 +19,7 @@
 #include "../../universal_c/src/headers/a_convert.h"
 
 
+// Generate the RFC850 string from tm_struct
 int atrfc_850_from_struct(struct tm Time_struct,char **RFC_850){
 	
 	int Counter = 0;
@@ -57,6 +58,7 @@ int atrfc_850_from_struct(struct tm Time_struct,char **RFC_850){
 }
 
 
+// Generate RFC850 string from UNIX-timestamp
 int atrfc_850_from_timestamp(long long int Timestamp,char **RFC_850){
 	
 	time_t Time = Timestamp;

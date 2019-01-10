@@ -1,7 +1,7 @@
 // -------------------------------------------------------------------
 // @author Alexandr KIRILOV
 // @copyright (C) 2019, http://arboreus.system
-// @doc
+// @doc Arboeus library testing procedures: ANSI string testing for UTC 0300
 //
 // @end
 // Created : 01/10/2019 at 15:54

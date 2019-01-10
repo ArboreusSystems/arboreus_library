@@ -151,7 +151,10 @@ int a_time_now_rfc_822(){
 
 // Return time in RFC850 format
 int a_time_now_rfc_850(){
-	atnh_rfc_850();
+	
+	char *RFC_850;
+	if (atnh_rfc_850(&RFC_850) != EXIT_SUCCESS){FAILURE;};
+	printf("%s",RFC_850);
 	SUCCESS;
 }
 

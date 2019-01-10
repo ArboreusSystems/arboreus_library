@@ -17,7 +17,7 @@ int atnh_int_date(long long int *Pointer);
 int atnh_int_full(long long int *Pointer);
 int atnh_int_extend(long long int *Pointer);
 int atnh_rfc_822(char **RFC_822);
-int atnh_rfc_850();
+int atnh_rfc_850(char **RFC_850);
 int atnh_ansi();
 
 #endif //ARBOREUS_A_TIME_NOW_HANDLER_H

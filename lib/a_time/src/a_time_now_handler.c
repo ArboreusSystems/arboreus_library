@@ -19,6 +19,7 @@
 #include "headers/a_time_weekday.h"
 #include "headers/a_time_month.h"
 #include "headers/a_time_rfc822.h"
+#include "headers/a_time_rfc850.h"
 #include "../../universal_c/src/headers/a_convert.h"
 #include "../../universal_c/src/headers/a_string.h"
 
@@ -150,8 +151,13 @@ int atnh_rfc_822(char **RFC_822){
 
 
 // Return time in RFC850 format "Sunday, 06-Nov-94 08:49:37 GMT"
-int atnh_rfc_850(){
-	printf("rfc_850");
+int atnh_rfc_850(char **RFC_850){
+	
+	time_t Time = time(NULL);
+	struct tm *Today;
+	Today = localtime(&Time);
+	char ***Output = &RFC_850;
+	if (atrfc_850_from_struct(*Today,*Output) != EXIT_SUCCESS){FAILURE;}
 	SUCCESS;
 }
 

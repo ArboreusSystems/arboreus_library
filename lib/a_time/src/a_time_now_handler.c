@@ -20,6 +20,7 @@
 #include "headers/a_time_month.h"
 #include "headers/a_time_rfc822.h"
 #include "headers/a_time_rfc850.h"
+#include "headers/a_time_ansi.h"
 #include "../../universal_c/src/headers/a_convert.h"
 #include "../../universal_c/src/headers/a_string.h"
 
@@ -163,7 +164,12 @@ int atnh_rfc_850(char **RFC_850){
 
 
 // Return time in ANSI format "Sun Nov  6 08:49:37 1994"
-int atnh_ansi(){
-	printf("ansi");
+int atnh_ansi(char **ANSI){
+	
+	time_t Time = time(NULL);
+	struct tm *Today;
+	Today = localtime(&Time);
+	char ***Output = &ANSI;
+	if (atansi_from_struct(*Today,*Output) != EXIT_SUCCESS){FAILURE;}
 	SUCCESS;
 }

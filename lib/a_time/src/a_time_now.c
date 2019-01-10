@@ -161,6 +161,9 @@ int a_time_now_rfc_850(){
 
 // Return time in ANSI format
 int a_time_now_ansi(){
-	atnh_ansi();
+	
+	char *ANSI;
+	if (atnh_ansi(&ANSI) != EXIT_SUCCESS){FAILURE;};
+	printf("%s",ANSI);
 	SUCCESS;
 }

@@ -9,6 +9,6 @@
 #ifndef ARBOREUS_A_TEST_TIME_ANSI_H
 #define ARBOREUS_A_TEST_TIME_ANSI_H
 
-int atansi();
+int atansi(void);
 
 #endif //ARBOREUS_A_TEST_TIME_ANSI_H

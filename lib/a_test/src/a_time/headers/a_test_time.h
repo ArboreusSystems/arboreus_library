@@ -9,6 +9,6 @@
 #ifndef ARBOREUS_A_TEST_TIME_H
 #define ARBOREUS_A_TEST_TIME_H
 
-int a_test_time_run();
+int a_test_time_run(void);
 
 #endif //ARBOREUS_A_TEST_TIME_H

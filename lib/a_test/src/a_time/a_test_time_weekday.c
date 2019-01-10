@@ -18,7 +18,7 @@
 
 
 // Test weekday conversion from numeric
-int atst_weekday_from_numeric(){
+int atst_weekday_from_numeric(void){
 	
 	if (atwd_numeric_to_integer(A_WEEKDAY_NUMERIC_MONDAY) != A_WEEKDAY_INT_MONDAY){FAILURE;}
 	printf("Done! Numeric to Integer weekday test passed for "A_WEEKDAY_FULL_MONDAY".\n");
@@ -100,7 +100,7 @@ int atst_weekday_from_numeric(){
 }
 
 // Test weekday conversion from Full
-int atst_weekday_from_full(){
+int atst_weekday_from_full(void){
 	
 	if (atwd_full_to_integer(A_WEEKDAY_FULL_MONDAY) != A_WEEKDAY_INT_MONDAY){FAILURE;}
 	printf("Done! Full to Integer weekday test passed for "A_WEEKDAY_FULL_MONDAY".\n");
@@ -182,7 +182,7 @@ int atst_weekday_from_full(){
 }
 
 // Test weekday conversion from Alpha3
-int atst_weekday_from_alpha3(){
+int atst_weekday_from_alpha3(void){
 	
 	if (atwd_alpha3_to_integer(A_WEEKDAY_ALPHA3_MONDAY) != A_WEEKDAY_INT_MONDAY){FAILURE;}
 	printf("Done! Alpha3 to Integer weekday test passed for "A_WEEKDAY_FULL_MONDAY".\n");
@@ -264,7 +264,7 @@ int atst_weekday_from_alpha3(){
 }
 
 // Test weekday conversion from integer
-int atst_weekday_from_integer(){
+int atst_weekday_from_integer(void){
 	
 	if (strcmp(A_WEEKDAY_ALPHA3_MONDAY,atwd_integer_to_alpha3(A_WEEKDAY_INT_MONDAY)) != 0){FAILURE;}
 	printf("Done! Integer to Alpha3 weekday test passed for "A_WEEKDAY_FULL_MONDAY".\n");

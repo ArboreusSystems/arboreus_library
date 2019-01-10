@@ -17,7 +17,7 @@
 #include "../../../a_time/src/headers/a_time_rfc850.h"
 
 
-int atrfc_850(){
+int atrfc_850(void){
 	
 	char *RFC_850; atrfc_850_from_timestamp(0,&RFC_850);
 	char *RFC_850_ethalon = "Thursday, 01-Jan-70 03:00:00 GMT";

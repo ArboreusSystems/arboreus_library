@@ -9,9 +9,9 @@
 #ifndef ARBOREUS_TEST_H
 #define ARBOREUS_TEST_H
 
-int atst_weekday_from_integer();
-int atst_weekday_from_alpha3();
-int atst_weekday_from_full();
-int atst_weekday_from_numeric();
+int atst_weekday_from_integer(void);
+int atst_weekday_from_alpha3(void);
+int atst_weekday_from_full(void);
+int atst_weekday_from_numeric(void);
 
 #endif //ARBOREUS_TEST_H

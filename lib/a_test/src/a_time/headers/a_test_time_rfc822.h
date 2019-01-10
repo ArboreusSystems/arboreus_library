@@ -9,6 +9,6 @@
 #ifndef ARBOREUS_A_TEST_TIME_RFC822_H
 #define ARBOREUS_A_TEST_TIME_RFC822_H
 
-int atrfc_822();
+int atrfc_822(void);
 
 #endif //ARBOREUS_A_TEST_TIME_RFC822_H

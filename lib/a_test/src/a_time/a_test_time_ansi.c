@@ -17,7 +17,7 @@
 #include "../../../a_time/src/headers/a_time_ansi.h"
 
 
-int atansi(){
+int atansi(void){
 	
 	char *ANSI; atansi_from_timestamp(0,&ANSI);
 	char *ANSI_ethalon = "Thu Jan 01 03:00:00 1970";

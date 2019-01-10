@@ -19,7 +19,7 @@
 
 
 // Test month name from numeric
-int atmn_month_from_numeric(){
+int atmn_month_from_numeric(void){
 	
 	if (atmn_numeric_to_integer(A_MONTH_NUMERIC_JANUARY) != A_MONTH_INT_JANUARY){FAILURE;}
 	printf("Done! Numeric to Integer month test passed for "A_MONTH_FULL_JANUARY".\n");
@@ -142,7 +142,7 @@ int atmn_month_from_numeric(){
 
 
 // Test month name from alpha2
-int atmn_month_from_alpha2(){
+int atmn_month_from_alpha2(void){
 	
 	
 	if (atmn_alpha2_to_integer(A_MONTH_ALPHA2_JANUARY) != A_MONTH_INT_JANUARY){FAILURE;}
@@ -266,7 +266,7 @@ int atmn_month_from_alpha2(){
 
 
 // Test month name from alpha3
-int atmn_month_from_alpha3(){
+int atmn_month_from_alpha3(void){
 	
 	if (strcmp(A_MONTH_NUMERIC_JANUARY,atmn_alpha3_to_numeric(A_MONTH_ALPHA3_JANUARY)) != 0){FAILURE;}
 	printf("Done! Alpha3 to Numeric month test passed for "A_MONTH_FULL_JANUARY".\n");
@@ -389,7 +389,7 @@ int atmn_month_from_alpha3(){
 
 
 // Test month name from integer
-int atmn_month_from_integer(){
+int atmn_month_from_integer(void){
 	
 	if (strcmp(A_MONTH_FULL_JANUARY,atmn_integer_to_full(A_MONTH_INT_JANUARY)) != 0){FAILURE;}
 	printf("Done! Integer to Full month test passed for "A_MONTH_FULL_JANUARY".\n");

@@ -9,6 +9,6 @@
 #ifndef ARBOREUS_A_TEST_TIME_RFC850_H
 #define ARBOREUS_A_TEST_TIME_RFC850_H
 
-int atrfc_850();
+int atrfc_850(void);
 
 #endif //ARBOREUS_A_TEST_TIME_RFC850_H

@@ -92,7 +92,7 @@ static ERL_NIF_TERM atnif_integer(ErlNifEnv* env, int argc, const ERL_NIF_TERM a
 static ERL_NIF_TERM atnif_integer_date(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
 	long long int Int_date = 0;
-	atnh_int(&Int_date);
+	atnh_int_date(&Int_date);
 	if (Int_date == 0){
 		return enif_make_atom(env,"false");
 	} else {

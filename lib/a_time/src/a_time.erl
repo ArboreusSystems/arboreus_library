@@ -15,10 +15,6 @@
 %% Module API
 -export([
 	test/0,
-	load_nif/1,
-	now_seconds/0,now_milliseconds/0,now_microseconds/0,
-	now_date_int/0,now_full_int/0,now_int/0,
-	now_date/0,
 	now/0,
 	current_year/1,current_month/0,current_day/0,current_dow/1,
 	current/0,current/1,
@@ -41,71 +37,6 @@
 -spec test() -> ok.
 
 test() -> ok.
-
-
-%%-----------------------------------
-%% @doc Load NIF part for this module
--spec load_nif(Path) -> ok
-	when
-	Path :: unix_path().
-
-load_nif(Path) -> erlang:load_nif(Path,0).
-
-
-%%-----------------------------------
-%% @doc Return current UNIX timestamp in seconds. Wrapper for NIF function
--spec now_seconds() -> a_timestamp() | false.
-
-now_seconds() -> no_nif.
-
-
-%%-----------------------------------
-%% @doc Return current UNIX timestamp in milliseconds. Wrapper for NIF function
--spec now_milliseconds() -> a_timestamp() | false.
-
-now_milliseconds() -> no_nif.
-
-
-%%-----------------------------------
-%% @doc Return current UNIX timestamp in microseconds. Wrapper for NIF function
--spec now_microseconds() -> a_timestamp() | false.
-
-now_microseconds() -> no_nif.
-
-
-%%-----------------------------------
-%% @doc Return current date like integer. Wrapper for NIF function
--spec now_date_int() -> a_date_int() | false.
-
-now_date_int() -> no_nif.
-
-
-%%-----------------------------------
-%% @doc Return current full time like integer. Wrapper for NIF function
--spec now_full_int() -> a_date_int() | false.
-
-now_full_int() -> no_nif.
-
-
-%%-----------------------------------
-%% @doc Return current time like integer. Wrapper for NIF function
--spec now_int() -> a_date_int() | false.
-
-now_int() -> no_nif.
-
-
-%%-----------------------------------
-%% @doc Return tuple within year, month, day. Wrapper for NIF function
--spec now_date() -> {year(),month(),day()} | false.
-
-now_date() -> no_nif.
-
-
-%%-----------------------------------
-%% @doc Return tuple within hours, minutes, seconds. Wrapper for NIF function
--spec now() -> {hour(),minute(),second()} | false.
-
-now() -> no_nif.
 
 
 %%-----------------------------------

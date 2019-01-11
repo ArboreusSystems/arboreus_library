@@ -26,6 +26,7 @@ MODULES += a_time
 MODULES += a_users
 MODULES += handlers
 MODULES += universal
+MODULES += universal_c
 MODULES += yaws_addons
 
 

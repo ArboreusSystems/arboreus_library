@@ -111,13 +111,26 @@ endef
 # @doc Build object file (*.o) from source to specified directory
 # @params
 #	$(1) - module name
-#   $(2) - application name
 
 define build_o
 $(eval SOURCE = $(call dir_module_src,$(APP_NAME))/$(1).c)
 $(eval OUTPUT = $(call dir_module_build,$(APP_NAME))/$(1).o)
 $(COMPILLER_C) -c -o $(OUTPUT) $(SOURCE) || exit; \
 echo "Done! File built: $(1).o in $(call dir_module_build,$(APP_NAME))";
+endef
+
+
+# ----------------------------------------------
+# @doc Build object file (*.o) from source to specified directory
+# @params
+#	$(1) - source file
+#   $(2) - output file
+
+define build_o_by_path
+$(eval SOURCE = $(1))
+$(eval OUTPUT = $(2))
+$(COMPILLER_C) -c -o $(OUTPUT) $(SOURCE) || exit; \
+echo "Done! File built: $(SOURCE) in $(OUTPUT)";
 endef
 
 

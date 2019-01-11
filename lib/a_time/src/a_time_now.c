@@ -32,13 +32,13 @@ int main(int Number, char *Arguments[]) {
 			a_time_now_milliseconds();
 		} else if (!strcmp("seconds",Arguments[1])){
 			a_time_now_seconds();
-		} else if (!strcmp("int",Arguments[1])){
+		} else if (!strcmp("integer",Arguments[1])){
 			a_time_now_int();
-		} else if (!strcmp("int_date",Arguments[1])){
+		} else if (!strcmp("integer_date",Arguments[1])){
 			a_time_now_int_date();
-		} else if (!strcmp("int_full",Arguments[1])){
+		} else if (!strcmp("integer_full",Arguments[1])){
 			a_time_now_int_full();
-		} else if (!strcmp("int_extend",Arguments[1])){
+		} else if (!strcmp("integer_extend",Arguments[1])){
 			a_time_now_int_extend();
 		} else if (!strcmp("rfc_822",Arguments[1])){
 			a_time_now_rfc_822();
@@ -65,7 +65,7 @@ int a_time_now_microseconds(){
 	
 	long long int Microseconds = 0;
 	if (atnh_microseconds(&Microseconds) == EXIT_SUCCESS) {
-		printf("%lld",Microseconds);
+		printf("%lld\n",Microseconds);
 		SUCCESS;
 	} else {
 		FAILURE_ERROR(2,"Wrong microseconds");
@@ -78,7 +78,7 @@ int a_time_now_milliseconds(){
 	
 	long long int Milliseconds = 0;
 	if (atnh_milliseconds(&Milliseconds) == EXIT_SUCCESS) {
-		printf("%lld",Milliseconds);
+		printf("%lld\n",Milliseconds);
 		SUCCESS;
 	} else {
 		FAILURE_ERROR(2,"Wrong milliseconds");
@@ -91,7 +91,7 @@ int a_time_now_seconds(){
 	
 	long long int Seconds = 0;
 	atnh_seconds(&Seconds);
-	printf("%lld",Seconds);
+	printf("%lld\n",Seconds);
 	SUCCESS;
 }
 
@@ -101,7 +101,7 @@ int a_time_now_int(){
 	
 	long long Int = 0;
 	atnh_int(&Int);
-	printf("%lld",Int);
+	printf("%lld\n",Int);
 	SUCCESS;
 }
 
@@ -111,7 +111,7 @@ int a_time_now_int_date(){
 	
 	long long Int_date = 0;
 	atnh_int_date(&Int_date);
-	printf("%lld",Int_date);
+	printf("%lld\n",Int_date);
 	SUCCESS;
 }
 
@@ -121,7 +121,7 @@ int a_time_now_int_full(){
 	
 	long long Int_full = 0;
 	atnh_int_full(&Int_full);
-	printf("%lld",Int_full);
+	printf("%lld\n",Int_full);
 	SUCCESS;
 }
 
@@ -131,7 +131,7 @@ int a_time_now_int_extend(){
 	
 	long long Int_extend = 0;
 	if (atnh_int_extend(&Int_extend) == EXIT_SUCCESS) {
-		printf("%lld",Int_extend);
+		printf("%lld\n",Int_extend);
 		SUCCESS;
 	} else {
 		FAILURE_ERROR(2,"Wrong int_extend");
@@ -144,7 +144,7 @@ int a_time_now_rfc_822(){
 	
 	char *RFC_822;
 	if (atnh_rfc_822(&RFC_822) != EXIT_SUCCESS){FAILURE;};
-	printf("%s",RFC_822);
+	printf("%s\n",RFC_822);
 	SUCCESS;
 }
 
@@ -154,7 +154,7 @@ int a_time_now_rfc_850(){
 	
 	char *RFC_850;
 	if (atnh_rfc_850(&RFC_850) != EXIT_SUCCESS){FAILURE;};
-	printf("%s",RFC_850);
+	printf("%s\n",RFC_850);
 	SUCCESS;
 }
 
@@ -164,6 +164,6 @@ int a_time_now_ansi(){
 	
 	char *ANSI;
 	if (atnh_ansi(&ANSI) != EXIT_SUCCESS){FAILURE;};
-	printf("%s",ANSI);
+	printf("%s\n",ANSI);
 	SUCCESS;
 }

@@ -25,8 +25,7 @@ MODULES += a_test
 MODULES += a_time
 MODULES += a_users
 MODULES += handlers
-MODULES += universal
-MODULES += universal_c
+MODULES += universal_erl
 MODULES += yaws_addons
 
 

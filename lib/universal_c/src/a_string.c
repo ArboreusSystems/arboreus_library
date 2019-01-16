@@ -23,7 +23,7 @@ int astr_reverse(char *String){
 	size_t Length = strlen(String) - 1;
 	char Output;
 	
-	for (; i < Length; i++, Length--) {
+	for (; i < (int)Length; i++, Length--) {
 		Output = String[i];
 		String[i] = String[Length];
 		String[Length] = Output;

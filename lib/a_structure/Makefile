@@ -55,7 +55,7 @@ ensure_dir_silent:
 backup:
 	rm -rf $(APP_DIR_BACKUP_EBIN)/*; \
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_EBIN)) \
-    cp -Rf $(APP_DIR_EBIN)/* $(APP_DIR_BACKUP_EBIN) || exit; \
+    cp -Rf $(APP_DIR_EBIN)/ $(APP_DIR_BACKUP_EBIN) || exit; \
     $(call return_done_for_module,"Backup procedures for $(APP_NAME) finished.")
 
 

@@ -91,10 +91,10 @@ backup:
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_BIN)) \
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_NIF)) \
     $(call ensure_dir_silent,$(APP_DIR_BACKUP_BUILD)) \
-    cp -Rf $(APP_DIR_EBIN)/* $(APP_DIR_BACKUP_EBIN); \
-    cp -Rf $(APP_DIR_BIN)/* $(APP_DIR_BACKUP_BIN); \
-    cp -Rf $(APP_DIR_NIF)/* $(APP_DIR_BACKUP_NIF); \
-    cp -Rf $(APP_DIR_BUILD)/* $(APP_DIR_BACKUP_BUILD); \
+    cp -Rf $(APP_DIR_EBIN)/ $(APP_DIR_BACKUP_EBIN); \
+    cp -Rf $(APP_DIR_BIN)/ $(APP_DIR_BACKUP_BIN); \
+    cp -Rf $(APP_DIR_NIF)/ $(APP_DIR_BACKUP_NIF); \
+    cp -Rf $(APP_DIR_BUILD)/ $(APP_DIR_BACKUP_BUILD); \
     $(call return_done_for_module,"Backup procedures for $(APP_NAME) finished.")
 
 

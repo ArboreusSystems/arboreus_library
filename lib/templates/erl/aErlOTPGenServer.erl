@@ -1,13 +1,13 @@
-%%%-------------------------------------------------------------------
-%%% @author Alexandr KIRILOV
-%%% @copyright (C) 2018, http://arboreus.system
-%%% @doc The Arboreus templates: OTP Gen_server
+%%% -------------------------------------------------------------------
+%%% @doc
+%%% @notice
 %%%
-%%% @end
-%%% Created : 29/05/2018 at 17:17
-%%%-------------------------------------------------------------------
--module(otp_gen_server).
--author("Alexandr KIRILOV, http://alexandr.kirilov.me").
+%%% @copyright Arboreus (http://arboreus.systems)
+%%% @author Alexandr Kirilov (http://alexandr.kirilov.me)
+%%% @created 01/25/2019 at 15:06
+%%% -------------------------------------------------------------------
+-module(aErlOTPGenServer).
+-author("Alexandr Kirilov (http://alexandr.kirilov.me)").
 -behaviour(gen_server).
 
 %% Constants
@@ -63,18 +63,18 @@ test(normal) ->
 	{ok, Pid} = start(),
 	test(Pid);
 test(Pid) when is_pid(Pid) ->
-	Time_start =  a_time:current(timestamp),
+	Time_start = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format("Process ~p started at: ~p (~p)~n", [
-		Pid,a_time:from_timestamp(rfc850,Time_start),Time_start
+		Pid, a_time:from_timestamp(rfc850, Time_start), Time_start
 	]),
 	io:format("Ok. Process name ~p.~n", [?SERVER]),
-	Time_stop =  a_time:current(timestamp),
+	Time_stop = a_time:current(timestamp),
 	io:format("*** -------------------~nTest for ~p passed~n", [?SERVER]),
 	io:format("Finished at: ~p (~p)~n", [
-		a_time:from_timestamp(rfc850,Time_stop),Time_stop
+		a_time:from_timestamp(rfc850, Time_stop), Time_stop
 	]),
-	io:format("Test time is: ~p~n",[Time_stop - Time_start]),
+	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	stop().
 
 

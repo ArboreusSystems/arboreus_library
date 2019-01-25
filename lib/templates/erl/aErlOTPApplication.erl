@@ -1,13 +1,13 @@
-%%%-------------------------------------------------------------------
-%%% @author Alexandr KIRILOV
-%%% @copyright (C) 2018, http://arboreus.system
-%%% @doc The Arboreus templates: OTP Application
+%%% -------------------------------------------------------------------
+%%% @doc
+%%% @notice
 %%%
-%%% @end
-%%% Created : 05/29/2018 at 17:20
-%%%-------------------------------------------------------------------
--module(otp_application).
--author("Alexandr KIRILOV, http://alexandr.kirilov.me").
+%%% @copyright Arboreus (http://arboreus.systems)
+%%% @author Alexandr Kirilov (http://alexandr.kirilov.me)
+%%% @created 01/25/2019 at 13:44
+%%% -------------------------------------------------------------------
+-module(aErlOTPApplication).
+-author("Alexandr Kirilov (http://alexandr.kirilov.me)").
 -behaviour(application).
 
 %% Constants
@@ -34,25 +34,25 @@ test() -> ok.
 
 %% ----------------------------
 %% @doc Application start phases handler
--spec start_phase(Phase,Type,Arguments) -> any()
+-spec start_phase(Phase, Type, Arguments) -> any()
 	when
 	Phase :: term(),
 	Type :: normal,
 	Arguments :: list().
 
-start_phase(Phase,Type,Arguments) ->
-	io:format("start_phase(~p,~p,~p).~n",[Phase,Type,Arguments]).
+start_phase(Phase, Type, Arguments) ->
+	io:format("start_phase(~p,~p,~p).~n", [Phase, Type, Arguments]).
 
 
 %% ----------------------------
 %% @doc Application start
--spec start(Start_type,_Start_arguments) ->
+-spec start(Start_type, _Start_arguments) ->
 	{ok, pid()} | {ok, pid(), State :: term()} | {error, Reason :: term()}
 	when
 	Start_type :: normal | {takeover, node()} | {failover, node()},
 	Start_arguments :: term().
 
-start(_Start_type,_Start_arguments) ->
+start(_Start_type, Start_arguments) ->
 	'TopSupervisor':start_link().
 
 

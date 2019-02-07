@@ -59,24 +59,24 @@ ensure_dir_silent:
 	$(call ensure_dir_silent,$(APP_DIR_BUILD))
 
 link_objects: build_objects
-	$(COMPILLER_C) -o $(DIR_BIN)/$(APP_NAME)/a_time_now \
-	 $(call dir_module_build,$(APP_NAME))/a_time_now.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_now_handler.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_month.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_weekday.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_rfc822.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_rfc850.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_ansi.o \
-	 $(call dir_module_build,$(APP_NAME))/a_convert.o \
-	 $(call dir_module_build,$(APP_NAME))/a_string.o \
+	$(COMPILLER_C) -o $(DIR_BIN)/$(APP_NAME)/aTimeNow \
+	 $(call dir_module_build,$(APP_NAME))/aTimeNow.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeNowHandler.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeMonth.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeWeekday.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeRFC822.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeRFC850.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeANSI.o \
+	 $(call dir_module_build,$(APP_NAME))/aConvert.o \
+	 $(call dir_module_build,$(APP_NAME))/aString.o \
 	 || exit; \
 	 $(call return_done_for_module,"Objects linked for module $(APP_NAME).")
 
-build_objects: a_time_now.c a_time_now_handler.c a_time_month.c a_time_weekday.c a_time_rfc822.c \
-a_time_rfc850.c a_time_ansi.c a_convert.c a_string.c
+build_objects: aTimeNow.c aTimeNowHandler.c aTimeMonth.c aTimeWeekday.c aTimeRFC822.c \
+aTimeRFC850.c aTimeANSI.c aConvert.c aString.c
 	$(call return_done_for_module,"Objects built for module $(APP_NAME).")
 
-build_nifs: a_time_now_nif.so
+build_nifs: aTimeNowNIF.so
 	$(call return_done_for_module,"Erlang NIFs built for $(APP_NAME).")
 
 build_erl: a_time_now.erl
@@ -101,32 +101,32 @@ backup:
 # ----------------------------------------------
 # C modules
 
-a_time_now.c:
-	$(call build_o,a_time_now)
+aTimeNow.c:
+	$(call build_o,aTimeNow)
 
-a_time_now_handler.c:
-	$(call build_o,a_time_now_handler)
+aTimeNowHandler.c:
+	$(call build_o,aTimeNowHandler)
 
-a_time_month.c:
-	$(call build_o,a_time_month)
+aTimeMonth.c:
+	$(call build_o,aTimeMonth)
 
-a_time_weekday.c:
-	$(call build_o,a_time_weekday)
+aTimeWeekday.c:
+	$(call build_o,aTimeWeekday)
 
-a_time_rfc822.c:
-	$(call build_o,a_time_rfc822)
+aTimeRFC822.c:
+	$(call build_o,aTimeRFC822)
 
-a_time_rfc850.c:
-	$(call build_o,a_time_rfc850)
+aTimeRFC850.c:
+	$(call build_o,aTimeRFC850)
 
-a_time_ansi.c:
-	$(call build_o,a_time_ansi)
+aTimeANSI.c:
+	$(call build_o,aTimeANSI)
 
-a_convert.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/a_convert.c,$(call dir_module_build,$(APP_NAME))/a_convert.o)
+aConvert.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/aConvert.c,$(call dir_module_build,$(APP_NAME))/aConvert.o)
 
-a_string.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/a_string.c,$(call dir_module_build,$(APP_NAME))/a_string.o)
+aString.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/aString.c,$(call dir_module_build,$(APP_NAME))/aString.o)
 
 
 # ----------------------------------------------
@@ -139,15 +139,15 @@ a_time_now.erl:
 # ----------------------------------------------
 # Erlang NIF modules
 
-a_time_now_nif.so:
-	$(COMPILLER_NIF) -o $(call dir_module_nif,$(APP_NAME))/a_time_now_nif.so \
-    $(call dir_module_src,$(APP_NAME))/a_time_now_nif.c \
-    $(call dir_module_src,$(APP_NAME))/a_time_now_handler.c \
-    $(call dir_module_src,$(APP_NAME))/a_time_weekday.c \
-    $(call dir_module_src,$(APP_NAME))/a_time_month.c \
-    $(call dir_module_src,$(APP_NAME))/a_time_rfc850.c \
-    $(call dir_module_src,$(APP_NAME))/a_time_rfc822.c \
-    $(call dir_module_src,$(APP_NAME))/a_time_ansi.c \
-    $(call dir_module_src,$(APP_UNIVERSAL_C))/a_convert.c \
-    $(call dir_module_src,$(APP_UNIVERSAL_C))/a_string.c \
+aTimeNowNIF.so:
+	$(COMPILLER_NIF) -o $(call dir_module_nif,$(APP_NAME))/aTimeNowNIF.so \
+    $(call dir_module_src,$(APP_NAME))/aTimeNowNIF.c \
+    $(call dir_module_src,$(APP_NAME))/aTimeNowHandler.c \
+    $(call dir_module_src,$(APP_NAME))/aTimeWeekday.c \
+    $(call dir_module_src,$(APP_NAME))/aTimeMonth.c \
+    $(call dir_module_src,$(APP_NAME))/aTimeRFC850.c \
+    $(call dir_module_src,$(APP_NAME))/aTimeRFC822.c \
+    $(call dir_module_src,$(APP_NAME))/aTimeANSI.c \
+    $(call dir_module_src,$(APP_UNIVERSAL_C))/aConvert.c \
+    $(call dir_module_src,$(APP_UNIVERSAL_C))/aString.c \
     || exit;

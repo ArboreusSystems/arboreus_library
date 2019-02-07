@@ -1,11 +1,11 @@
-// -------------------------------------------------------------------
-// @author Alexandr KIRILOV
-// @copyright (C) 2018, http://arboreus.system
-// @doc Arboreus current time handler
-//
-// @end
-// Created : 12/24/2018 at 13:54
-// -------------------------------------------------------------------
+/* -------------------------------------------------------------------
+ *  @doc Arboreus current time handler
+ *  @notice
+ *
+ *  @copyright Arboreus (http://arboreus.systems)
+ *  @author Alexandr Kirilov (http://alexandr.kirilov.me)
+ *  @created 12/24/2018 at 13:54
+ * */// --------------------------------------------------------------
 
 // System includes
 #include <stdio.h>
@@ -14,19 +14,19 @@
 #include <sys/timeb.h>
 
 // Application includes
-#include "../../constants/constants_general.h"
-#include "headers/a_time_now_handler.h"
-#include "headers/a_time_weekday.h"
-#include "headers/a_time_month.h"
-#include "headers/a_time_rfc822.h"
-#include "headers/a_time_rfc850.h"
-#include "headers/a_time_ansi.h"
-#include "../../universal_c/src/headers/a_convert.h"
-#include "../../universal_c/src/headers/a_string.h"
+#include "../../constants/aConstantsGeneral.h"
+#include "headers/aTimeNowHandler.h"
+#include "headers/aTimeWeekday.h"
+#include "headers/aTimeMonth.h"
+#include "headers/aTimeRFC822.h"
+#include "headers/aTimeRFC850.h"
+#include "headers/aTimeANSI.h"
+#include "../../universal_c/src/headers/aConvert.h"
+#include "../../universal_c/src/headers/aString.h"
 
 
 // Return time in microseconds
-int atnh_microseconds(long long int *Pointer){
+int atnhMicroseconds(long long int *Pointer){
 	
 	struct timeval Time;
 	if (!gettimeofday(&Time, NULL)) {
@@ -42,7 +42,7 @@ int atnh_microseconds(long long int *Pointer){
 
 
 // Return time in milliseconds
-int atnh_milliseconds(long long int *Pointer){
+int atnhMilliseconds(long long int *Pointer){
 	
 	struct timeb Time;
 	if (!ftime(&Time)) {
@@ -58,7 +58,7 @@ int atnh_milliseconds(long long int *Pointer){
 
 
 // Return time in seconds
-int atnh_seconds(long long int *Pointer){
+int atnhSeconds(long long int *Pointer){
 	
 	*Pointer = time(NULL);
 	
@@ -67,7 +67,7 @@ int atnh_seconds(long long int *Pointer){
 
 
 // Return time like integer
-int atnh_int(long long int *Pointer){
+int atnhInt(long long int *Pointer){
 	
 	time_t Time = time(NULL);
 	struct tm *Today;
@@ -82,7 +82,7 @@ int atnh_int(long long int *Pointer){
 
 
 // Return date like integer
-int atnh_int_date(long long int *Pointer){
+int atnhIntDate(long long int *Pointer){
 	
 	time_t Time = time(NULL);
 	struct tm *Today;
@@ -97,7 +97,7 @@ int atnh_int_date(long long int *Pointer){
 
 
 // Return full time like integer
-int atnh_int_full(long long int *Pointer){
+int atnhIntFull(long long int *Pointer){
 	
 	time_t Time = time(NULL);
 	struct tm *Today;
@@ -115,7 +115,7 @@ int atnh_int_full(long long int *Pointer){
 
 
 // Return full time like integer within extended precession
-int atnh_int_extend(long long int *Pointer){
+int atnhIntExtend(long long int *Pointer){
 	
 	struct timeval Time;
 	if (!gettimeofday(&Time, NULL)) {
@@ -140,36 +140,36 @@ int atnh_int_extend(long long int *Pointer){
 
 
 // Return time in RFC822 format "Sun, 06 Nov 1994 08:49:37 GMT"
-int atnh_rfc_822(char **RFC_822){
+int atnhRFC822(char **RFC_822){
 	
 	time_t Time = time(NULL);
 	struct tm *Today;
 	Today = localtime(&Time);
 	char ***Output = &RFC_822;
-	if (atrfc_822_from_struct(*Today,*Output) != EXIT_SUCCESS){FAILURE;}
+	if (atRFC822FromStruct(*Today, *Output) != EXIT_SUCCESS){FAILURE;}
 	SUCCESS;
 }
 
 
 // Return time in RFC850 format "Sunday, 06-Nov-94 08:49:37 GMT"
-int atnh_rfc_850(char **RFC_850){
+int atnhRFC850(char **RFC_850){
 	
 	time_t Time = time(NULL);
 	struct tm *Today;
 	Today = localtime(&Time);
 	char ***Output = &RFC_850;
-	if (atrfc_850_from_struct(*Today,*Output) != EXIT_SUCCESS){FAILURE;}
+	if (atRFC850FromStruct(*Today, *Output) != EXIT_SUCCESS){FAILURE;}
 	SUCCESS;
 }
 
 
 // Return time in ANSI format "Sun Nov  6 08:49:37 1994"
-int atnh_ansi(char **ANSI){
+int atnhANSI(char **ANSI){
 	
 	time_t Time = time(NULL);
 	struct tm *Today;
 	Today = localtime(&Time);
 	char ***Output = &ANSI;
-	if (atansi_from_struct(*Today,*Output) != EXIT_SUCCESS){FAILURE;}
+	if (atANSIFromStruct(*Today, *Output) != EXIT_SUCCESS){FAILURE;}
 	SUCCESS;
 }

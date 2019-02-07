@@ -1,11 +1,11 @@
-// -------------------------------------------------------------------
-// @author Alexandr KIRILOV
-// @copyright (C) 2018, http://arboreus.system
-// @doc Arboreus month name handler
-//
-// @end
-// Created : 12/24/2018 at 18:17
-// -------------------------------------------------------------------
+/* -------------------------------------------------------------------
+ *  @doc Arboreus ANSI time format handler
+ *  @notice
+ *
+ *  @copyright Arboreus (http://arboreus.systems)
+ *  @author Alexandr Kirilov (http://alexandr.kirilov.me)
+ *  @created 12/24/2018 at 18:17
+ * */// --------------------------------------------------------------
 
 // System includes
 #include <stdio.h>
@@ -13,13 +13,13 @@
 #include <string.h>
 
 // Application includes
-#include "../../constants/constants_general.h"
-#include "headers/a_time_month.h"
-#include "../../universal_c/src/headers/a_convert.h"
+#include "../../constants/aConstantsGeneral.h"
+#include "headers/aTimeMonth.h"
+#include "../../universal_c/src/headers/aConvert.h"
 
 
 // Return integer month from numeric
-int atmn_numeric_to_integer(char *Numeric){
+int atmnNumericToInteger(char *Numeric){
 	
 	if (!strcmp(A_MONTH_NUMERIC_JANUARY,Numeric)){return A_MONTH_INT_JANUARY;}
 	if (!strcmp(A_MONTH_NUMERIC_FEBRUARY,Numeric)){return A_MONTH_INT_FEBRUARY;}
@@ -38,7 +38,7 @@ int atmn_numeric_to_integer(char *Numeric){
 
 
 // Return alpha3 month from numeric
-const char *atmn_numeric_to_alpha3(char *Numeric){
+const char *atmnNumericToAlpha3(char *Numeric){
 	
 	if (!strcmp(A_MONTH_NUMERIC_JANUARY,Numeric)){return A_MONTH_ALPHA3_JANUARY;}
 	if (!strcmp(A_MONTH_NUMERIC_FEBRUARY,Numeric)){return A_MONTH_ALPHA3_FEBRUARY;}
@@ -57,7 +57,7 @@ const char *atmn_numeric_to_alpha3(char *Numeric){
 
 
 // Return alpha2 month from numeric
-const char *atmn_numeric_to_alpha2(char *Numeric){
+const char *atmnNumericToAlpha2(char *Numeric){
 	
 	if (!strcmp(A_MONTH_NUMERIC_JANUARY,Numeric)){return A_MONTH_ALPHA2_JANUARY;}
 	if (!strcmp(A_MONTH_NUMERIC_FEBRUARY,Numeric)){return A_MONTH_ALPHA2_FEBRUARY;}
@@ -76,7 +76,7 @@ const char *atmn_numeric_to_alpha2(char *Numeric){
 
 
 // Return full month from numeric
-const char *atmn_numeric_to_full(char *Numeric){
+const char *atmnNumericToFull(char *Numeric){
 	
 	if (!strcmp(A_MONTH_NUMERIC_JANUARY,Numeric)){return A_MONTH_FULL_JANUARY;}
 	if (!strcmp(A_MONTH_NUMERIC_FEBRUARY,Numeric)){return A_MONTH_FULL_FEBRUARY;}
@@ -95,7 +95,7 @@ const char *atmn_numeric_to_full(char *Numeric){
 
 
 // Return integer month from alpha2
-int atmn_alpha2_to_integer(char *Alpha2){
+int atmnAlpha2ToInteger(char *Alpha2){
 	
 	if (!strcmp(A_MONTH_ALPHA2_JANUARY,Alpha2)){return A_MONTH_INT_JANUARY;}
 	if (!strcmp(A_MONTH_ALPHA2_FEBRUARY,Alpha2)){return A_MONTH_INT_FEBRUARY;}
@@ -114,7 +114,7 @@ int atmn_alpha2_to_integer(char *Alpha2){
 
 
 // Return alpha3 month from alpha2
-const char *atmn_alpha2_to_alpha3(char *Alpha2){
+const char *atmnAlpha2ToAlpha3(char *Alpha2){
 	
 	if (!strcmp(A_MONTH_ALPHA2_JANUARY,Alpha2)){return A_MONTH_ALPHA3_JANUARY;}
 	if (!strcmp(A_MONTH_ALPHA2_FEBRUARY,Alpha2)){return A_MONTH_ALPHA3_FEBRUARY;}
@@ -133,7 +133,7 @@ const char *atmn_alpha2_to_alpha3(char *Alpha2){
 
 
 // Return full month from alpha2
-const char *atmn_alpha2_to_full(char *Alpha2){
+const char *atmnAlpha2ToFull(char *Alpha2){
 	
 	if (!strcmp(A_MONTH_ALPHA2_JANUARY,Alpha2)){return A_MONTH_FULL_JANUARY;}
 	if (!strcmp(A_MONTH_ALPHA2_FEBRUARY,Alpha2)){return A_MONTH_FULL_FEBRUARY;}
@@ -152,7 +152,7 @@ const char *atmn_alpha2_to_full(char *Alpha2){
 
 
 // Return numeric month from alpha2
-const char *atmn_alpha2_to_numeric(char *Alpha2){
+const char *atmnAlpha2ToNumeric(char *Alpha2){
 	
 	if (!strcmp(A_MONTH_ALPHA2_JANUARY,Alpha2)){return A_MONTH_NUMERIC_JANUARY;}
 	if (!strcmp(A_MONTH_ALPHA2_FEBRUARY,Alpha2)){return A_MONTH_NUMERIC_FEBRUARY;}
@@ -171,7 +171,7 @@ const char *atmn_alpha2_to_numeric(char *Alpha2){
 
 
 // Return month integer from alpha3
-int atmn_alpha3_to_integer(char *Alpha3){
+int atmnAlpha3ToInteger(char *Alpha3){
 	
 	if (!strcmp(A_MONTH_ALPHA3_JANUARY,Alpha3)){return A_MONTH_INT_JANUARY;}
 	if (!strcmp(A_MONTH_ALPHA3_FEBRUARY,Alpha3)){return A_MONTH_INT_FEBRUARY;}
@@ -190,7 +190,7 @@ int atmn_alpha3_to_integer(char *Alpha3){
 
 
 // Return month alpha2 from alpha3
-const char *atmn_alpha3_to_alpha2(char *Alpha3){
+const char *atmnAlpha3ToAlpha2(char *Alpha3){
 	
 	if (!strcmp(A_MONTH_ALPHA3_JANUARY,Alpha3)){return A_MONTH_ALPHA2_JANUARY;}
 	if (!strcmp(A_MONTH_ALPHA3_FEBRUARY,Alpha3)){return A_MONTH_ALPHA2_FEBRUARY;}
@@ -209,7 +209,7 @@ const char *atmn_alpha3_to_alpha2(char *Alpha3){
 
 
 // Return month full from alpha3
-const char *atmn_alpha3_to_full(char *Alpha3){
+const char *atmnAlpha3ToFull(char *Alpha3){
 	
 	if (!strcmp(A_MONTH_ALPHA3_JANUARY,Alpha3)){return A_MONTH_FULL_JANUARY;}
 	if (!strcmp(A_MONTH_ALPHA3_FEBRUARY,Alpha3)){return A_MONTH_FULL_FEBRUARY;}
@@ -228,7 +228,7 @@ const char *atmn_alpha3_to_full(char *Alpha3){
 
 
 // Return month numeric from alpha3
-const char *atmn_alpha3_to_numeric(char *Alpha3){
+const char *atmnAlpha3ToNumeric(char *Alpha3){
 	
 	if (!strcmp(A_MONTH_ALPHA3_JANUARY,Alpha3)){return A_MONTH_NUMERIC_JANUARY;}
 	if (!strcmp(A_MONTH_ALPHA3_FEBRUARY,Alpha3)){return A_MONTH_NUMERIC_FEBRUARY;}
@@ -247,7 +247,7 @@ const char *atmn_alpha3_to_numeric(char *Alpha3){
 
 
 // Return month alpha3 from integer
-const char *atmn_integer_to_alpha3(int Month){
+const char *atmnIntegerToAlpha3(int Month){
 	
 	if (Month == A_MONTH_INT_JANUARY) {return A_MONTH_ALPHA3_JANUARY;} else
 	if (Month == A_MONTH_INT_FEBRUARY) {return A_MONTH_ALPHA3_FEBRUARY;} else
@@ -266,7 +266,7 @@ const char *atmn_integer_to_alpha3(int Month){
 
 
 // Return month alpha2 from integer
-const char *atmn_integer_to_alpha2(int Month){
+const char *atmnIntegerToAlpha2(int Month){
 	
 	if (Month == A_MONTH_INT_JANUARY) {return A_MONTH_ALPHA2_JANUARY;} else
 	if (Month == A_MONTH_INT_FEBRUARY) {return A_MONTH_ALPHA2_FEBRUARY;} else
@@ -285,7 +285,7 @@ const char *atmn_integer_to_alpha2(int Month){
 
 
 // Return month full from integer
-const char *atmn_integer_to_full(int Month){
+const char *atmnIntegerToFull(int Month){
 	
 	if (Month == A_MONTH_INT_JANUARY) {return A_MONTH_FULL_JANUARY;} else
 	if (Month == A_MONTH_INT_FEBRUARY) {return A_MONTH_FULL_FEBRUARY;} else
@@ -304,14 +304,14 @@ const char *atmn_integer_to_full(int Month){
 
 
 // Return month numeric from integer
-const char *atmn_integer_to_numeric(int Month){
+const char *atmnTntegerToNumeric(int Month){
 	
 	if (Month > A_MONTH_INT_DECEMBER){return A_MONTH_NUMERIC_NOTAMONTH;}
 	if (Month < A_MONTH_INT_JANUARY){return A_MONTH_NUMERIC_NOTAMONTH;}
 	
 	char *Numeric;
 	
-	if (acnv_integer_to_zstring(Month + 1,&Numeric,2) == EXIT_SUCCESS){
+	if (acnvIntegerToZString(Month + 1, &Numeric, 2) == EXIT_SUCCESS){
 		return Numeric;
 	} else {
 		return A_MONTH_NUMERIC_NOTAMONTH;

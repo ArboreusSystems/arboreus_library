@@ -1,24 +1,24 @@
-// -------------------------------------------------------------------
-// @author Alexandr KIRILOV
-// @copyright (C) 2018, http://arboreus.system
-// @doc Arboreus weekday name handler
-//
-// @end
-// Created : 12/24/2018 at 19:10
-// -------------------------------------------------------------------
+/* -------------------------------------------------------------------
+ *  @doc Arboreus weekday name handler
+ *  @notice
+ *
+ *  @copyright Arboreus (http://arboreus.systems)
+ *  @author Alexandr Kirilov (http://alexandr.kirilov.me)
+ *  @created 12/24/2018 at 19:10
+ * */// --------------------------------------------------------------
 
 // System includes
 #include <stdio.h>
 #include <string.h>
 
 // Application includes
-#include "../../constants/constants_general.h"
-#include "headers/a_time_weekday.h"
-#include "../../universal_c/src/headers/a_convert.h"
+#include "../../constants/aConstantsGeneral.h"
+#include "headers/aTimeWeekday.h"
+#include "../../universal_c/src/headers/aConvert.h"
 
 
 // Return weekday in Alpha3 format
-const char *atwd_integer_to_alpha3(int Month){
+const char *atwdIntegerToAlpha3(int Month){
 	
 	if (Month == A_WEEKDAY_INT_MONDAY){return A_WEEKDAY_ALPHA3_MONDAY;}
 	if (Month == A_WEEKDAY_INT_TUESDAY){return A_WEEKDAY_ALPHA3_TUESDAY;}
@@ -32,7 +32,7 @@ const char *atwd_integer_to_alpha3(int Month){
 
 
 // Return weekday in Alpha2 format
-const char *atwd_integer_to_alpha2(int Month){
+const char *atwdIntegerToAlpha2(int Month){
 	
 	if (Month == A_WEEKDAY_INT_MONDAY){return A_WEEKDAY_ALPHA2_MONDAY;}
 	if (Month == A_WEEKDAY_INT_TUESDAY){return A_WEEKDAY_ALPHA2_TUESDAY;}
@@ -46,7 +46,7 @@ const char *atwd_integer_to_alpha2(int Month){
 
 
 // Return weekday in Full format
-const char *atwd_integer_to_full(int Month){
+const char *atwdIntegerToFull(int Month){
 	
 	if (Month == A_WEEKDAY_INT_MONDAY){return A_WEEKDAY_FULL_MONDAY;}
 	if (Month == A_WEEKDAY_INT_TUESDAY){return A_WEEKDAY_FULL_TUESDAY;}
@@ -59,14 +59,14 @@ const char *atwd_integer_to_full(int Month){
 }
 
 // Return weekday in Numeric format
-const char *atwd_integer_to_numeric(int Weekday){
+const char *atwdIntegerToNumeric(int Weekday){
 	
 	if (Weekday > A_WEEKDAY_INT_SATURDAY){return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;}
 	if (Weekday < A_WEEKDAY_INT_SUNDAY){return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;}
 	
 	char *Numeric;
 	
-	if (acnv_integer_to_zstring(Weekday,&Numeric,2) == EXIT_SUCCESS){
+	if (acnvIntegerToZString(Weekday, &Numeric, 2) == EXIT_SUCCESS){
 		return Numeric;
 	} else {
 		return A_WEEKDAY_NUMERIC_NOTAWEEKDAY;
@@ -75,7 +75,7 @@ const char *atwd_integer_to_numeric(int Weekday){
 
 
 // Return weekday number from Alpha3 string
-int atwd_alpha3_to_integer(char *Pointer){
+int atwdAlpha3ToInteger(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_ALPHA3_MONDAY,Pointer)){return A_WEEKDAY_INT_MONDAY;}
 	if (!strcmp(A_WEEKDAY_ALPHA3_TUESDAY,Pointer)){return A_WEEKDAY_INT_TUESDAY;}
@@ -89,7 +89,7 @@ int atwd_alpha3_to_integer(char *Pointer){
 
 
 // Return weekday Alpha2 from Alpha3
-const char *atwd_alpha3_to_alpha2(char *Pointer){
+const char *atwdAlpha3ToAlpha2(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_ALPHA3_MONDAY,Pointer)){return A_WEEKDAY_ALPHA2_MONDAY;}
 	if (!strcmp(A_WEEKDAY_ALPHA3_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA2_TUESDAY;}
@@ -103,7 +103,7 @@ const char *atwd_alpha3_to_alpha2(char *Pointer){
 
 
 // Return weekday Full from Alpha3
-const char *atwd_alpha3_to_full(char *Pointer){
+const char *atwdAlpha3ToFull(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_ALPHA3_MONDAY,Pointer)){return A_WEEKDAY_FULL_MONDAY;}
 	if (!strcmp(A_WEEKDAY_ALPHA3_TUESDAY,Pointer)){return A_WEEKDAY_FULL_TUESDAY;}
@@ -117,7 +117,7 @@ const char *atwd_alpha3_to_full(char *Pointer){
 
 
 // Return weekday Numeric from Alpha3
-const char *atwd_alpha3_to_numeric(char *Pointer){
+const char *atwdAlpha3ToNumeric(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_ALPHA3_MONDAY,Pointer)){return A_WEEKDAY_NUMERIC_MONDAY;}
 	if (!strcmp(A_WEEKDAY_ALPHA3_TUESDAY,Pointer)){return A_WEEKDAY_NUMERIC_TUESDAY;}
@@ -131,7 +131,7 @@ const char *atwd_alpha3_to_numeric(char *Pointer){
 
 
 // Return weekday Alpha3 from Full
-const char *atwd_full_to_alpha3(char *Pointer){
+const char *atwdFullToAlpha3(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_FULL_MONDAY,Pointer)){return A_WEEKDAY_ALPHA3_MONDAY;}
 	if (!strcmp(A_WEEKDAY_FULL_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA3_TUESDAY;}
@@ -145,7 +145,7 @@ const char *atwd_full_to_alpha3(char *Pointer){
 
 
 // Return weekday Alpha3 from Full
-const char *atwd_full_to_alpha2(char *Pointer){
+const char *atwdFullToAlpha2(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_FULL_MONDAY,Pointer)){return A_WEEKDAY_ALPHA2_MONDAY;}
 	if (!strcmp(A_WEEKDAY_FULL_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA2_TUESDAY;}
@@ -159,7 +159,7 @@ const char *atwd_full_to_alpha2(char *Pointer){
 
 
 // Return weekday number from full name string
-int atwd_full_to_integer(char *Pointer){
+int atwdFullToInteger(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_FULL_MONDAY,Pointer)){return A_WEEKDAY_INT_MONDAY;}
 	if (!strcmp(A_WEEKDAY_FULL_TUESDAY,Pointer)){return A_WEEKDAY_INT_TUESDAY;}
@@ -173,7 +173,7 @@ int atwd_full_to_integer(char *Pointer){
 
 
 // Return weekday numeric from full
-const char *atwd_full_to_numeric(char *Pointer){
+const char *atwdFullToNumeric(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_FULL_MONDAY,Pointer)){return A_WEEKDAY_NUMERIC_MONDAY;}
 	if (!strcmp(A_WEEKDAY_FULL_TUESDAY,Pointer)){return A_WEEKDAY_NUMERIC_TUESDAY;}
@@ -187,7 +187,7 @@ const char *atwd_full_to_numeric(char *Pointer){
 
 
 // Return weekday integer from numeric
-int atwd_numeric_to_integer(char *Pointer){
+int atwdNumericToInteger(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_NUMERIC_MONDAY,Pointer)){return A_WEEKDAY_INT_MONDAY;}
 	if (!strcmp(A_WEEKDAY_NUMERIC_TUESDAY,Pointer)){return A_WEEKDAY_INT_TUESDAY;}
@@ -201,7 +201,7 @@ int atwd_numeric_to_integer(char *Pointer){
 
 
 // Return weekday alpha3 from numeric
-const char *atwd_numeric_to_alpha3(char *Pointer){
+const char *atwdNumericToAlpha3(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_NUMERIC_MONDAY,Pointer)){return A_WEEKDAY_ALPHA3_MONDAY;}
 	if (!strcmp(A_WEEKDAY_NUMERIC_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA3_TUESDAY;}
@@ -215,7 +215,7 @@ const char *atwd_numeric_to_alpha3(char *Pointer){
 
 
 // Return weekday alpha2 from numeric
-const char *atwd_numeric_to_alpha2(char *Pointer){
+const char *atwdNumericToAlpha2(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_NUMERIC_MONDAY,Pointer)){return A_WEEKDAY_ALPHA2_MONDAY;}
 	if (!strcmp(A_WEEKDAY_NUMERIC_TUESDAY,Pointer)){return A_WEEKDAY_ALPHA2_TUESDAY;}
@@ -229,7 +229,7 @@ const char *atwd_numeric_to_alpha2(char *Pointer){
 
 
 // Return weekday full from numeric
-const char *atwd_numeric_to_full(char *Pointer){
+const char *atwdNumericToFull(char *Pointer){
 	
 	if (!strcmp(A_WEEKDAY_NUMERIC_MONDAY,Pointer)){return A_WEEKDAY_FULL_MONDAY;}
 	if (!strcmp(A_WEEKDAY_NUMERIC_TUESDAY,Pointer)){return A_WEEKDAY_FULL_TUESDAY;}

@@ -15,7 +15,6 @@
 %% Module API
 -export([
 	test/0,
-	now/0,
 	current_year/1,current_month/0,current_day/0,current_dow/1,
 	current/0,current/1,
 	timestamp/0,timestamp/1,timestamp_to_tuple/1,from_timestamp/2,

@@ -1,11 +1,11 @@
-// -------------------------------------------------------------------
-// @author Alexandr KIRILOV
-// @copyright (C) 2018, http://arboreus.system
-// @doc Arboreus UNIX current time handler
-//
-// @end
-// Created : 12/23/2018 at 20:47
-// -------------------------------------------------------------------
+/* -------------------------------------------------------------------
+ *  @doc Arboreus UNIX current time handler
+ *  @notice
+ *
+ *  @copyright Arboreus (http://arboreus.systems)
+ *  @author Alexandr Kirilov (http://alexandr.kirilov.me)
+ *  @created 12/23/2018 at 20:47
+ * */// --------------------------------------------------------------
 
 // System includes
 #include <stdio.h>
@@ -14,9 +14,9 @@
 #include <err.h>
 
 // Application includes
-#include "../../constants/constants_general.h"
-#include "headers/a_time_now.h"
-#include "headers/a_time_now_handler.h"
+#include "../../constants/aConstantsGeneral.h"
+#include "headers/aTimeNow.h"
+#include "headers/aTimeNowHandler.h"
 
 
 
@@ -27,30 +27,30 @@ int main(int Number, char *Arguments[]) {
 	
 	if (Number>1) {
 		if (!strcmp("microseconds",Arguments[1])) {
-			a_time_now_microseconds();
+			aTimeNowMicroseconds();
 		} else if (!strcmp("milliseconds",Arguments[1])){
-			a_time_now_milliseconds();
+			aTimeNowMilliseconds();
 		} else if (!strcmp("seconds",Arguments[1])){
-			a_time_now_seconds();
+			aTimeNowSeconds();
 		} else if (!strcmp("integer",Arguments[1])){
-			a_time_now_int();
+			aTimeNowInt();
 		} else if (!strcmp("integer_date",Arguments[1])){
-			a_time_now_int_date();
+			aTimeNowIntDate();
 		} else if (!strcmp("integer_full",Arguments[1])){
-			a_time_now_int_full();
+			aTimeNowIntFull();
 		} else if (!strcmp("integer_extend",Arguments[1])){
-			a_time_now_int_extend();
+			aTimeNowIntExtend();
 		} else if (!strcmp("rfc_822",Arguments[1])){
-			a_time_now_rfc_822();
+			aTimeNowRFC822();
 		} else if (!strcmp("rfc_850",Arguments[1])){
-			a_time_now_rfc_850();
+			aTimeNowRFC850();
 		} else if (!strcmp("ansi",Arguments[1])){
-			a_time_now_ansi();
+			aTimeNowANSI();
 		} else {
 			FAILURE_ERROR(1,"Wrong parameter");
 		}
 	} else {
-		a_time_now_microseconds();
+		aTimeNowMicroseconds();
 	}
 }
 
@@ -61,10 +61,10 @@ int main(int Number, char *Arguments[]) {
 
 
 // Return time in microseconds
-int a_time_now_microseconds(){
+int aTimeNowMicroseconds(){
 	
 	long long int Microseconds = 0;
-	if (atnh_microseconds(&Microseconds) == EXIT_SUCCESS) {
+	if (atnhMicroseconds(&Microseconds) == EXIT_SUCCESS) {
 		printf("%lld\n",Microseconds);
 		SUCCESS;
 	} else {
@@ -74,10 +74,10 @@ int a_time_now_microseconds(){
 
 
 // Return time in milliseconds
-int a_time_now_milliseconds(){
+int aTimeNowMilliseconds(){
 	
 	long long int Milliseconds = 0;
-	if (atnh_milliseconds(&Milliseconds) == EXIT_SUCCESS) {
+	if (atnhMilliseconds(&Milliseconds) == EXIT_SUCCESS) {
 		printf("%lld\n",Milliseconds);
 		SUCCESS;
 	} else {
@@ -87,50 +87,50 @@ int a_time_now_milliseconds(){
 
 
 // Return time in seconds
-int a_time_now_seconds(){
+int aTimeNowSeconds(){
 	
 	long long int Seconds = 0;
-	atnh_seconds(&Seconds);
+	atnhSeconds(&Seconds);
 	printf("%lld\n",Seconds);
 	SUCCESS;
 }
 
 
 // Return time like integer
-int a_time_now_int(){
+int aTimeNowInt(){
 	
 	long long Int = 0;
-	atnh_int(&Int);
+	atnhInt(&Int);
 	printf("%lld\n",Int);
 	SUCCESS;
 }
 
 
 // Return date like integer
-int a_time_now_int_date(){
+int aTimeNowIntDate(){
 	
 	long long Int_date = 0;
-	atnh_int_date(&Int_date);
+	atnhIntDate(&Int_date);
 	printf("%lld\n",Int_date);
 	SUCCESS;
 }
 
 
 // Return full time like integer
-int a_time_now_int_full(){
+int aTimeNowIntFull(){
 	
 	long long Int_full = 0;
-	atnh_int_full(&Int_full);
+	atnhIntFull(&Int_full);
 	printf("%lld\n",Int_full);
 	SUCCESS;
 }
 
 
 // Return full time like integer
-int a_time_now_int_extend(){
+int aTimeNowIntExtend(){
 	
 	long long Int_extend = 0;
-	if (atnh_int_extend(&Int_extend) == EXIT_SUCCESS) {
+	if (atnhIntExtend(&Int_extend) == EXIT_SUCCESS) {
 		printf("%lld\n",Int_extend);
 		SUCCESS;
 	} else {
@@ -140,30 +140,30 @@ int a_time_now_int_extend(){
 
 
 // Return time in RFC822 format
-int a_time_now_rfc_822(){
+int aTimeNowRFC822(){
 	
 	char *RFC_822;
-	if (atnh_rfc_822(&RFC_822) != EXIT_SUCCESS){FAILURE;};
+	if (atnhRFC822(&RFC_822) != EXIT_SUCCESS){FAILURE;};
 	printf("%s\n",RFC_822);
 	SUCCESS;
 }
 
 
 // Return time in RFC850 format
-int a_time_now_rfc_850(){
+int aTimeNowRFC850(){
 	
 	char *RFC_850;
-	if (atnh_rfc_850(&RFC_850) != EXIT_SUCCESS){FAILURE;};
+	if (atnhRFC850(&RFC_850) != EXIT_SUCCESS){FAILURE;};
 	printf("%s\n",RFC_850);
 	SUCCESS;
 }
 
 
 // Return time in ANSI format
-int a_time_now_ansi(){
+int aTimeNowANSI(){
 	
 	char *ANSI;
-	if (atnh_ansi(&ANSI) != EXIT_SUCCESS){FAILURE;};
+	if (atnhANSI(&ANSI) != EXIT_SUCCESS){FAILURE;};
 	printf("%s\n",ANSI);
 	SUCCESS;
 }

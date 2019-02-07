@@ -59,28 +59,28 @@ ensure_dir_silent:
 	$(call ensure_dir_silent,$(APP_DIR_BUILD))
 
 link_objects: build_objects
-	$(COMPILLER_C) -o $(DIR_BIN)/$(APP_NAME)/a_test \
-	 $(call dir_module_build,$(APP_NAME))/a_test.o \
-	 $(call dir_module_build,$(APP_NAME))/a_test_time.o \
-	 $(call dir_module_build,$(APP_NAME))/a_test_time_ansi.o \
-	 $(call dir_module_build,$(APP_NAME))/a_test_time_month.o \
-	 $(call dir_module_build,$(APP_NAME))/a_test_time_rfc822.o \
-	 $(call dir_module_build,$(APP_NAME))/a_test_time_rfc850.o \
-	 $(call dir_module_build,$(APP_NAME))/a_test_time_weekday.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_now_handler.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_month.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_weekday.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_rfc822.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_rfc850.o \
-	 $(call dir_module_build,$(APP_NAME))/a_time_ansi.o \
-	 $(call dir_module_build,$(APP_NAME))/a_convert.o \
-	 $(call dir_module_build,$(APP_NAME))/a_string.o \
+	$(COMPILLER_C) -o $(DIR_BIN)/$(APP_NAME)/aTest \
+	 $(call dir_module_build,$(APP_NAME))/aTest.o \
+	 $(call dir_module_build,$(APP_NAME))/aTestTime.o \
+	 $(call dir_module_build,$(APP_NAME))/aTestTimeANSI.o \
+	 $(call dir_module_build,$(APP_NAME))/aTestTimeMonth.o \
+	 $(call dir_module_build,$(APP_NAME))/aTestTimeRFC822.o \
+	 $(call dir_module_build,$(APP_NAME))/aTestTimeRFC850.o \
+	 $(call dir_module_build,$(APP_NAME))/aTestTimeWeekday.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeNowHandler.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeMonth.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeWeekday.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeRFC822.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeRFC850.o \
+	 $(call dir_module_build,$(APP_NAME))/aTimeANSI.o \
+	 $(call dir_module_build,$(APP_NAME))/aConvert.o \
+	 $(call dir_module_build,$(APP_NAME))/aString.o \
 	 || exit; \
 	 $(call return_done_for_module,"Objects linked for module $(APP_NAME).")
 
-build_objects: a_test.c a_test_time.c a_test_time_ansi.c a_test_time_month.c a_test_time_rfc822.c a_test_time_rfc850.c \
-a_test_time_rfc850.c a_test_time_weekday.c a_time_now_handler.c a_time_month.c a_time_weekday.c a_time_rfc822.c \
-a_time_rfc850.c a_time_ansi.c a_convert.c a_string.c
+build_objects: aTest.c aTestTime.c aTestTimeANSI.c aTestTimeMonth.c aTestTimeRFC822.c aTestTimeRFC850.c \
+aTestTimeRFC850.c aTestTimeWeekday.c aTimeNowHandler.c aTimeMonth.c aTimeWeekday.c aTimeRFC822.c \
+aTimeRFC850.c aTimeANSI.c aConvert.c aString.c
 	$(call return_done_for_module,"Objects built for module $(APP_NAME).")
 
 backup:
@@ -99,56 +99,56 @@ backup:
 # ----------------------------------------------
 # C modules
 
-a_test.c:
-	$(call build_o,a_test)
+aTest.c:
+	$(call build_o,aTest)
 
 # a_test_time
 
-a_test_time.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/a_test_time.c,$(call dir_module_build,$(APP_NAME))/a_test_time.o)
+aTestTime.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/aTestTime.c,$(call dir_module_build,$(APP_NAME))/aTestTime.o)
 
-a_test_time_ansi.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/a_test_time_ansi.c,$(call dir_module_build,$(APP_NAME))/a_test_time_ansi.o)
+aTestTimeANSI.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/aTestTimeANSI.c,$(call dir_module_build,$(APP_NAME))/aTestTimeANSI.o)
 
-a_test_time_month.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/a_test_time_month.c,$(call dir_module_build,$(APP_NAME))/a_test_time_month.o)
+aTestTimeMonth.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/aTestTimeMonth.c,$(call dir_module_build,$(APP_NAME))/aTestTimeMonth.o)
 
-a_test_time_rfc822.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/a_test_time_rfc822.c,$(call dir_module_build,$(APP_NAME))/a_test_time_rfc822.o)
+aTestTimeRFC822.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/aTestTimeRFC822.c,$(call dir_module_build,$(APP_NAME))/aTestTimeRFC822.o)
 
-a_test_time_rfc850.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/a_test_time_rfc850.c,$(call dir_module_build,$(APP_NAME))/a_test_time_rfc850.o)
+aTestTimeRFC850.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/aTestTimeRFC850.c,$(call dir_module_build,$(APP_NAME))/aTestTimeRFC850.o)
 
-a_test_time_weekday.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/a_test_time_weekday.c,$(call dir_module_build,$(APP_NAME))/a_test_time_weekday.o)
+aTestTimeWeekday.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/a_time/aTestTimeWeekday.c,$(call dir_module_build,$(APP_NAME))/aTestTimeWeekday.o)
 
 # a_time
 
-a_time_now_handler.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/a_time_now_handler.c,$(call dir_module_build,$(APP_NAME))/a_time_now_handler.o)
+aTimeNowHandler.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/aTimeNowHandler.c,$(call dir_module_build,$(APP_NAME))/aTimeNowHandler.o)
 
-a_time_month.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/a_time_month.c,$(call dir_module_build,$(APP_NAME))/a_time_month.o)
+aTimeMonth.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/aTimeMonth.c,$(call dir_module_build,$(APP_NAME))/aTimeMonth.o)
 
-a_time_weekday.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/a_time_weekday.c,$(call dir_module_build,$(APP_NAME))/a_time_weekday.o)
+aTimeWeekday.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/aTimeWeekday.c,$(call dir_module_build,$(APP_NAME))/aTimeWeekday.o)
 
-a_time_rfc822.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/a_time_rfc822.c,$(call dir_module_build,$(APP_NAME))/a_time_rfc822.o)
+aTimeRFC822.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/aTimeRFC822.c,$(call dir_module_build,$(APP_NAME))/aTimeRFC822.o)
 
-a_time_rfc850.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/a_time_rfc850.c,$(call dir_module_build,$(APP_NAME))/a_time_rfc850.o)
+aTimeRFC850.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/aTimeRFC850.c,$(call dir_module_build,$(APP_NAME))/aTimeRFC850.o)
 
-a_time_ansi.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/a_time_ansi.c,$(call dir_module_build,$(APP_NAME))/a_time_ansi.o)
+aTimeANSI.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/aTimeANSI.c,$(call dir_module_build,$(APP_NAME))/aTimeANSI.o)
 
 # universal_c
 
-a_convert.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/a_convert.c,$(call dir_module_build,$(APP_NAME))/a_convert.o)
+aConvert.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/aConvert.c,$(call dir_module_build,$(APP_NAME))/aConvert.o)
 
-a_string.c:
-	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/a_string.c,$(call dir_module_build,$(APP_NAME))/a_string.o)
+aString.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/aString.c,$(call dir_module_build,$(APP_NAME))/aString.o)
 
 
 # ----------------------------------------------

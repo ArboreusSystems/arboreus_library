@@ -12,14 +12,14 @@
 #include <string.h>
 
 // Application includes
-#include "../../constants/constants_general.h"
-#include "headers/a_convert.h"
-#include "headers/a_string.h"
+#include "../../constants/aConstantsGeneral.h"
+#include "headers/aConvert.h"
+#include "headers/aString.h"
 
 
 
 // Convert string to integer
-int acnv_string_to_integer(char *String, long long int *Number){
+int acnvStringToInteger(char *String, long long int *Number){
 	
 	size_t Size = strlen(String);
 	int i = 0;
@@ -31,7 +31,7 @@ int acnv_string_to_integer(char *String, long long int *Number){
 			Sign = -1; i++;
 		}
 		for(;i < Size; i++){
-			Cipher = acnv_char_to_cipher((int)String[i]);
+			Cipher = acnvCharToCipher((int) String[i]);
 			if (Cipher < 0){
 				return -3;
 			} else {
@@ -47,7 +47,7 @@ int acnv_string_to_integer(char *String, long long int *Number){
 
 
 // Convert integer to string within zero
-int acnv_integer_to_zstring(long long int Number, char **String, int Length){
+int acnvIntegerToZString(long long int Number, char **String, int Length){
 	
 	int Max_length = 18;
 	int Max_size = Max_length + 2;
@@ -65,7 +65,7 @@ int acnv_integer_to_zstring(long long int Number, char **String, int Length){
 		Sign = -Sign;
 	}
 	do {
-		Buffer[Counter_b++] = acnv_cipher_to_char((int)(Sign % 10));
+		Buffer[Counter_b++] = acnvCipherToChar((int) (Sign % 10));
 	} while ((Sign /= 10) > 0);
 	if (Counter_b < Length){
 		while (Counter_b < Length){
@@ -95,7 +95,7 @@ int acnv_integer_to_zstring(long long int Number, char **String, int Length){
 
 
 // Convert integer to string
-int acnv_integer_to_string(long long int Number, char **String){
+int acnvIntegerToString(long long int Number, char **String){
 	
 	char Output[20];
 	long long int Sign = 0;
@@ -105,13 +105,13 @@ int acnv_integer_to_string(long long int Number, char **String){
 		Sign = -Sign;
 	}
 	do {
-		Output[Counter++] = acnv_cipher_to_char((int)(Sign % 10));
+		Output[Counter++] = acnvCipherToChar((int) (Sign % 10));
 	} while ((Sign /= 10) > 0);
 	if (Number < 0){
 		Output[Counter++] = '-';
 	}
 	Output[Counter] = '\0';
-	astr_reverse(Output);
+	astrReverse(Output);
 	*String = malloc(Counter * sizeof(char));
 	if (*String != NULL){
 		strcpy(*String,Output);
@@ -123,13 +123,13 @@ int acnv_integer_to_string(long long int Number, char **String){
 
 
 // Convert cipher to unicode char
-char acnv_cipher_to_char(int Cipher){
+char acnvCipherToChar(int Cipher){
 	return (char)('0' + Cipher);
 }
 
 
 // Convert unicode char to cipher
-int acnv_char_to_cipher(int Char){
+int acnvCharToCipher(int Char){
 	
 	int Cipher = Char - '0';
 	

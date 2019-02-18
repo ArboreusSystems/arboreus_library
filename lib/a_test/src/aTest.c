@@ -13,12 +13,14 @@
 // Application includes
 #include "../../constants/aConstantsGeneral.h"
 #include "a_time/headers/aTestTime.h"
+#include "universal_c/headers/aTestUniversalC.h"
 
 
 // Application
 int main(int Number, char *Arguments[]) {
 	
-	if (aTestTimeRun()){FAILURE;}
+	if (aTestTimeRun()) {FAILURE;}
+	if (aTestUniversalCRun()) {FAILURE;}
 	
 	printf("-----------------\n");
 	printf("*** DONE! All tests passed.\n");

@@ -75,12 +75,15 @@ link_objects: build_objects
 	 $(call dir_module_build,$(APP_NAME))/aTimeANSI.o \
 	 $(call dir_module_build,$(APP_NAME))/aConvert.o \
 	 $(call dir_module_build,$(APP_NAME))/aString.o \
+	 $(call dir_module_build,$(APP_NAME))/aSymbol.o \
+	 $(call dir_module_build,$(APP_NAME))/aTestSymbol.o \
+	 $(call dir_module_build,$(APP_NAME))/aTestUniversalC.o \
 	 || exit; \
 	 $(call return_done_for_module,"Objects linked for module $(APP_NAME).")
 
 build_objects: aTest.c aTestTime.c aTestTimeANSI.c aTestTimeMonth.c aTestTimeRFC822.c aTestTimeRFC850.c \
 aTestTimeRFC850.c aTestTimeWeekday.c aTimeNowHandler.c aTimeMonth.c aTimeWeekday.c aTimeRFC822.c \
-aTimeRFC850.c aTimeANSI.c aConvert.c aString.c
+aTimeRFC850.c aTimeANSI.c aConvert.c aString.c aSymbol.c aTestUniversalC.c aTestSymbol.c
 	$(call return_done_for_module,"Objects built for module $(APP_NAME).")
 
 backup:
@@ -142,6 +145,16 @@ aTimeRFC850.c:
 aTimeANSI.c:
 	$(call build_o_by_path,$(call dir_module_src,$(APP_A_TIME))/aTimeANSI.c,$(call dir_module_build,$(APP_NAME))/aTimeANSI.o)
 
+
+# aTestUniversalC
+
+aTestUniversalC.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/universal_c/aTestUniversalC.c,$(call dir_module_build,$(APP_NAME))/aTestUniversalC.o)
+
+aTestSymbol.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_NAME))/universal_c/aTestSymbol.c,$(call dir_module_build,$(APP_NAME))/aTestSymbol.o)
+
+
 # universal_c
 
 aConvert.c:
@@ -149,6 +162,9 @@ aConvert.c:
 
 aString.c:
 	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/aString.c,$(call dir_module_build,$(APP_NAME))/aString.o)
+
+aSymbol.c:
+	$(call build_o_by_path,$(call dir_module_src,$(APP_UNIVERSAL_C))/aSymbol.c,$(call dir_module_build,$(APP_NAME))/aSymbol.o)
 
 
 # ----------------------------------------------

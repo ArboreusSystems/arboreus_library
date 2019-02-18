@@ -13,10 +13,20 @@
 // Application includes
 #include "../../../constants/aConstantsGeneral.h"
 #include "headers/aTestUniversalC.h"
+#include "headers/aTestSymbol.h"
 
 
 int aTestUniversalCRun() {
 	
-	printf("aTestUniversalCRun\n");
+	if (atucIsLatinLower() != EXIT_SUCCESS) {FAILURE;}
+	if (atucIsLatinUpper() != EXIT_SUCCESS) {FAILURE;}
+	if (atucIsLatin() != EXIT_SUCCESS) {FAILURE;}
+	if (atucIsNumeric() != EXIT_SUCCESS) {FAILURE;}
+	if (atucIsAt() != EXIT_SUCCESS) {FAILURE;}
+	if (atucIsDot() != EXIT_SUCCESS) {FAILURE;}
+	if (atucIsSpace() != EXIT_SUCCESS) {FAILURE;}
+	
+	printf("\n");
+	printf("*** DONE! Tests for universal_c module passed.\n\n");
 	SUCCESS;
 };

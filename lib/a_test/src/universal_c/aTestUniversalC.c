@@ -17,7 +17,10 @@
 
 
 int aTestUniversalCRun() {
-	
+
+	if (atucIsLatinNumeric() != EXIT_SUCCESS) {FAILURE;}
+	if (atucIsLatinLowerNumeric() != EXIT_SUCCESS) {FAILURE;}
+	if (atucIsLatinUpperNumeric() != EXIT_SUCCESS) {FAILURE;}
 	if (atucIsLatinLower() != EXIT_SUCCESS) {FAILURE;}
 	if (atucIsLatinUpper() != EXIT_SUCCESS) {FAILURE;}
 	if (atucIsLatin() != EXIT_SUCCESS) {FAILURE;}

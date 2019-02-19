@@ -15,6 +15,32 @@
 #include "headers/aSymbol.h"
 
 
+int asymIsLatinNumeric(int Symbol) {
+	
+	if (asymIsNumeric(Symbol) == EXIT_SUCCESS) {SUCCESS;}
+	if (asymIsLatin(Symbol) == EXIT_SUCCESS) {SUCCESS;}
+	FAILURE;
+}
+
+
+// Checking UTF-8 latin upper or numeric symbol 
+int asymIsLatinUpperNumeric(int Symbol) {
+	
+	if (asymIsNumeric(Symbol) == EXIT_SUCCESS) {SUCCESS;}
+	if (asymIsLatinUpper(Symbol) == EXIT_SUCCESS) {SUCCESS;}
+	FAILURE;
+}
+
+
+// Checking UTF-8 latin lower or numeric symbol
+int asymIsLatinLowerNumeric(int Symbol) {
+	
+	if (asymIsNumeric(Symbol) == EXIT_SUCCESS) {SUCCESS;}
+	if (asymIsLatinLower(Symbol) == EXIT_SUCCESS) {SUCCESS;}
+	FAILURE;
+}
+
+
 // Checking UTF-8 Basic " "(space) symbol
 int asymIsSpace(int Symbol) {
 	

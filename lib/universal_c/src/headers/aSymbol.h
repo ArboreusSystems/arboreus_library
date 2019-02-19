@@ -12,6 +12,9 @@
 
 int asymIsEqual(int Symbol,int UTFNumber);
 
+int asymIsLatinNumeric(int Symbol);
+int asymIsLatinUpperNumeric(int Symbol);
+int asymIsLatinLowerNumeric(int Symbol);
 int asymIsLatinLower(int Symbol);
 int asymIsLatinUpper(int Symbol);
 int asymIsLatin(int Symbol);

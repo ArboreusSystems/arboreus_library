@@ -10,6 +10,9 @@
 #ifndef ARBOREUS_ATESTSYMBOL_H
 #define ARBOREUS_ATESTSYMBOL_H
 
+int atucIsLatinNumeric();
+int atucIsLatinUpperNumeric();
+int atucIsLatinLowerNumeric();
 int atucIsLatinLower();
 int atucIsLatinUpper();
 int atucIsLatin();

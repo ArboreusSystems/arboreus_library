@@ -18,17 +18,58 @@
 #include "../../../universal_c/src/headers/aSymbol.h"
 
 
+// Checking test of latin numeric string functionality
+int atucIsLatinNumeric() {
+	
+	int i = 0;
+	for (i = 1; i < 48; i++) {if (asymIsLatinNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	for (i = 48; i < 58; i++) {if (asymIsLatinNumeric((char)i) != EXIT_SUCCESS) {FAILURE;}}
+	for (i = 58; i < 65; i++) {if (asymIsLatinNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	for (i = 65; i < 91; i++) {if (asymIsLatinNumeric((char)i) != EXIT_SUCCESS) {FAILURE;}}
+	for (i = 91; i < 97; i++) {if (asymIsLatinNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	for (i = 97; i < 123; i++) {if (asymIsLatinNumeric((char)i) != EXIT_SUCCESS) {FAILURE;}}
+	for (i = 123; i < 300; i++) {if (asymIsLatinNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	printf("Done! atucIsLatinNumeric() test passed.\n");
+	SUCCESS;
+}
+
+
+// Checking test of latin upper numeric string functionality
+int atucIsLatinUpperNumeric() {
+	
+	int i = 0;
+	for (i = 1; i < 48; i++) {if (asymIsLatinUpperNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	for (i = 48; i < 58; i++) {if (asymIsLatinUpperNumeric((char)i) != EXIT_SUCCESS) {FAILURE;}}
+	for (i = 58; i < 65; i++) {if (asymIsLatinUpperNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	for (i = 65; i < 91; i++) {if (asymIsLatinUpperNumeric((char)i) != EXIT_SUCCESS) {FAILURE;}}
+	for (i = 91; i < 300; i++) {if (asymIsLatinUpperNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	printf("Done! atucIsLatinUpperNumeric() test passed.\n");
+	SUCCESS;
+}
+
+
+// Checking test of latin lower numeric string functionality
+int atucIsLatinLowerNumeric() {
+	
+	int i = 0;
+	for (i = 1; i < 48; i++) {if (asymIsLatinLowerNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	for (i = 48; i < 58; i++) {if (asymIsLatinLowerNumeric((char)i) != EXIT_SUCCESS) {FAILURE;}}
+	for (i = 58; i < 97; i++) {if (asymIsLatinLowerNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	for (i = 97; i < 123; i++) {if (asymIsLatinLowerNumeric((char)i) != EXIT_SUCCESS) {FAILURE;}}
+	for (i = 123; i < 300; i++) {if (asymIsLatinLowerNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
+	printf("Done! atucIsLatinLowerNumeric() test passed.\n");
+	SUCCESS;
+}
+
+
 // Checking test of latin lower case string functionality
 int atucIsLatinLower() {
 	
 	int i = 0;
-	
 	for (i = 1; i < 97; i++) {if (asymIsLatinLower((char)i) != EXIT_FAILURE) {FAILURE;}}
 	for (i = 97; i < 123; i++) {if (asymIsLatinLower((char)i) != EXIT_SUCCESS) {FAILURE;}}
 	for (i = 123; i < 320; i++) {if (asymIsLatinLower((char)i) != EXIT_FAILURE) {FAILURE;}}
-	
 	printf("Done! asymIsLatinLower() test passed.\n");
-	
 	SUCCESS;
 }
 
@@ -37,13 +78,10 @@ int atucIsLatinLower() {
 int atucIsLatinUpper() {
 	
 	int i = 0;
-	
 	for (i = 1; i < 65; i++) {if (asymIsLatinUpper((char)i) != EXIT_FAILURE) {FAILURE;}}
 	for (i = 65; i < 91; i++) {if (asymIsLatinUpper((char)i) != EXIT_SUCCESS) {FAILURE;}}
 	for (i = 91; i < 320; i++) {if (asymIsLatinUpper((char)i) != EXIT_FAILURE) {FAILURE;}}
-	
 	printf("Done! asymIsLatinUpper() test passed.\n");
-	
 	SUCCESS;
 }
 
@@ -52,15 +90,12 @@ int atucIsLatinUpper() {
 int atucIsLatin() {
 	
 	int i = 0;
-	
 	for (i = 1; i < 65; i++) {if (asymIsLatin((char)i) != EXIT_FAILURE) {FAILURE;}}
 	for (i = 65; i < 91; i++) {if (asymIsLatin((char)i) != EXIT_SUCCESS) {FAILURE;}}
 	for (i = 91; i < 97; i++) {if (asymIsLatin((char)i) != EXIT_FAILURE) {FAILURE;}}
 	for (i = 97; i < 123; i++) {if (asymIsLatin((char)i) != EXIT_SUCCESS) {FAILURE;}}
 	for (i = 123; i < 320; i++) {if (asymIsLatin((char)i) != EXIT_FAILURE) {FAILURE;}}
-	
 	printf("Done! asymIsLatin() test passed.\n");
-	
 	SUCCESS;
 }
 
@@ -69,13 +104,10 @@ int atucIsLatin() {
 int atucIsNumeric() {
 	
 	int i = 0;
-	
 	for (i = 1; i < 48; i++) {if (asymIsNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
 	for (i = 48; i < 58; i++) {if (asymIsNumeric((char)i) != EXIT_SUCCESS) {FAILURE;}}
 	for (i = 58; i < 200; i++) {if (asymIsNumeric((char)i) != EXIT_FAILURE) {FAILURE;}}
-	
 	printf("Done! atucIsNumeric() test passed.\n");
-	
 	SUCCESS;
 }
 
@@ -84,7 +116,6 @@ int atucIsNumeric() {
 int atucIsAt() {
 	
 	int i = 0;
-	
 	for (i = 1; i < 320; i++) {
 		if (i == 64) {
 			if (asymIsAt((char)i) != EXIT_SUCCESS) {FAILURE;}
@@ -92,9 +123,7 @@ int atucIsAt() {
 			if (asymIsAt((char)i) != EXIT_FAILURE) {FAILURE;}
 		}
 	}
-	
 	printf("Done! atucIsAt() test passed.\n");
-	
 	SUCCESS;
 }
 
@@ -103,7 +132,6 @@ int atucIsAt() {
 int atucIsDot() {
 	
 	int i = 0;
-	
 	for (i = 1; i < 200; i++) {
 		if (i == 46) {
 			if (asymIsDot((char)i) != EXIT_SUCCESS) {FAILURE;}
@@ -111,9 +139,7 @@ int atucIsDot() {
 			if (asymIsDot((char)i) != EXIT_FAILURE) {FAILURE;}
 		}
 	}
-	
 	printf("Done! atucIsDot() test passed.\n");
-	
 	SUCCESS;
 }
 
@@ -122,7 +148,6 @@ int atucIsDot() {
 int atucIsSpace() {
 	
 	int i = 0;
-	
 	for (i = 1; i < 200; i++) {
 		if (i == 32) {
 			if (asymIsSpace((char)i) != EXIT_SUCCESS) {FAILURE;}
@@ -130,8 +155,6 @@ int atucIsSpace() {
 			if (asymIsSpace((char)i) != EXIT_FAILURE) {FAILURE;}
 		}
 	}
-	
 	printf("Done! atucIsSpace() test passed.\n");
-	
 	SUCCESS;
 }

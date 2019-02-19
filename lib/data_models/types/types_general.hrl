@@ -52,6 +52,7 @@
 
 -type list_of_options() :: list_of_properties().
 -type list_of_properties() :: [any()].
+-type list_of_parameters() :: [any()].
 -type list_of_records() :: [record()].
 -type list_of_integers() :: [integer()].
 -type list_of_floats() :: [float()].

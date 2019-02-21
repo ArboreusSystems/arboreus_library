@@ -19,7 +19,8 @@
 %% API
 -export([
 	test/0,
-	do/4
+	do/4,
+	set/2
 ]).
 
 
@@ -44,28 +45,66 @@ test() ->
 	ok.
 
 
+
+%% ----------------------------
+%% @doc Run the set of functions for benchmark
+-spec set(Functions,Iterations) -> list_of_tuples()
+	when
+	Functions :: [{Module,Function,Parameters}],
+	Iterations :: pos_integer(),
+	Module :: atom(),
+	Function :: atom(),
+	Parameters :: list_of_parameters().
+
+set(Functions,Iterations) -> set_handler(Functions,Iterations,[]).
+
+
+%% ----------------------------
+%% @doc Run set functionality handler
+-spec set_handler([{Module,Function,Parameters}],Iterations,Output) -> {ok,Output}
+	when
+	Module :: atom(),
+	Function :: atom(),
+	Parameters :: list_of_parameters(),
+	Iterations :: pos_integer(),
+	Output :: list_of_tuples().
+	
+
+set_handler([],_,Output) -> {ok,lists:keysort(1,Output)};
+set_handler([{Module,Function,Parameters}|Functions],Iterations,Output) ->
+	set_handler(Functions,Iterations,lists:append([
+		Output,[
+			try do(Module,Function,Parameters,Iterations)
+			catch _:_ -> {failed,0,Module,Function,Parameters,0,0} end
+		]
+	])).
+
+
 %% ----------------------------
 %% @doc Run the benchmark calculation for specified function
--spec do(Module,Function,Parameters,Iterations) -> {Time_start,Time_stop,Time_test}
+-spec do(Module,Function,Parameters,Iterations) ->
+	{Time_iteration,Time_test,Module,Function,Parameters,Time_start,Time_stop}
 	when
 	Module :: module(),
 	Function :: atom(),
 	Parameters :: list_of_parameters(),
 	Iterations :: integer(),
+	Time_iteration :: float_pos(),
+	Time_test :: pos_integer(),
 	Time_start :: pos_integer(),
-	Time_stop :: pos_integer(),
-	Time_test :: pos_integer().
+	Time_stop :: pos_integer().
 	
 do(Module,Function,Parameters,Iterations) ->
-	Time_start = a_time:current(timestamp),
+	Time_start = a_time_now:microseconds(),
 	do_handler(Module,Function,Parameters,Iterations),
-	Time_stop = a_time:current(timestamp),
-	{Time_start,Time_stop,Time_stop - Time_start}.
+	Time_stop = a_time_now:microseconds(),
+	Test_time = Time_stop - Time_start,
+	{Test_time/Iterations,Test_time,Module,Function,Parameters,Time_start,Time_stop}.
 
 
 %% ----------------------------
 %% @doc Benchmark calculation handler
--spec do_handler(Module,Function,Parameters,Iteration) -> ok
+-spec do_handler(Module,Function,Parameters,Iterations) -> ok
 	when
 	Module :: module(),
 	Function :: atom(),

@@ -48,6 +48,7 @@ install: backup clean ensure_dir_silent
 	$(call target,a_value_bin_is.erl)
 	$(call target,a_value_str_is.erl)
 	$(call target,a_var.erl)
+	$(call target,a_benchmark.erl)
 	$(call return_done_for_module,"Module $(APP_NAME) installed.")
 
 clean:
@@ -126,3 +127,6 @@ a_value_str_is.erl:
 
 a_var.erl:
 	$(call build_erl,a_var)
+
+a_benchmark.erl:
+	$(call build_erl,a_benchmark)

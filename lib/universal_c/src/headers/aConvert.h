@@ -9,10 +9,18 @@
 #ifndef ARBOREUS_A_CONVERT_H
 #define ARBOREUS_A_CONVERT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int acnvStringToInteger(char *String, long long int *Number);
 int acnvIntegerToZString(long long int Number, char **String, int Length);
 int acnvIntegerToString(long long int Number, char **String);
 char acnvCipherToChar(int Cipher);
 int acnvCharToCipher(int Char);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_A_CONVERT_H

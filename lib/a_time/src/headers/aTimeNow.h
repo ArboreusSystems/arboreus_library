@@ -10,6 +10,10 @@
 #ifndef ARBOREUS_A_TIME_NOW_H
 #define ARBOREUS_A_TIME_NOW_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Functionality
 int aTimeNowMicroseconds();
 int aTimeNowMilliseconds();
@@ -21,5 +25,9 @@ int aTimeNowIntExtend();
 int aTimeNowRFC822();
 int aTimeNowRFC850();
 int aTimeNowANSI();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_A_TIME_NOW_H

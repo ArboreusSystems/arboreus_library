@@ -10,6 +10,10 @@
 #ifndef ARBOREUS_A_TIME_WEEKDAY_H
 #define ARBOREUS_A_TIME_WEEKDAY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Constant: weekday integer
 #define A_WEEKDAY_INT_SUNDAY 0
 #define A_WEEKDAY_INT_MONDAY 1
@@ -83,5 +87,9 @@ int atwdNumericToInteger(char *Pointer);
 const char *atwdNumericToAlpha3(char *Pointer);
 const char *atwdNumericToAlpha2(char *Pointer);
 const char *atwdNumericToFull(char *Pointer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_A_TIME_WEEKDAY_H

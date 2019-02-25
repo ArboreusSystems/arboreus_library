@@ -10,6 +10,10 @@
 #ifndef ARBOREUS_A_TIME_MONTH_H
 #define ARBOREUS_A_TIME_MONTH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Constants: months integer
 #define A_MONTH_INT_JANUARY 0
 #define A_MONTH_INT_FEBRUARY 1
@@ -108,5 +112,9 @@ int atmnNumericToInteger(char *Numeric);
 const char *atmnNumericToAlpha3(char *Numeric);
 const char *atmnNumericToAlpha2(char *Numeric);
 const char *atmnNumericToFull(char *Numeric);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_A_TIME_MONTH_H

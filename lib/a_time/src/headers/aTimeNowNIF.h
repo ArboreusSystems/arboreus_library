@@ -10,6 +10,10 @@
 #ifndef ARBOREUS_A_TIME_NOW_NIF_H
 #define ARBOREUS_A_TIME_NOW_NIF_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Functionality
 static ERL_NIF_TERM atNIFMicroseconds(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);
 static ERL_NIF_TERM atNIFMilliseconds(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);
@@ -21,5 +25,9 @@ static ERL_NIF_TERM atNIFIntegerExtend(ErlNifEnv *env, int argc, const ERL_NIF_T
 static ERL_NIF_TERM atNIFRFC822(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);
 static ERL_NIF_TERM atNIFRFC850(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);
 static ERL_NIF_TERM atNIFANSI(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_A_TIME_NOW_NIF_H

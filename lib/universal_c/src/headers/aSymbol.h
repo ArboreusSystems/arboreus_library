@@ -10,6 +10,10 @@
 #ifndef ARBOREUS_ASYMBOL_H
 #define ARBOREUS_ASYMBOL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int asymIsEqual(int Symbol,int UTFNumber);
 
 int asymIsLatinNumeric(int Symbol);
@@ -22,5 +26,9 @@ int asymIsNumeric(int Symbol);
 int asymIsAt(int Symbol);
 int asymIsDot(int Symbol);
 int asymIsSpace(int Symbol);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_ASYMBOL_H

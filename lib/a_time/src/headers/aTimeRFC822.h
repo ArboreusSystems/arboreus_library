@@ -14,8 +14,16 @@
 #include <sys/time.h>
 #include <sys/timeb.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Functionality
 int atRFC822FromStruct(struct tm TimeStruct, char **RFC_822);
 int atRFC822FromTimestamp(long long int Timestamp, char **RFC22);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_A_TIME_RFC822_H

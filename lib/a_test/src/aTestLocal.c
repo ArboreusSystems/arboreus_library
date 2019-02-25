@@ -13,10 +13,13 @@
 
 // Application includes
 #include "../../constants/aConstantsGeneral.h"
+#include "../../a_test/src/universal_c/headers/aTestUniversalC.h"
 
 
 // Application
 int main(int n,char *Arguments[]){
+	
+	if (aTestUniversalCRun()) {FAILURE;}
 	
 	printf("Local test C\n");
 	

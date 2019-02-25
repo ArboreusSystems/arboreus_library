@@ -10,6 +10,10 @@
 #ifndef ARBOREUS_A_TIME_NOW_HANDLER_H
 #define ARBOREUS_A_TIME_NOW_HANDLER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Functionality
 int atnhMicroseconds(long long int *Pointer);
 int atnhMilliseconds(long long int *Pointer);
@@ -21,5 +25,9 @@ int atnhIntExtend(long long int *Pointer);
 int atnhRFC822(char **RFC_822);
 int atnhRFC850(char **RFC_850);
 int atnhANSI(char **ANSI);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_A_TIME_NOW_HANDLER_H

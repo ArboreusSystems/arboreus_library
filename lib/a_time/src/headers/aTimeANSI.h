@@ -14,8 +14,16 @@
 #include <sys/time.h>
 #include <sys/timeb.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Functionality
 int atANSIFromStruct(struct tm Time_struct, char **ANSI);
 int atANSIFromTimestamp(long long int Timestamp, char **ANSI);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ARBOREUS_A_TIME_ANSI_H

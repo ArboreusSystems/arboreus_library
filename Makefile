@@ -3,6 +3,16 @@
 # (C) Arboreus library (http://arboreus.systems)
 # (C) Alexandr Kirilov (http://alexandr.kirilov.me)
 #
+#	For using:
+#		* should be defined directories.conf.mk
+#		* should be configured $ make configure
+#
+#	For making action:
+#		* for every part of libraray use
+#			$ make install|configure|clean
+#		* for defined part of library use variable
+#			$ make install|configure|clean MODULES_FOR_ACTION=[module_name]
+#
 # ----------------------------------------------
 
 MAKEFLAGS += --silent
@@ -14,7 +24,6 @@ MAKEFLAGS += --silent
 
 include $(PWD)/make/directories.conf.mk
 include $(PWD)/make/conf.mk
-include $(PWD)/make/arguments.mk
 include $(PWD)/make/actions.mk
 
 

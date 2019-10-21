@@ -15,9 +15,9 @@
 %% API
 -export([
 	test/0,
-	is_module/1,
-	is_path/1,
-	l/1
+	is_module/1,is_path/1,
+	l/1,
+	reload_all/0,reload_all_visual/0
 ]).
 
 
@@ -64,7 +64,55 @@ test() ->
 	),
 	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
 	ok.
-	
+
+
+%% ----------------------------
+%% @doc Reload all modules
+-spec reload_all() -> {ok,Output}
+	when
+	Output :: [{Module,code:load_ret()}],
+	Module :: atom().
+
+reload_all() -> l(loaded_modules()).
+
+
+%% ----------------------------
+%% @doc Reload all modules and print in console all success modules
+-spec reload_all_visual() -> ok.
+
+reload_all_visual() ->
+	{ok,Output} = reload_all(),
+	reload_all_visual_handler(Output).
+
+
+%% ----------------------------
+%% @doc Handler for reload_all_visual/0
+
+reload_all_visual_handler([]) -> ok;
+reload_all_visual_handler([{Module,{module,Module}}|Output]) ->
+	io:fwrite("~p~n", [{Module,{module,Module}}]),
+	reload_all_visual_handler(Output);
+reload_all_visual_handler([_|Output]) ->
+	reload_all_visual_handler(Output).
+
+
+%% ----------------------------
+%% @doc Return loaded modules list
+-spec loaded_modules() -> [Module]
+	when
+	Module :: atom().
+
+loaded_modules() -> loaded_modules_handler(code:all_loaded(),[]).
+
+
+%% ----------------------------
+%% @doc Handler for module_list
+
+loaded_modules_handler([],Output) -> Output;
+loaded_modules_handler([{Module,_}|Modules],Output) ->
+	loaded_modules_handler(
+		Modules,lists:append([Output,[Module]])
+	).
 
 
 %% ----------------------------

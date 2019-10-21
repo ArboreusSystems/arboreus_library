@@ -162,6 +162,23 @@ static ERL_NIF_TERM atNIFANSI(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[
 	}
 }
 
+static int load(ErlNifEnv* env, void** priv_data, ERL_NIF_TERM load_info) {
+    *priv_data = enif_open_resource_type(
+        env,NULL,"cwm_utils_buf",NULL,ERL_NIF_RT_CREATE|ERL_NIF_RT_TAKEOVER,NULL
+    );
+    return 0;
+}
+
+static int upgrade(ErlNifEnv* env, void** priv_data, void** old_priv_data, ERL_NIF_TERM load_info) {
+    *priv_data = enif_open_resource_type(
+        env,NULL,"cwm_utils_buf",NULL,ERL_NIF_RT_TAKEOVER,NULL
+    );
+    return 0;
+}
+
+static void unload(ErlNifEnv* env, void* priv_data) {
+    return ;
+}
 
 // NIF initializer
-ERL_NIF_INIT(a_time_now,nif_funcs,NULL,NULL,NULL,NULL)
+ERL_NIF_INIT(a_time_now,nif_funcs,&load,NULL,&upgrade,&unload)

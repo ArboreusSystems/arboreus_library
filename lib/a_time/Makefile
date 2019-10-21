@@ -79,7 +79,7 @@ aTimeRFC850.c aTimeANSI.c aConvert.c aString.c
 build_nifs: aTimeNowNIF.so
 	$(call return_done_for_module,"Erlang NIFs built for $(APP_NAME).")
 
-build_erl: a_time_now.erl
+build_erl: a_time_now.erl a_time.erl
 	$(call return_done_for_module,"Erlang modules built for $(APP_NAME).")
 
 backup:
@@ -134,6 +134,9 @@ aString.c:
 
 a_time_now.erl:
 	$(call build_erl,a_time_now)
+
+a_time.erl:
+	$(call build_erl,a_time)
 
 
 # ----------------------------------------------

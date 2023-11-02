@@ -28,28 +28,30 @@ test() -> ok.
 
 %% ----------------------------
 %% @doc Make asynchronous call on defined node
--spec call(Node_name,Module,Function,Arguments) -> any()
+-spec call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) -> any()
 	when
-	Node_name :: atom(),
-	Module :: atom(),
-	Function :: atom(),
-	Arguments :: list().
+		NODE_NAME :: atom(),
+		MODULE :: atom(),
+		FUNCTION :: atom(),
+		ARGUMENTS :: list().
 
-call(Node_name,Module,Function,Arguments) ->
-	rpc:call(Node_name,Module,Function,Arguments).
+call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
+
+	rpc:call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS).
 
 
 %% ----------------------------
 %% @doc Make asynchronous call on defined node
--spec async_call(Node_name,Module,Function,Arguments) -> any()
+-spec async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) -> any()
 	when
-	Node_name :: atom(),
-	Module :: atom(),
-	Function :: atom(),
-	Arguments :: list().
+		NODE_NAME :: atom(),
+		MODULE :: atom(),
+		FUNCTION :: atom(),
+		ARGUMENTS :: list().
 
-async_call(Node_name,Module,Function,Arguments) ->
-	rpc:yield(rpc:async_call(Node_name,Module,Function,Arguments)).
+async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
+
+	rpc:yield(rpc:async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS)).
 
 
 %% ----------------------------

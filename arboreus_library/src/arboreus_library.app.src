@@ -1,0 +1,13 @@
+{application, arboreus_library,[
+	{description, "Arboreus Erlang library"},
+	{vsn, "0.2.0"},
+	{registered, []},
+	{applications,[
+		kernel,
+		stdlib
+	]},
+	{env,[]},
+	{modules, []},
+	{licenses, ["BSD 2"]},
+	{links, []}
+]}.

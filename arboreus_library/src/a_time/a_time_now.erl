@@ -20,7 +20,6 @@
 %% API
 -export([
 	test/0,
-%%	load_nif/1,
 	microseconds/0,milliseconds/0,seconds/0,
 	integer/0,integer_date/0,integer_full/0,integer_extend/0,
 	rfc_822/0,rfc_850/0,ansi/0
@@ -29,34 +28,30 @@
 %% On load
 -on_load(init/0).
 
+%% Definitions
+-define(A_TIME_NOW_APPLICATION, arboreus_library).
+-define(A_TIME_NOW_LIBRARY, a_time_now).
+
 
 %% ----------------------------
-%% @doc
-
--define(APPNAME, a_time_now).
--define(LIBNAME, a_time_now).
+%% @doc Load NIF library for module
+-spec init() -> ok | {error, {REASON, TEXT}}
+	when
+		REASON :: term(),
+		TEXT :: string().
 
 init() ->
-	SoName = case code:priv_dir(?APPNAME) of
+
+	NIF_PATH = case code:priv_dir(?A_TIME_NOW_APPLICATION) of
 		{error, bad_name} ->
-			case filelib:is_dir(filename:join(["..", priv])) of
-				true ->
-					filename:join(["..", priv, ?LIBNAME]);
-				_ ->
-					filename:join([priv, ?LIBNAME])
+			case filelib:is_dir(filename:join(["..",priv])) of
+				true -> filename:join(["..",priv,?A_TIME_NOW_LIBRARY]);
+				_ -> filename:join([priv,?A_TIME_NOW_LIBRARY])
 			end;
-		Dir ->
-			filename:join(Dir, ?LIBNAME)
+		DIR ->
+			filename:join(DIR,?A_TIME_NOW_LIBRARY)
 	end,
-	erlang:load_nif("/Users/alexandr/Projects/arboreus/arboreus_library/arboreus_library/priv/a_time_now", 0).
-
-
-%% ----------------------------
-%% @doc
-
-not_loaded(LINE) ->
-
-	erlang:nif_error({not_loaded, [{module, ?MODULE}, {line,LINE}]}).
+	erlang:load_nif(NIF_PATH,0).
 
 
 %% ----------------------------
@@ -65,96 +60,87 @@ not_loaded(LINE) ->
 
 test() ->
 
-	Time_start = a_time:current(timestamp),
+	TIME_START = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
 		"Module (a_time_now) testing started at:~n~p (~p)~n",
-		[a_time:from_timestamp(rfc850, Time_start), Time_start]
+		[a_time:from_timestamp(rfc850,TIME_START),TIME_START]
 	),
-	Time_stop = a_time:current(timestamp),
+	TIME_STOP = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
 		"Module (a_time_now) testing finished at:~n~p (~p)~n",
-		[a_time:from_timestamp(rfc850, Time_stop), Time_stop]
+		[a_time:from_timestamp(rfc850,TIME_STOP),TIME_STOP]
 	),
-	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
+	io:format("Test time is: ~p~n", [TIME_STOP - TIME_START]),
 	ok.
-
-
-%%%%-----------------------------------
-%%%% @doc Load NIF part for this module
-%%-spec load_nif(Path) -> ok
-%%	when
-%%	Path :: unix_path().
-%%
-%%load_nif(Path) -> erlang:load_nif(Path,0).
 
 
 %%-----------------------------------
 %% @doc Return current time in ANSI string. Wrapper for NIF function
 -spec ansi() -> a_time_ansi() | false.
 
-ansi() -> not_loaded(?LINE).
+ansi() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current time in RFC850 string. Wrapper for NIF function
 -spec rfc_850() -> a_time_rfc850() | false.
 
-rfc_850() -> not_loaded(?LINE).
+rfc_850() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current time in RFC822 string. Wrapper for NIF function
 -spec rfc_822() -> a_time_rfc822() | false.
 
-rfc_822() -> not_loaded(?LINE).
+rfc_822() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current full time in integer. Wrapper for NIF function
 -spec integer_extend() -> a_time_integer_extend() | false.
 
-integer_extend() -> not_loaded(?LINE).
+integer_extend() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current full time in integer. Wrapper for NIF function
 -spec integer_full() -> a_time_integer_full() | false.
 
-integer_full() -> not_loaded(?LINE).
+integer_full() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current date in integer. Wrapper for NIF function
 -spec integer_date() -> a_time_integer_date() | false.
 
-integer_date() -> not_loaded(?LINE).
+integer_date() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current time in integer. Wrapper for NIF function
 -spec integer() -> a_time_integer() | false.
 
-integer() -> not_loaded(?LINE).
+integer() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current UNIX timestamp in seconds. Wrapper for NIF function
 -spec seconds() -> a_time_unix_seconds() | false.
 
-seconds() -> not_loaded(?LINE).
+seconds() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current UNIX timestamp in milliseconds. Wrapper for NIF function
 -spec milliseconds() -> a_time_unix_milliseconds() | false.
 
-milliseconds() -> not_loaded(?LINE).
+milliseconds() -> a_error:nif_not_loaded(?MODULE,?LINE).
 
 
 %%-----------------------------------
 %% @doc Return current UNIX timestamp in microseconds. Wrapper for NIF function
 -spec microseconds() -> a_time_unix_microseconds() | false.
 
-microseconds() -> not_loaded(?LINE).
+microseconds() -> a_error:nif_not_loaded(?MODULE,?LINE).

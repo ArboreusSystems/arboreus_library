@@ -15,7 +15,7 @@
 	async_call/4,
 	call/4,
 	nodes/0,
-	hostname/0
+	fqdn/0
 ]).
 
 
@@ -60,7 +60,7 @@ async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
 
 nodes() ->
 
-	HOST_NAME = hostname(),
+	HOST_NAME = fqdn(),
 	[_EPMD | NODE_DESCRIPTIONS] = string:tokens(os:cmd("epmd -names"),"\n"),
 	NODES = [parse_node_description(DESCRIPTION) || DESCRIPTION <- NODE_DESCRIPTIONS],
 	[{list_to_atom(string:concat(string:concat(NODE_NAME,"@"),HOST_NAME)),PORT} || {NODE_NAME,PORT} <- NODES].
@@ -86,9 +86,9 @@ parse_node_description(NODE_DESCRIPTION) ->
 
 %% ----------------------------
 %% @doc Return full hostname of current host
--spec hostname() -> string().
+-spec fqdn() -> string().
 
-hostname() ->
+fqdn() ->
 
 	CMD_OUTPUT = os:cmd("hostname -f"),
 	{HOSTNAME,_} = lists:split(length(CMD_OUTPUT) - 1, CMD_OUTPUT),

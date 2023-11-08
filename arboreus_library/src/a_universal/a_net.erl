@@ -9,8 +9,9 @@
 -module(a_net).
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
-%% System include
--include("../include/types/types_network.hrl").
+%% Data types
+-include_lib("../include/types/types_general.hrl").
+-include_lib("../include/types/types_network.hrl").
 
 %% API
 -export([

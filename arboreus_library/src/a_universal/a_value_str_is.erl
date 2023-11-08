@@ -12,6 +12,7 @@
 %% Constants
 
 %% Data types
+-include_lib("../include/types/types_general.hrl").
 -include_lib("../include/types/types_network.hrl").
 -include_lib("../include/types/types_time.hrl").
 

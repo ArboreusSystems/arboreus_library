@@ -8,7 +8,6 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
-
 %% ------------------------------------------
 %% Network types
 
@@ -28,3 +27,12 @@
 }.
 -type ipv6_list() :: [ipv6_byte()].
 -type ipv6_integer() :: 0..340282366920938463463374607431768211455.
+
+-type host_name_string() :: utf_text_string().
+-type host_name_binary() :: utf_text_binary().
+
+-type node_name_string() :: utf_text_string().
+-type node_name_binary() :: utf_text_binary().
+
+-type cookie_string() :: utf_base64_string().
+-type cookie_binary() :: utf_text_binary().

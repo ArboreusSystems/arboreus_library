@@ -13,9 +13,7 @@
 -export([
 	test/0,
 	async_call/4,
-	call/4,
-	nodes/0,
-	fqdn/0
+	call/4
 ]).
 
 
@@ -52,44 +50,3 @@ call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
 async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
 
 	rpc:yield(rpc:async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS)).
-
-
-%% ----------------------------
-%% @doc Return list of started nodes on current server
--spec nodes() -> proplists:proplist().
-
-nodes() ->
-
-	HOST_NAME = fqdn(),
-	[_EPMD | NODE_DESCRIPTIONS] = string:tokens(os:cmd("epmd -names"),"\n"),
-	NODES = [parse_node_description(DESCRIPTION) || DESCRIPTION <- NODE_DESCRIPTIONS],
-	[{list_to_atom(string:concat(string:concat(NODE_NAME,"@"),HOST_NAME)),PORT} || {NODE_NAME,PORT} <- NODES].
-
-
-%% ----------------------------
-%% @doc Check the node description and return term within node data
--spec parse_node_description(NODE_DESCRIPTION) -> {nomatch,REPLY} | {NODE_NAME_STRING,PORT_NUMBER}
-	when
-		NODE_DESCRIPTION :: string(),
-		REPLY :: any(),
-		NODE_NAME_STRING :: string(),
-		PORT_NUMBER :: port().
-
-parse_node_description(NODE_DESCRIPTION) ->
-
-	PATTERN = "^name\ ([a-zA-Z_0-9\-]*)\ at port ([0-9]{1,5})$",
-	case re:run(NODE_DESCRIPTION,PATTERN,[dotall, ungreedy, {capture, all_but_first, list}]) of
-		{match,[NODE_NAME,PORT]} -> {NODE_NAME,list_to_integer(PORT)};
-		REPLY -> {nomatch,REPLY}
-	end.
-
-
-%% ----------------------------
-%% @doc Return full hostname of current host
--spec fqdn() -> string().
-
-fqdn() ->
-
-	CMD_OUTPUT = os:cmd("hostname -f"),
-	{HOSTNAME,_} = lists:split(length(CMD_OUTPUT) - 1, CMD_OUTPUT),
-	HOSTNAME.

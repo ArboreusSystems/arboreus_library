@@ -9,14 +9,17 @@
 -module(a_node).
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
-%% Constants
-
 %% Data types
 -include_lib("../include/types/types_general.hrl").
 -include_lib("../include/types/types_a_balancer.hrl").
+-include_lib("../include/types/types_network.hrl").
 
-%% Data models
+%% Records
+-include_lib("../include/records/records_a_node.hrl").
 -include_lib("../include/records/records_a_balancer.hrl").
+
+%% Macros
+-include_lib("../include/macros/macro_a_lists.hrl").
 
 %% API
 -export([
@@ -24,8 +27,10 @@
 	change_name/1,change_name/2,
 	name_type/0,name_type/1,
 	parse_name/0,parse_name/1,
-	load/1
-	
+	load/1,
+	names/0,
+	fqdn/0,
+	default_node_parameters/0
 ]).
 
 
@@ -35,78 +40,81 @@
 -spec test() -> ok.
 
 test() ->
-	Time_start = a_time:current(timestamp),
+
+	TIME_START = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
 		"Module (a_node) testing started at:~n~p (~p)~n",
-		[a_time:from_timestamp(rfc850, Time_start), Time_start]
+		[a_time:from_timestamp(rfc850,TIME_START),TIME_START]
 	),
-	Load_list_structure = [(fun is_integer/1),(fun is_integer/1),(fun is_integer/1)],
-	Load_list = load(list),
-	Load_list_wrong = [wrong,list,structure],
-	true = a_structure_l:verify(return_boolean,Load_list_structure,Load_list),
-	false = a_structure_l:verify(return_boolean,Load_list_structure,Load_list_wrong),
-	Load_record_structure = {
+	LOAD_LIST_STRUCTURE = [(fun is_integer/1),(fun is_integer/1),(fun is_integer/1)],
+	LOAD_LIST = load(list),
+	LOAD_LIST_WRONG = [wrong,list,structure],
+	true = a_structure_l:verify(return_boolean,LOAD_LIST_STRUCTURE,LOAD_LIST),
+	false = a_structure_l:verify(return_boolean,LOAD_LIST_STRUCTURE,LOAD_LIST_WRONG),
+	LOAD_RECORD_STRUCTURE = {
 		(fun is_atom/1),
 		(fun is_integer/1),
 		(fun is_integer/1),
 		(fun is_integer/1)
 	},
-	Load_record = load(record),
-	Load_record_wrong = #a_node_load{
+	LOAD_RECORD = load(record),
+	LOAD_RECORD_WRONG = #a_node_load{
 		processes = processes,
 		memory_total = memory_total,
 		ports = ports
 	},
-	true = a_structure_r:verify(return_boolean,Load_record_structure,Load_record),
-	false = a_structure_r:verify(return_boolean,Load_record_structure,Load_record_wrong),
+	true = a_structure_r:verify(return_boolean,LOAD_RECORD_STRUCTURE,LOAD_RECORD),
+	false = a_structure_r:verify(return_boolean,LOAD_RECORD_STRUCTURE,LOAD_RECORD_WRONG),
 	io:format("DONE! Fun load/1 test passed~n"),
-	New_name_sting = "new_name",
-	Change_name_test = case node() of
+	NEW_NAME_STRING = "new_name",
+	CHANGE_NAME_TEST = case node() of
 		'nonode@nohost' ->
 			nonetkernel = change_name(test),
-			Old_name_string = "old_name",
-			{ok,_} = net_kernel:start([list_to_atom(Old_name_string)]),
-			{ok,{Old_name_string,Domain}} = parse_name(),
-			Old_name = node(),
-			{ok,New_name} = change_name(list_to_atom(New_name_sting)),
-			{ok,{New_name_sting,Domain}} = parse_name(New_name),
-			{ok,Old_name} = change_name(list_to_atom(Old_name_string)),
+			OLD_NAME_STRING = "old_name",
+			{ok,_} = net_kernel:start([list_to_atom(OLD_NAME_STRING)]),
+			{ok,{OLD_NAME_STRING,DOMAIN}} = parse_name(),
+			OLD_NAME = node(),
+			{ok,NEW_NAME} = change_name(list_to_atom(NEW_NAME_STRING)),
+			{ok,{NEW_NAME_STRING,DOMAIN}} = parse_name(NEW_NAME),
+			{ok,OLD_NAME} = change_name(list_to_atom(OLD_NAME_STRING)),
 			net_kernel:stop();
-		Old_node_name ->
-			{ok,{Old_name_string,Domain}} = parse_name(),
-			case change_name(list_to_atom(New_name_sting)) of
-				{ok,New_name} ->
-					{ok,{New_name_sting,Domain}} = parse_name(New_name),
-					{ok,Old_node_name} = change_name(list_to_atom(Old_name_string)),
+		OLD_NODE_NAME ->
+			{ok,{OLD_NAME_STRING,DOMAIN}} = parse_name(),
+			case change_name(list_to_atom(NEW_NAME_STRING)) of
+				{ok,NEW_NAME} ->
+					{ok,{NEW_NAME_STRING,DOMAIN}} = parse_name(NEW_NAME),
+					{ok,OLD_NODE_NAME} = change_name(list_to_atom(OLD_NAME_STRING)),
 					ok;
-				Result -> Result
+				RESULT -> RESULT
 			end
 	end,
-	io:format("DONE! Change name functionality test result: ~p~n",[Change_name_test]),
-	Time_stop = a_time:current(timestamp),
+	io:format("DONE! Change name functionality test result: ~p~n",[CHANGE_NAME_TEST]),
+	TIME_STOP = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
 		"Module (a_node) testing finished at:~n~p (~p)~n",
-		[a_time:from_timestamp(rfc850, Time_stop), Time_stop]
+		[a_time:from_timestamp(rfc850,TIME_STOP),TIME_STOP]
 	),
-	io:format("Test time is: ~p~n", [Time_stop - Time_start]),
+	io:format("Test time is: ~p~n", [TIME_STOP - TIME_START]),
 	ok.
 
 
 %% ----------------------------
 %% @doc Node load
--spec load(Kind) -> list_of_properties() | a_node_load()
-	when
-	Kind :: list | record.
+-spec load(KIND) -> list_of_properties() | a_node_load()
+	when KIND :: list | record.
 
 load(list)->
+
 	[
 		length(erlang:processes()),
 		length(erlang:ports()),
 		proplists:get_value(total,erlang:memory())
 	];
+
 load(record) ->
+
 	#a_node_load{
 		processes = length(erlang:processes()),
 		ports = length(erlang:ports()),
@@ -116,33 +124,37 @@ load(record) ->
 
 %% ----------------------------
 %% @doc Parse current node name
--spec parse_name() -> {ok,{Name,Domain}} | nonetkernel
+-spec parse_name() -> {ok,{NAME,DOMAIN}} | nonetkernel
 	when
-	Name :: unicode:charlist(),
-	Domain :: unicode:charlist().
+		NAME :: unicode:charlist(),
+		DOMAIN :: unicode:charlist().
 
 parse_name() -> parse_name(node()).
 
 
 %% ----------------------------
 %% @doc Parse node name
--spec parse_name(Node_name) -> {ok,{Name,Domain}} | {ok,Name} | nomatch | nonetkernel
+-spec parse_name(NODE_NAME) -> {ok,{NAME,DOMAIN}} | {ok,NAME} | nomatch | nonetkernel
 	when
-	Node_name :: node() | unicode:charlist(),
-	Name :: unicode:charlist(),
-	Domain :: unicode:charlist().
+		NODE_NAME :: node() | unicode:charlist(),
+		NAME :: unicode:charlist(),
+		DOMAIN :: unicode:charlist().
 
 parse_name('nonode@nohost') -> nonetkernel;
-parse_name(Node_name) when is_atom(Node_name) ->
-	parse_name(atom_to_list(Node_name));
-parse_name(Node_name) when is_list(Node_name) ->
-	case re:run(Node_name,"^([a-zA-Z0-9\_\-]{1,})\@([a-zA-Z0-9\_\-]{1,}\.{0,1}){1,}$") of
+
+parse_name(NODE_NAME) when is_atom(NODE_NAME) ->
+
+	parse_name(atom_to_list(NODE_NAME));
+
+parse_name(NODE_NAME) when is_list(NODE_NAME) ->
+
+	case re:run(NODE_NAME,"^([a-zA-Z0-9\_\-]{1,})\@([a-zA-Z0-9\_\-]{1,}\.{0,1}){1,}$") of
 		{match,_} ->
-			[Name,Domain] = string:tokens(Node_name,"@"),
-			{ok,{Name,Domain}};
+			[NAME,DOMAIN] = string:tokens(NODE_NAME,"@"),
+			{ok,{NAME,DOMAIN}};
 		_ ->
-			case re:run(Node_name,"^([a-zA-Z0-9\-\_]{1,})$") of
-				{match,_} -> {ok,Node_name};
+			case re:run(NODE_NAME,"^([a-zA-Z0-9\-\_]{1,})$") of
+				{match,_} -> {ok,NODE_NAME};
 				_ -> nomatch
 			end
 	end.
@@ -157,21 +169,24 @@ name_type() -> name_type(node()).
 
 %% ----------------------------
 %% @doc Return node name type
--spec name_type(Name) -> shortnames | longnames | name | nomatch | nonetkernel
-	when
-	Name :: atom() | unicode:charlist().
+-spec name_type(NAME) -> shortnames | longnames | name | nomatch | nonetkernel
+	when NAME :: atom() | unicode:charlist().
 
 name_type('nonode@nohost') -> nonetkernel;
-name_type(Name) when is_atom(Name) ->
-	name_type(atom_to_list(Name));
-name_type(Name) when is_list(Name) ->
-	case re:run(Name,"^[a-zA-Z0-9\_\-]{1,}\@[a-zA-Z0-9\_\-]{1,}$") of
+
+name_type(NAME) when is_atom(NAME) ->
+
+	name_type(atom_to_list(NAME));
+
+name_type(NAME) when is_list(NAME) ->
+
+	case re:run(NAME,"^[a-zA-Z0-9\_\-]{1,}\@[a-zA-Z0-9\_\-]{1,}$") of
 		{match,_} -> shortnames;
 		_ ->
-			case re:run(Name,"^[a-zA-Z0-9\_\-]{1,}\@[a-zA-Z0-9\.\_\-]{1,}$") of
+			case re:run(NAME,"^[a-zA-Z0-9\_\-]{1,}\@[a-zA-Z0-9\.\_\-]{1,}$") of
 				{match,_} -> longnames;
 				_ ->
-					case re:run(Name,"^[a-zA-Z0-9\_\-]{1,}$") of
+					case re:run(NAME,"^[a-zA-Z0-9\_\-]{1,}$") of
 						{match,_} -> name;
 						_ -> nomatch
 					end
@@ -181,51 +196,122 @@ name_type(Name) when is_list(Name) ->
 
 %% ----------------------------
 %% @doc Change node name
--spec change_name(New_name) -> {ok,New_node_name} | wrongnewname | wrongtype | nonetkernel
+-spec change_name(NEW_NAME) -> {ok,NEW_NODE_NAME} | wrongnewname | wrongtype | nonetkernel
 	when
-	New_name :: atom() | unicode:charlist(),
-	New_node_name :: node().
+		NEW_NAME :: atom() | unicode:charlist(),
+		NEW_NODE_NAME :: node().
 
-change_name(New_name) ->
-	change_name(New_name,name_type()).
+change_name(NEW_NAME) -> change_name(NEW_NAME,name_type()).
 
 
 %% ----------------------------
 %% @doc Change node name
--spec change_name(New_name,Type) ->
-	{ok,New_node_name} | wrongnewname | wrongtype | nonetkernel | Net_kernel_error
+-spec change_name(NEW_NAME,TYPE) ->
+	{ok,NEW_NODE_NAME} | wrongnewname | wrongtype | nonetkernel | NET_KERNEL_ERROR
 	when
-	New_name :: atom() | unicode:charlist(),
-	New_node_name :: node(),
-	Type :: shortnames | longnames | nonetkernel,
-	Net_kernel_error :: not_allowed | not_found.
+		NEW_NAME :: atom() | unicode:charlist(),
+		NEW_NODE_NAME :: node(),
+		TYPE :: shortnames | longnames | nonetkernel,
+		NET_KERNEL_ERROR :: not_allowed | not_found.
 
-change_name(New_name,Type) when is_atom(New_name) ->
-	change_name(atom_to_list(New_name),Type);
-change_name(New_name,Type) when is_list(New_name) ->
-	case name_type(New_name) of
-		name -> change_name({node,New_name},Type);
+change_name(NEW_NAME,TYPE) when is_atom(NEW_NAME) ->
+
+	change_name(atom_to_list(NEW_NAME),TYPE);
+
+change_name(NEW_NAME,TYPE) when is_list(NEW_NAME) ->
+
+	case name_type(NEW_NAME) of
+		name -> change_name({node,NEW_NAME},TYPE);
 		_ -> wrongnewname
 	end;
-change_name({node,New_name},Type) when is_list(New_name) ->
+
+change_name({node,NEW_NAME},TYPE) when is_list(NEW_NAME) ->
+
 	case node() of
 		'nonode@nohost' -> nonetkernel;
-		_ -> change_name({kernel,New_name},Type)
+		_ -> change_name({kernel,NEW_NAME},TYPE)
 	end;
-change_name({kernel,New_name},Type) when is_list(New_name) ->
+
+change_name({kernel,NEW_NAME},TYPE) when is_list(NEW_NAME) ->
+
 	case net_kernel:stop() of
-		ok -> change_name({verified,New_name},Type);
-		{error,Reason} -> Reason
+		ok -> change_name({verified,NEW_NAME},TYPE);
+		{error,REASON} -> REASON
 	end;
-change_name({verified,New_name},shortnames) when is_list(New_name) ->
-	{ok,_Net_kernel_pid} = net_kernel:start([
-		list_to_atom(New_name),shortnames
+
+change_name({verified,NEW_NAME},shortnames) when is_list(NEW_NAME) ->
+
+	{ok,_NET_KERNEL_PID} = net_kernel:start([
+		list_to_atom(NEW_NAME),shortnames
 	]),
 	{ok,node()};
-change_name({verified,New_name},longnames) when is_list(New_name) ->
-	{ok,_Net_kernel_pid} = net_kernel:start([
-		list_to_atom(lists:concat([New_name,"@",net_adm:localhost()])),longnames
+
+change_name({verified,NEW_NAME},longnames) when is_list(NEW_NAME) ->
+
+	{ok,_NET_KERNEL_PID} = net_kernel:start([
+		list_to_atom(lists:concat([NEW_NAME,"@",net_adm:localhost()])),longnames
 	]),
 	{ok,node()};
+
 change_name(_,nonetkernel) -> nonetkernel;
+
 change_name(_,_) -> wrongtype.
+
+
+%% ----------------------------
+%% @doc Return list of started nodes on current server
+-spec names() -> proplists:proplist().
+
+names() ->
+
+	HOST_NAME = fqdn(),
+	[_EPMD | NODE_DESCRIPTIONS] = string:tokens(os:cmd("epmd -names"),"\n"),
+	NODES = [parse_node_description(DESCRIPTION) || DESCRIPTION <- NODE_DESCRIPTIONS],
+	[{list_to_atom(string:concat(string:concat(NODE_NAME,"@"),HOST_NAME)),PORT} || {NODE_NAME,PORT} <- NODES].
+
+
+%% ----------------------------
+%% @doc Check the node description and return term within node data
+-spec parse_node_description(NODE_DESCRIPTION) -> {nomatch,REPLY} | {NODE_NAME_STRING,PORT_NUMBER}
+	when
+		NODE_DESCRIPTION :: string(),
+		REPLY :: any(),
+		NODE_NAME_STRING :: string(),
+		PORT_NUMBER :: port().
+
+parse_node_description(NODE_DESCRIPTION) ->
+
+	PATTERN = "^name\ ([a-zA-Z_0-9\-]*)\ at port ([0-9]{1,5})$",
+	case re:run(NODE_DESCRIPTION,PATTERN,[dotall, ungreedy, {capture, all_but_first, list}]) of
+		{match,[NODE_NAME,PORT]} -> {NODE_NAME,list_to_integer(PORT)};
+		REPLY -> {nomatch,REPLY}
+	end.
+
+
+%% ----------------------------
+%% @doc Return full hostname of current host
+-spec fqdn() -> string().
+
+fqdn() ->
+
+	CMD_OUTPUT = os:cmd("hostname -f"),
+	{HOSTNAME,_} = lists:split(length(CMD_OUTPUT) - 1, CMD_OUTPUT),
+	HOSTNAME.
+
+
+%% ----------------------------
+%% @doc Return default node parameters record
+-spec default_node_parameters() -> #a_node_properties{}.
+
+default_node_parameters() ->
+
+	#a_node_properties{
+		name = "test_node",
+		host = "no_default_host",
+		detached = true,
+		cookie = "no_cookie",
+		port_range = false,
+		port_range_min = 0,
+		port_range_max = 0,
+		command_timeout = 3000
+	}.

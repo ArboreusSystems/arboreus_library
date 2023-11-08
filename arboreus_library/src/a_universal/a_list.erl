@@ -12,7 +12,8 @@
 %% Constants
 
 %% Data types
--include("../include/types/types_general.hrl").
+-include_lib("../include/types/types_general.hrl").
+-include_lib("../include/macros/macro_a_lists.hrl").
 
 %% Data models
 
@@ -38,198 +39,213 @@ test() -> ok.
 
 %% ----------------------------
 %% @doc Numerate the list
--spec numerate(List) -> list()
-	when
-	List :: list().
+-spec numerate(LIST) -> list()
+	when LIST :: list().
 
-numerate(List) ->
-	numerate_handler(List,1,[]).
+numerate(LIST) -> numerate_handler(LIST,1,[]).
 
 
 %% ----------------------------
 %% @doc Numerate procedure handler
--spec numerate_handler(List,Count,Output) -> Output
+-spec numerate_handler(LIST,COUNT,OUTPUT) -> OUTPUT
 	when
-	List :: list(),
-	Count :: pos_integer(),
-	Output :: list().
+		LIST :: list(),
+		COUNT :: pos_integer(),
+		OUTPUT :: list().
 
-numerate_handler([],_,Output) -> Output;
-numerate_handler([Value|List],Count,Output) ->
+numerate_handler([],_,OUTPUT) -> OUTPUT;
+
+numerate_handler([VALUE|LIST],COUNT,OUTPUT) ->
+
 	numerate_handler(
-		List,Count + 1,
-		lists:append(Output,[{Count,Value}])
+		LIST,COUNT + 1,
+		lists:append(OUTPUT,[{COUNT,VALUE}])
 	).
 
 
 %% ----------------------------
 %% @doc Exclude members of list from another lists and return diff
--spec exclude(List,Members) -> list()
+-spec exclude(LIST,MEMBERS) -> list()
 	when
-	List :: list(),
-	Members :: list().
+		LIST :: list(),
+		MEMBERS :: list().
 
-exclude(List,Members) ->
-	exclude_handler(List,Members,[]).
+exclude(LIST,MEMBERS) -> exclude_handler(LIST,MEMBERS,[]).
 
 
 %% ----------------------------
 %% @doc Aux function for exclude/2
--spec exclude_handler(List,Members,Output) -> list()
+-spec exclude_handler(LIST,MEMBERS,OUTPUT) -> list()
 	when
-	List :: list(),
-	Members :: list(),
-	Output :: list().
+		LIST :: list(),
+		MEMBERS :: list(),
+		OUTPUT :: list().
 
-exclude_handler([],_,Output) -> Output;
-exclude_handler([Element|List],Members,Output) ->
+exclude_handler([],_,OUTPUT) -> OUTPUT;
+
+exclude_handler([ELEMENT|LIST],MEMBERS,OUTPUT) ->
+
 	exclude_handler(
-		List,Members,
-		case lists:member(Element,Members) of
-			false -> lists:append(Output,[Element]);
-			_ -> Output
+		LIST,MEMBERS,
+		case lists:member(ELEMENT,MEMBERS) of
+			false -> lists:append(OUTPUT,[ELEMENT]);
+			_ -> OUTPUT
 		end
 	).
 
 
 %% ----------------------------
 %% @doc Compare members in two lists within checking length
--spec compare_members(List1,List2) -> boolean()
+-spec compare_members(LIST1,LIST2) -> boolean()
 	when
-	List1 :: list(),
-	List2 :: list().
+		LIST1 :: list(),
+		LIST2 :: list().
 
-compare_members(List1,List2) ->
-	Length1 = length(List1),
-	Length2 = length(List2),
+compare_members(LIST1,LIST2) ->
+
+	LENGTH1 = length(LIST1),
+	LENGTH2 = length(LIST2),
 	if
-		Length1 == Length2 -> compare_members_handler(List1,List2);
+		LENGTH1 == LENGTH2 -> compare_members_handler(LIST1,LIST2);
 		true -> false
 	end.
 
 
 %% ----------------------------
 %% @doc Compare members in two lists
--spec compare_members_handler(List1,List2) -> boolean()
+-spec compare_members_handler(LIST1,LIST2) -> boolean()
 	when
-	List1 :: list(),
-	List2 :: list().
+		LIST1 :: list(),
+		LIST2 :: list().
 
 compare_members_handler([],_) -> true;
-compare_members_handler([Member|List1],List2) ->
-	case lists:member(Member,List2) of
-		true -> compare_members_handler(List1,List2);
+
+compare_members_handler([MEMBER|LIST1],LIST2) ->
+
+	case lists:member(MEMBER,LIST2) of
+		true -> compare_members_handler(LIST1,LIST2);
 		_ -> false
 	end.
 
 
 %% ----------------------------
 %% @doc Find members of list from another list
--spec find_members(Members,List) -> list()
+-spec find_members(MEMBERS,LIST) -> list()
 	when
-	Members :: list(),
-	List :: list().
+		MEMBERS :: list(),
+		LIST :: list().
 
-find_members(Members_list,List) ->
-	find_members_handler(Members_list,List,[]).
+find_members(MEMBERS,LIST) ->
+
+	find_members_handler(MEMBERS,LIST,[]).
 
 
 %% ----------------------------
 %% @doc Find members of list from another list
--spec find_members_handler(Members,List,Output) -> list()
+-spec find_members_handler(MEMBERS,LIST,OUTPUT) -> list()
 	when
-	Members :: list(),
-	List :: list(),
-	Output :: list().
+		MEMBERS :: list(),
+		LIST :: list(),
+		OUTPUT :: list().
 
-find_members_handler([],_,Output) -> Output;
-find_members_handler([Member|Members],List,Output) ->
-	find_members_handler(Members,List,
-		case lists:member(Member,List) of
-			true -> lists:append(Output,[Member]);
-			false -> Output
+find_members_handler([],_,OUTPUT) -> OUTPUT;
+
+find_members_handler([MEMBER|MEMBERS],LIST,OUTPUT) ->
+
+	find_members_handler(MEMBERS,LIST,
+		case lists:member(MEMBER,LIST) of
+			true -> lists:append(OUTPUT,[MEMBER]);
+			false -> OUTPUT
 		end
 	).
 
 
 %% ----------------------------
 %% @doc Clear duplicates from defined list
--spec clear_duplicates(List::list()) -> list().
+-spec clear_duplicates(LIST ::list()) -> list().
 
-clear_duplicates(List) -> clear_duplicates_handler(List,[]).
+clear_duplicates(LIST) -> clear_duplicates_handler(LIST,[]).
 
 
 %% ----------------------------
 %% @doc Clear duplicates from defined list
--spec clear_duplicates_handler(List,Output) -> list()
+-spec clear_duplicates_handler(LIST,OUTPUT) -> list()
 	when
-	List :: list(),
-	Output :: list().
+		LIST :: list(),
+		OUTPUT :: list().
 
-clear_duplicates_handler([],Output) -> Output;
-clear_duplicates_handler([Element|List],Output) ->
+clear_duplicates_handler([],OUTPUT) -> OUTPUT;
+
+clear_duplicates_handler([ELEMENT|LIST],OUTPUT) ->
+
 	clear_duplicates_handler(
-		List,
-		case lists:member(Element,Output) of
-			true -> Output;
-			false -> lists:append(Output,[Element])
+		LIST,
+		case lists:member(ELEMENT,OUTPUT) of
+			true -> OUTPUT;
+			false -> lists:append(OUTPUT,[ELEMENT])
 		end
 	).
 
 %% ----------------------------
 %% @doc Wrapper function for check/3, checking list of typed elements
--spec check(List,Type_properties) -> list() | nomatch
+-spec check(LIST,TYPE_PROPERTIES) -> list() | nomatch
 	when
-	List :: list(),
-	Type_properties :: {Type,Type_parameters},
-	Type :: atom(),
-	Type_parameters :: list().
+		LIST :: list(),
+		TYPE_PROPERTIES :: {TYPE,TYPE_PARAMETERS},
+		TYPE :: atom(),
+		TYPE_PARAMETERS :: list().
 
-check(List,Type_properties) -> check(List,Type_properties,[]).
+check(LIST,TYPE_PROPERTIES) -> check(LIST,TYPE_PROPERTIES,[]).
 
 
 %% ----------------------------
 %% @doc Checking list of typed elements
--spec check(List,Type_properties,Output) -> list() | nomatch
+-spec check(LIST,TYPE_PROPERTIES,OUTPUT) -> list() | nomatch
 	when
-	List :: list(),
-	Type_properties :: {Type,Type_parameters},
-	Type :: atom(),
-	Type_parameters :: list(),
-	Output :: list().
+		LIST :: list(),
+		TYPE_PROPERTIES :: {TYPE,TYPE_PARAMETERS},
+		TYPE :: atom(),
+		TYPE_PARAMETERS :: list(),
+		OUTPUT :: list().
 
-check([],_,Output) -> Output;
-check([Element|List],{Type,Type_parameters},Output) ->
-	case a_yaws_params:check(Type,Element,Type_parameters) of
+check([],_,OUTPUT) -> OUTPUT;
+
+check([ELEMENT|LIST],{TYPE,TYPE_PARAMETERS},OUTPUT) ->
+
+	case a_yaws_params:check(TYPE,ELEMENT,TYPE_PARAMETERS) of
 		nomatch -> nomatch;
-		Checked_element ->
+		CHECKED_ELEMENT ->
 			check(
-				List,{Type,Type_parameters},
-				lists:append(Output,[Checked_element])
+				LIST,{TYPE,TYPE_PARAMETERS},
+				lists:append(OUTPUT,[CHECKED_ELEMENT])
 			)
 	end.
 
 
 %% ----------------------------
 %% @doc Get out key-value pair and return cleared List and value
--spec get_out(Type,Key,List) -> Result | {error,_Reason}
+-spec get_out(TYPE,KEY,LIST) -> RESULT | {error,REASON}
 	when
-	Type :: value | pair,
-	Key :: atom(),
-	List :: list(),
-	Result :: list().
+		TYPE :: value | pair,
+		KEY :: atom(),
+		LIST :: list(),
+		RESULT :: list(),
+		REASON :: term().
 
-get_out(value,Key,List) ->
-	case proplists:get_value(Key,List) of
+get_out(value,KEY,LIST) ->
+
+	case proplists:get_value(KEY,LIST) of
 		undefined -> undefined;
-		Value ->
-			List_out = proplists:delete(Key,List),
-			[Value,List_out]
+		VALUE ->
+			LIST_OUT = proplists:delete(KEY,LIST),
+			[VALUE,LIST_OUT]
 	end;
-get_out(pair,Key,List) ->
-	case proplists:get_value(Key,List) of
+
+get_out(pair,KEY,LIST) ->
+
+	case proplists:get_value(KEY,LIST) of
 		undefined -> undefined;
-		Value ->
-			List_out = proplists:delete(Key,List),
-			[{Key,Value},List_out]
+		VALUE ->
+			LIST_OUT = proplists:delete(KEY,LIST),
+			[{KEY,VALUE},LIST_OUT]
 	end.

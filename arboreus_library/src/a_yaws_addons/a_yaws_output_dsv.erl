@@ -11,7 +11,7 @@
 
 %% System include
 -include("../include/types/types_general.hrl").
--include("../include/constants/constants_general.hrl").
+-include("../include/constants/a_constants_general.hrl").
 
 %% API
 -export([

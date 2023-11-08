@@ -17,7 +17,7 @@
 -include("../include/records/records_a_structure_tree.hrl").
 
 %% Constants
--include("../include/constants/constants_structure_tree.hrl").
+-include("../include/constants/a_constants_structure_tree.hrl").
 -define(MODEL_NAME,?NAME_LINK).
 
 %% API

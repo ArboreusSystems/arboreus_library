@@ -10,7 +10,7 @@
 -author("Alexandr KIRILOV (http://alexandr.kirilov.me)").
 
 %% Data types
--include("../include/types/types_general.hrl").
+-include_lib("../include/types/types_general.hrl").
 
 %% Module API
 -export([

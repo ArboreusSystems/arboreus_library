@@ -12,9 +12,8 @@
 %% Constants
 
 %% Data types
--include("../include/types/types_general.hrl").
--include("../include/types/types_network.hrl").
--include("../include/types/types_time.hrl").
+-include_lib("../include/types/types_network.hrl").
+-include_lib("../include/types/types_time.hrl").
 
 %% Data models
 

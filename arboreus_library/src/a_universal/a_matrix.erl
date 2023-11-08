@@ -13,7 +13,7 @@
 -define(TEST_RECORD_NAME,test_matrix).
 
 %% Data types
--include("../include/types/types_general.hrl").
+-include_lib("../include/types/types_general.hrl").
 
 %% Data models
 -record(test_matrix,{a,b,c,d}).

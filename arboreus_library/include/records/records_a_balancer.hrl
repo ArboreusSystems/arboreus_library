@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+
 %% ----------------------------
 %% @doc Balancer data model definition
 

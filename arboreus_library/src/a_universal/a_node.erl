@@ -30,7 +30,10 @@
 	load/1,
 	names/0,
 	fqdn/0,
-	default_node_parameters/0
+	default_node_properties/0,
+	start/1,
+	stop/1,
+	ensure/4
 ]).
 
 
@@ -300,18 +303,96 @@ fqdn() ->
 
 
 %% ----------------------------
-%% @doc Return default node parameters record
--spec default_node_parameters() -> #a_node_properties{}.
+%% @doc Return default node properties record
+-spec default_node_properties() -> #a_node_start_properties{}.
 
-default_node_parameters() ->
+default_node_properties() ->
 
-	#a_node_properties{
+	#a_node_start_properties{
 		name = "test_node",
-		host = "no_default_host",
 		detached = true,
 		cookie = "no_cookie",
 		port_range = false,
 		port_range_min = 0,
 		port_range_max = 0,
-		command_timeout = 3000
+		command_timeout = 0,
+		shutdown_time = 0
 	}.
+
+
+%% ----------------------------
+%% @doc Starting node with parameters
+-spec start(PARAMETERS) -> no_return()
+	when PARAMETERS :: #a_node_start_properties{}.
+
+start(PARAMETERS) ->
+
+	PARAMETER_NODE_NAME = string:concat(" -name ",PARAMETERS#a_node_start_properties.name),
+	PARAMETER_COOKIE = string:concat(" -setcookie ",PARAMETERS#a_node_start_properties.cookie),
+	PARAMETER_DETACHED = case PARAMETERS#a_node_start_properties.detached of
+		true -> " -detached";
+		_ -> ""
+	end,
+	PARAMETER_PORT_RANGE = case PARAMETERS#a_node_start_properties.port_range of
+		true ->
+			" -kernel " ++
+			"inet_dist_listen_min " ++ PARAMETERS#a_node_start_properties.port_range_min ++ " "
+			"inet_dist_listen_max " ++ PARAMETERS#a_node_start_properties.port_range_max;
+		_ ->
+			""
+	end,
+	erlang:display(PARAMETERS#a_node_start_properties.shutdown_time),
+	PARAMETER_SHUTDOWN_TIME = case PARAMETERS#a_node_start_properties.shutdown_time of
+		undefined -> "";
+		0 -> "";
+		SHUTDOWN_TIME -> " -shutdown_time " ++ integer_to_list(SHUTDOWN_TIME)
+	end,
+
+	ERL_COMMAND = "erl" ++
+		PARAMETER_NODE_NAME ++ PARAMETER_COOKIE ++
+		PARAMETER_DETACHED ++ PARAMETER_PORT_RANGE ++
+		PARAMETER_SHUTDOWN_TIME,
+
+	os:cmd(ERL_COMMAND),
+	timer:sleep(PARAMETERS#a_node_start_properties.command_timeout).
+
+
+%% ----------------------------
+%% @doc Ensure node connected and fully operational by calling custom function
+%% on this node
+-spec ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) -> any()
+	when
+		NODE_NAME :: node(),
+		MODULE :: module(),
+		FUNCTION :: atom(),
+		ARGUMENTS :: list().
+
+ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
+
+	case net_adm:ping(NODE_NAME) of
+		pong -> a_rpc:async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS);
+		_ -> {error,not_connected}
+	end.
+
+
+%% ----------------------------
+%% @doc Stopping node by FQDN
+-spec stop(NODE_FQDN) -> ok | error
+	when NODE_FQDN :: atom() | string().
+
+stop(NODE_FQDN_STRING) when is_list(NODE_FQDN_STRING) ->
+
+	stop(list_to_atom(NODE_FQDN_STRING));
+
+stop(NODE_FQDN) when is_atom(NODE_FQDN) ->
+
+	case net_adm:ping(NODE_FQDN) of
+		pong ->
+			case a_rpc:async_call(NODE_FQDN,init,stop,[]) of
+				ok -> {ok,NODE_FQDN};
+				REPLY -> REPLY
+			end;
+		REPLY -> REPLY
+	end;
+
+stop(_) -> error.

@@ -12,14 +12,14 @@
 %% ----------------------------
 %% @doc
 
--record(a_node_properties,{
+-record(a_node_start_properties,{
 
 	name :: node_name_string(),
-	host :: host_name_string(),
 	detached :: boolean(),
 	cookie :: cookie_string(),
 	port_range :: boolean(),
 	port_range_min :: port(),
 	port_range_max :: port(),
-	command_timeout :: integer()
+	command_timeout :: integer(),
+	shutdown_time :: integer()
 }).

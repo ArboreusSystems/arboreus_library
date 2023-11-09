@@ -78,3 +78,7 @@
 -type second() :: 0..59.
 
 -type process_id() :: any().
+
+-type size() :: integer().
+
+-type file_path_string() :: utf_text_string().

@@ -32,7 +32,7 @@
 	fqdn/0,
 	default_node_properties/0,
 	start/1,
-	stop/1,
+	stop/1,stop/4,
 	ensure/4
 ]).
 
@@ -325,7 +325,7 @@ default_node_properties() ->
 -spec start(PARAMETERS) -> no_return()
 	when PARAMETERS :: #a_node_start_properties{}.
 
-start(PARAMETERS) ->
+start(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties)->
 
 	PARAMETER_NODE_NAME = string:concat(" -name ",PARAMETERS#a_node_start_properties.name),
 	PARAMETER_COOKIE = string:concat(" -setcookie ",PARAMETERS#a_node_start_properties.cookie),
@@ -359,31 +359,54 @@ start(PARAMETERS) ->
 	case lists:keyfind(NODE_NAME,1,names()) of
 		{NODE_NAME,_PORT_NAMUBER} -> {ok,NODE_NAME};
 		_ -> {error,PARAMETERS}
-	end.
+	end;
+
+start(PARAMETERS) ->
+
+	{error,[
+		{"PARAMETERS",is_record(PARAMETERS,a_node_start_properties)}
+	]}.
 
 
 %% ----------------------------
 %% @doc Ensure node connected and fully operational by calling custom function
 %% on this node
--spec ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) -> any()
+-spec ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) -> any() | {error,REASON}
 	when
 		NODE_NAME :: node(),
 		MODULE :: module(),
 		FUNCTION :: atom(),
-		ARGUMENTS :: list().
+		ARGUMENTS :: list(),
+		REASON :: term().
 
-ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
+ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS)
+	when
+		is_atom(NODE_NAME),
+		is_atom(MODULE),
+		is_atom(FUNCTION),
+		is_list(ARGUMENTS) ->
 
 	case net_adm:ping(NODE_NAME) of
 		pong -> a_rpc:async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS);
 		_ -> {error,not_connected}
-	end.
+	end;
+
+ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
+
+	{error,[
+		{"NODE_NAME",is_atom(NODE_NAME)},
+		{"MODULE",is_atom(MODULE)},
+		{"FUNCTION",is_atom(FUNCTION)},
+		{"ARGUMENTS",is_list(ARGUMENTS)}
+	]}.
 
 
 %% ----------------------------
 %% @doc Stopping node by FQDN
--spec stop(NODE_FQDN) -> ok | error
-	when NODE_FQDN :: atom() | string().
+-spec stop(NODE_FQDN) -> {ok,NODE_FQDN} | {error,REASON}
+	when
+		NODE_FQDN :: atom() | string(),
+		REASON :: term().
 
 stop(NODE_FQDN_STRING) when is_list(NODE_FQDN_STRING) ->
 
@@ -391,13 +414,42 @@ stop(NODE_FQDN_STRING) when is_list(NODE_FQDN_STRING) ->
 
 stop(NODE_FQDN) when is_atom(NODE_FQDN) ->
 
-	case net_adm:ping(NODE_FQDN) of
-		pong ->
-			case a_rpc:async_call(NODE_FQDN,init,stop,[]) of
-				ok -> {ok,NODE_FQDN};
-				REPLY -> REPLY
-			end;
-		REPLY -> REPLY
+	case stop(NODE_FQDN,init,stop,[]) of
+		ok -> {ok,NODE_FQDN};
+		_ -> {error,NODE_FQDN}
 	end;
 
-stop(_) -> error.
+stop(NODE_FQDN) ->
+
+	{error,[{"NODE_FQDN",is_atom(NODE_FQDN)}]}.
+
+
+%% ----------------------------
+%% @doc Stopping node by calling designed function
+-spec stop(NODE_FQDN,MODULE,FUNCTION,ARGUMENTS) -> any()
+	when
+		NODE_FQDN :: node(),
+		MODULE :: module(),
+		FUNCTION :: atom(),
+		ARGUMENTS :: list().
+
+stop(NODE_FQDN,MODULE,FUNCTION,ARGUMENTS)
+	when
+		is_atom(NODE_FQDN),
+		is_atom(MODULE),
+		is_atom(FUNCTION),
+		is_list(ARGUMENTS) ->
+
+	case net_adm:ping(NODE_FQDN) of
+		pong ->	a_rpc:async_call(NODE_FQDN,MODULE,FUNCTION,[]);
+		REPLY -> {error,{no_connected_node,REPLY}}
+	end;
+
+stop(NODE_FQDN,MODULE,FUNCTION,ARGUMENTS) ->
+
+	{error,[
+		{"NODE_FQDN",is_atom(NODE_FQDN)},
+		{"MODULE",is_atom(MODULE)},
+		{"FUNCTION",is_atom(FUNCTION)},
+		{"ARGUMENTS",is_list(ARGUMENTS)}
+	]}.

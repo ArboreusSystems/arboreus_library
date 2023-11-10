@@ -341,7 +341,6 @@ start(PARAMETERS) ->
 		_ ->
 			""
 	end,
-	erlang:display(PARAMETERS#a_node_start_properties.shutdown_time),
 	PARAMETER_SHUTDOWN_TIME = case PARAMETERS#a_node_start_properties.shutdown_time of
 		undefined -> "";
 		0 -> "";
@@ -354,7 +353,13 @@ start(PARAMETERS) ->
 		PARAMETER_SHUTDOWN_TIME,
 
 	os:cmd(ERL_COMMAND),
-	timer:sleep(PARAMETERS#a_node_start_properties.command_timeout).
+	timer:sleep(PARAMETERS#a_node_start_properties.command_timeout),
+
+	NODE_NAME = list_to_atom(PARAMETERS#a_node_start_properties.name ++ "@" ++ fqdn()),
+	case lists:keyfind(NODE_NAME,1,names()) of
+		{NODE_NAME,_PORT_NAMUBER} -> {ok,NODE_NAME};
+		_ -> {error,PARAMETERS}
+	end.
 
 
 %% ----------------------------

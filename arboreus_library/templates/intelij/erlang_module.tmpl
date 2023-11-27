@@ -1,0 +1,15 @@
+#parse("Erlang File Header.erl")
+-module(${NAME_ATOM}).
+#parse("Erlang File Module.erl")
+
+%% API
+-export([
+	test/0
+]).
+
+
+%% ----------------------------
+%% @doc Module test function
+-spec test() -> ok.
+
+test() -> ok.

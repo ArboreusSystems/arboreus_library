@@ -1,0 +1,13 @@
+#parse("Erlang File Header.erl")
+-module(${NAME_ATOM}).
+#parse("Erlang File Module.erl")
+
+%% Test includes
+-include_lib("eunit/include/eunit.hrl").
+
+
+%% ----------------------------
+%% @doc Module test function
+-spec simple_test() -> any().
+
+simple_test() -> ?assert(true).

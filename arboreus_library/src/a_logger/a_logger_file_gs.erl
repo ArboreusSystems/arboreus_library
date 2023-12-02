@@ -98,9 +98,11 @@ init([INITIAL_STATE]) ->
 							end,
 							OPENING_MESSAGE =
 								TIME ++ TYPE ++
-								INITIAL_STATE#a_logger_file_state.message_opening_text,
+								INITIAL_STATE#a_logger_file_state.message_opening_text ++
+								"\n",
 							file:write(IO_DEVICE,OPENING_MESSAGE)
 					end,
+					process_flag(trap_exit, true),
 					{ok,INITIAL_STATE#a_logger_file_state{
 						io_device = IO_DEVICE,
 						file_path = FILE_PATH
@@ -187,6 +189,10 @@ handle_cast(REQUEST,STATE = #a_logger_file_state{}) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
+handle_info({'EXIT',_FROM,REASON},STATE) ->
+
+	{stop,REASON,STATE};
+
 handle_info(INFO,STATE = #a_logger_file_state{}) ->
 
 	ERROR = {error,undefined_info,self(),INFO,?MODULE,?FILE,?LINE},
@@ -197,7 +203,7 @@ handle_info(INFO,STATE = #a_logger_file_state{}) ->
 		STATE#a_logger_file_state.error_callback_function,
 		[ERROR]
 	),
-	{reply,ERROR,STATE}.
+	{noreply,STATE}.
 
 
 %% ----------------------------
@@ -229,7 +235,7 @@ terminate(_REASON,STATE = #a_logger_file_state{}) ->
 					file:write(STATE#a_logger_file_state.io_device,
 						TIME ++ STATE#a_logger_file_state.separator ++
 						TYPE ++ STATE#a_logger_file_state.separator ++
-						STATE#a_logger_file_state.message_closing_text
+						STATE#a_logger_file_state.message_closing_text ++ "\n"
 					)
 			end,
 			case file:close(STATE#a_logger_file_state.io_device) of
@@ -284,7 +290,7 @@ write_error(STATE,MESSAGE_BODY) ->
 			end,
 			case STATE#a_logger_file_state.io_device of
 				undefined -> {error,no_io_device};
-				IO_DEVICE -> file:write(IO_DEVICE,TIME ++ TYPE ++ MESSAGE_BODY)
+				IO_DEVICE -> file:write(IO_DEVICE,TIME ++ TYPE ++ MESSAGE_BODY ++ "\n")
 			end
 	end.
 
@@ -307,5 +313,5 @@ write_message(STATE,MESSAGE_BODY) ->
 	end,
 	case STATE#a_logger_file_state.io_device of
 		undefined -> {error,no_io_device};
-		IO_DEVICE -> file:write(IO_DEVICE,TIME ++ MESSAGE_BODY)
+		IO_DEVICE -> file:write(IO_DEVICE,TIME ++ MESSAGE_BODY ++ "\n")
 	end.

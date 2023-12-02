@@ -11,7 +11,8 @@
 
 %% API
 -export([
-	nif_not_loaded/2
+	nif_not_loaded/2,
+	callback/4
 ]).
 
 
@@ -25,3 +26,20 @@
 nif_not_loaded(MODULE,LINE) ->
 
 	erlang:nif_error({not_loaded, [{module,MODULE}, {line,LINE}]}).
+
+
+%% ----------------------------
+%% @doc Check callback value and run callback function
+-spec callback(IS_CALLBACK,MODULE,FUNCTION,PARAMETERS) -> any()
+	when
+		IS_CALLBACK :: boolean(),
+		MODULE :: module(),
+		FUNCTION :: atom(),
+		PARAMETERS :: [term()].
+
+callback(IS_CALLBACK,MODULE,FUNCTION,PARAMETERS) ->
+
+	if
+		IS_CALLBACK == true -> erlang:apply(MODULE,FUNCTION,PARAMETERS);
+		true -> ok
+	end.

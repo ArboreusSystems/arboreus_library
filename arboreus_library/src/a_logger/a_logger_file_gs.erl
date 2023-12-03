@@ -225,17 +225,20 @@ terminate(_REASON,STATE = #a_logger_file_state{}) ->
 			if
 				STATE#a_logger_file_state.message_closing == true ->
 					TIME = case STATE#a_logger_file_state.file_closing_time of
-						true -> integer_to_list(a_time_now:microseconds());
+						true ->
+							integer_to_list(a_time_now:microseconds()) ++
+							STATE#a_logger_file_state.separator;
 						_ -> ""
 					end,
 					TYPE = case STATE#a_logger_file_state.message_type of
-						true -> STATE#a_logger_file_state.message_closing_type;
+						true ->
+							STATE#a_logger_file_state.message_closing_type ++
+							STATE#a_logger_file_state.separator;
 						_ -> ""
 					end,
-					file:write(STATE#a_logger_file_state.io_device,
-						TIME ++ STATE#a_logger_file_state.separator ++
-						TYPE ++ STATE#a_logger_file_state.separator ++
-						STATE#a_logger_file_state.message_closing_text ++ "\n"
+					file:write(
+						STATE#a_logger_file_state.io_device,
+						TIME ++ TYPE ++ STATE#a_logger_file_state.message_closing_text ++ "\n"
 					)
 			end,
 			case file:close(STATE#a_logger_file_state.io_device) of

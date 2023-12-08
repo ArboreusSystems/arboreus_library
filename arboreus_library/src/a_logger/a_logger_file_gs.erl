@@ -130,9 +130,17 @@ init([]) -> {error,wrong_initial_data}.
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_call({write,MESSAGE_BODY},_FROM,STATE = #a_logger_file_state{}) ->
+handle_call(logbook_descriptor,_FROM,STATE = #a_logger_file_state{}) ->
 
-	{reply,write_message(STATE,MESSAGE_BODY),STATE};
+	{reply,{ok,STATE#a_logger_file_state.io_device},STATE};
+
+handle_call({write_binary,MESSAGE_BODY},_FROM,STATE = #a_logger_file_state{}) ->
+
+	{reply,write_binary_message(STATE,MESSAGE_BODY),STATE};
+
+handle_call({write_text,MESSAGE_BODY},_FROM,STATE = #a_logger_file_state{}) ->
+
+	{reply,write_text_message(STATE,MESSAGE_BODY),STATE};
 
 handle_call(REQUEST,FROM,STATE = #a_logger_file_state{}) ->
 
@@ -159,10 +167,15 @@ handle_call(REQUEST,FROM,STATE = #a_logger_file_state{}) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_cast({write,MESSAGE_BODY},STATE = #a_logger_file_state{}) ->
+handle_cast({write_binary,MESSAGE_BODY},STATE = #a_logger_file_state{}) ->
 
-	write_message(STATE,MESSAGE_BODY),
-	{reply,STATE};
+	write_binary_message(STATE,MESSAGE_BODY),
+	{noreply,STATE};
+
+handle_cast({write_text,MESSAGE_BODY},STATE = #a_logger_file_state{}) ->
+
+	write_text_message(STATE,MESSAGE_BODY),
+	{noreply,STATE};
 
 handle_cast(REQUEST,STATE = #a_logger_file_state{}) ->
 
@@ -174,7 +187,7 @@ handle_cast(REQUEST,STATE = #a_logger_file_state{}) ->
 		STATE#a_logger_file_state.error_callback_function,
 		[ERROR]
 	),
-	{reply,STATE}.
+	{noreply,STATE}.
 
 
 %% ----------------------------
@@ -293,20 +306,20 @@ write_error(STATE,MESSAGE_BODY) ->
 			end,
 			case STATE#a_logger_file_state.io_device of
 				undefined -> {error,no_io_device};
-				IO_DEVICE -> file:write(IO_DEVICE,TIME ++ TYPE ++ MESSAGE_BODY ++ "\n")
+				IO_DEVICE -> file:write(IO_DEVICE,TIME ++ TYPE ++ MESSAGE_BODY)
 			end
 	end.
 
 
 %% ----------------------------
 %% @doc Write message to logbook file
--spec write_message(STATE,MESSAGE_BODY) -> ok | {error, REASON}
+-spec write_text_message(STATE,MESSAGE_BODY) -> ok | {error, REASON}
 	when
 		STATE :: #a_logger_file_state{},
 		MESSAGE_BODY :: string(),
 		REASON :: term().
 
-write_message(STATE,MESSAGE_BODY) ->
+write_text_message(STATE,MESSAGE_BODY) ->
 
 	TIME = case STATE#a_logger_file_state.message_time of
 		true ->
@@ -316,5 +329,27 @@ write_message(STATE,MESSAGE_BODY) ->
 	end,
 	case STATE#a_logger_file_state.io_device of
 		undefined -> {error,no_io_device};
-		IO_DEVICE -> file:write(IO_DEVICE,TIME ++ MESSAGE_BODY ++ "\n")
+		IO_DEVICE -> file:write(IO_DEVICE,TIME ++ MESSAGE_BODY)
+	end.
+
+
+%% ----------------------------
+%% @doc Write message to logbook file
+-spec write_binary_message(STATE,MESSAGE_BODY) -> ok | {error, REASON}
+	when
+		STATE :: #a_logger_file_state{},
+		MESSAGE_BODY :: binary(),
+		REASON :: term().
+
+write_binary_message(STATE,MESSAGE_BODY) ->
+
+	TIME = case STATE#a_logger_file_state.message_time of
+		true ->
+			integer_to_list(a_time_now:microseconds()) ++
+			STATE#a_logger_file_state.separator;
+		_ -> ""
+	end,
+	case STATE#a_logger_file_state.io_device of
+		undefined -> {error,no_io_device};
+		IO_DEVICE -> file:write(IO_DEVICE,<<(list_to_binary(TIME))/binary,MESSAGE_BODY/binary>>)
 	end.

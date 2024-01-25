@@ -10,9 +10,9 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% Data types
--include_lib("../include/types/types_general.hrl").
+-include_lib("../include/types/types_a_general.hrl").
 -include_lib("../include/types/types_a_balancer.hrl").
--include_lib("../include/types/types_network.hrl").
+-include_lib("../include/types/types_a_network.hrl").
 
 %% Records
 -include_lib("../include/records/records_a_node.hrl").

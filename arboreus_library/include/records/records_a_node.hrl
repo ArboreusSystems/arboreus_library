@@ -16,7 +16,7 @@
 
 	name :: a_node_name_string(),
 	detached :: boolean(),
-	cookie :: a_cookie_string(),
+	cookie :: a_node_cookie_string(),
 	port_range :: boolean(),
 	port_range_min :: port(),
 	port_range_max :: port(),

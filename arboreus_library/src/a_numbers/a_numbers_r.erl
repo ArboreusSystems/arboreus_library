@@ -81,7 +81,7 @@ test() ->
 %% @doc Calculate average value for the record of numbers
 -spec average(Record) -> number()
 	when
-	Record :: record().
+	Record :: a_record().
 
 average(Record) -> average_handler(Record,tuple_size(Record),0).
 
@@ -90,7 +90,7 @@ average(Record) -> average_handler(Record,tuple_size(Record),0).
 %% @doc The average procedure handler
 -spec average_handler(Record,Counter,Sum) -> Sum
 	when
-	Record :: record(),
+	Record :: a_record(),
 	Counter :: pos_integer(),
 	Sum :: 0.
 
@@ -113,9 +113,9 @@ average_percentage(Record) -> average(percentage(Record)).
 
 %% ----------------------------
 %% @doc Define the bigger value and calculate percentage to each of numbers of the record
--spec percentage(Record) -> record()
+-spec percentage(Record) -> a_record()
 	when
-	Record :: record().
+	Record :: a_record().
 
 percentage(Record) ->
 	{Minimal,Maximal} = endpoints(Record),
@@ -129,12 +129,12 @@ percentage(Record) ->
 
 %% ----------------------------
 %% @doc The percentage procedure handler
--spec percentage_handler(Range,Delta,Counter,Record) -> record()
+-spec percentage_handler(Range,Delta,Counter,Record) -> a_record()
 	when
 	Range :: pos_integer(),
 	Delta :: number(),
 	Counter :: pos_integer(),
-	Record :: record().
+	Record :: a_record().
 
 percentage_handler(_,_,1,Record) -> Record;
 percentage_handler(Range,Delta,Counter,Record) ->
@@ -150,7 +150,7 @@ percentage_handler(Range,Delta,Counter,Record) ->
 %% @doc Calculate the range between endpoints of record of numbers
 -spec range(Record) -> Range
 	when
-	Record :: record(),
+	Record :: a_record(),
 	Range :: pos_integer().
 
 range(Record) -> a_numbers:range(endpoints(Record)).
@@ -160,7 +160,7 @@ range(Record) -> a_numbers:range(endpoints(Record)).
 %% @doc Find endpoints values of the list of numbers, less and bigger
 -spec endpoints(Record) -> {Minimal,Maximal}
 	when
-	Record :: record(),
+	Record :: a_record(),
 	Minimal :: number(),
 	Maximal :: number().
 
@@ -187,7 +187,7 @@ endpoints(Record) ->
 	Length :: pos_integer(),
 	Minimal :: number(),
 	Maximal :: number(),
-	Record :: record().
+	Record :: a_record().
 
 endpoints_handler(Counter,Length,Minimal,Maximal,_) when Counter == Length + 1 ->
 	{Minimal,Maximal};

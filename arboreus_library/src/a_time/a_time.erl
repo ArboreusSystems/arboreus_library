@@ -46,9 +46,9 @@ test() -> ok.
 	Date :: current | {Type,String} | {Year,Month,Day},
 	Type :: ansi | rfc822 | iso8601,
 	String :: unicode:charlist(),
-	Year :: year(),
-	Month :: month(),
-	Day :: day().
+	Year :: a_year(),
+	Month :: a_month(),
+	Day :: a_day().
 
 date_to_integer({Type,String}) ->
 	{Date,_} = from_formated(Type,String,tuple),
@@ -61,7 +61,7 @@ date_to_integer({Year,Month,Day}) ->
 
 %%-----------------------------------
 %% @doc Return a Year :: integer(), the part of erlang:localtime()
--spec current_year(Output_type) -> year() | year_short() | {error,_Error_notice}
+-spec current_year(Output_type) -> a_year() | a_year_short() | {error,_Error_notice}
 	when
 	Output_type :: full | short .
 
@@ -73,7 +73,7 @@ current_year(short) ->
 
 %%-----------------------------------
 %% @doc Return a Month() = integer(), the part of erlang:localtime()
--spec current_month() -> month().
+-spec current_month() -> a_month().
 
 current_month() ->
 	{_,Month,_} = a_time:now_date(),
@@ -82,7 +82,7 @@ current_month() ->
 
 %%-----------------------------------
 %% @doc Return a Day :: integer(), the part of erlang:localtime()
--spec current_day() -> day().
+-spec current_day() -> a_day().
 
 current_day() ->
 	{_,_,Day} = a_time:now_date(),

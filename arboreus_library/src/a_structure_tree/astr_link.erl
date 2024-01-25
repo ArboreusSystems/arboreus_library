@@ -94,7 +94,7 @@ test() ->
 	{ok,_Datum} | {norow,Properties} | {aborted,_Reason}
 	when
 	Kind :: by_point | by_points,
-	Properties :: list_of_properties(),
+	Properties :: a_list_of_properties(),
 	Return_mode :: return_id | return_ids | return_record | return_records.
 
 select(by_point,[Point],Return_mode) ->
@@ -130,7 +130,7 @@ select(by_points,[Point_a,Point_b],Return_mode) ->
 	{ok,_Datum} | {norow,Properties} | {aborted,_Reason}
 	when
 	Kind :: by_point | by_points,
-	Properties :: list_of_properties(),
+	Properties :: a_list_of_properties(),
 	Return_mode :: return_id | return_ids | return_record | return_records.
 
 dirty_select(by_point,[Point],Return_mode) ->
@@ -164,7 +164,7 @@ dirty_select(by_points,[Point_a,Point_b],Return_mode) ->
 %% @doc Select datum from record by defined field
 -spec select_return(Datum,Return_mode) -> {ok,_Datum}
 	when
-	Datum :: astr_link() | list_of_records(),
+	Datum :: astr_link() | a_list_of_records(),
 	Return_mode :: return_id | return_ids | return_record | return_records.
 
 select_return(return_id,[Record]) ->
@@ -211,7 +211,7 @@ delete(Astr_link_id) ->
 	{ok,Astr_link_id} | {norow,Astr_link_id} | {error,_Reason}
 	when
 	Strength :: astr_link_strength(),
-	Properties :: list_of_properties() | astr_link() | astr_link_id(),
+	Properties :: a_list_of_properties() | astr_link() | astr_link_id(),
 	Astr_link_id :: astr_link_id().
 
 update_strength(Strength,[Point_a,Point_b]) ->
@@ -294,7 +294,7 @@ create(Record) when is_record(Record,astr_link) ->
 
 %% ----------------------------
 %% @doc Generate ID for link between points A and B
--spec generate_id(Point_a,Point_b) -> md5_binary()
+-spec generate_id(Point_a,Point_b) -> a_md5_binary()
 	when
 	Point_a :: astr_point_id(),
 	Point_b :: astr_point_id().

@@ -13,9 +13,9 @@
 %% Time types
 
 -type a_time_tuple() :: {a_date(),a_time()}.
--type a_date() :: {year(),month(),day()}.
--type a_time() :: {hour(),minute(),second()}.
--type local_time() :: {a_date(),a_time()}.
+-type a_date() :: {a_year(),a_month(),a_day()}.
+-type a_time() :: {a_hour(),a_minute(),a_second()}.
+-type a_local_time() :: {a_date(),a_time()}.
 
 -type a_time_unix_timestamp() :: pos_integer().
 -type a_time_unix_microseconds() :: pos_integer().

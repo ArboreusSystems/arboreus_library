@@ -59,7 +59,7 @@ test() ->
 
 %% ----------------------------
 %% @doc transform term to utf binary
--spec to_utf_binary(Term) -> utf_text_binary()
+-spec to_utf_binary(Term) -> a_utf_text_binary()
 	when
 	Term :: term().
 
@@ -69,7 +69,7 @@ to_utf_binary(Term) ->
 
 %% ----------------------------
 %% @doc Transform term to string
--spec to_utf_string(Term) -> utf_text()
+-spec to_utf_string(Term) -> a_utf_text()
 	when
 	Term :: term().
 
@@ -83,7 +83,7 @@ to_utf_string(Term) ->
 %% @doc Parse term from utf binary string
 -spec from_utf_binary(Binary) -> term()
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 from_utf_binary(Binary) ->
 	from_utf_string(unicode:characters_to_list(Binary)).
@@ -105,7 +105,7 @@ from_utf_string(String) ->
 %% @doc Write any term to file like binary
 -spec to_binary_file(Path,Term) -> {ok,Path} | {error,_Reason}
 	when
-	Path :: unix_path_string(),
+	Path :: a_unix_path_string(),
 	Term :: term().
 
 to_binary_file(Path,Term) ->
@@ -119,7 +119,7 @@ to_binary_file(Path,Term) ->
 %% @doc Read term from file
 -spec from_binary_file(Path) -> {ok,term()} | {error,_Reason}
 	when
-	Path :: unix_path_string().
+	Path :: a_unix_path_string().
 
 from_binary_file(Path) ->
 	case file:read_file(Path) of

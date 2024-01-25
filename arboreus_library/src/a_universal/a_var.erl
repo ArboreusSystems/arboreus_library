@@ -71,7 +71,7 @@ inspector(description,Variable) ->
 %% @doc Write to file the variable value
 -spec dump(Path,Variable) -> ok | {error, _Reason}
 	when
-	Path :: unix_path_string(),
+	Path :: a_unix_path_string(),
 	Variable :: any().
 
 dump(Path,Variable) ->
@@ -80,7 +80,7 @@ dump(Path,Variable) ->
 
 %%-----------------------------------
 %% @doc Return string converted from binary
--spec to_string(Variable) -> utf_text()
+-spec to_string(Variable) -> a_utf_text()
 	when
 	Variable :: any().
 

@@ -141,10 +141,10 @@ test() ->
 
 %% ----------------------------
 %% @doc Rotate the list based structure
--spec plain_rotate(Kind,Structures) -> list_of_lists()
+-spec plain_rotate(Kind,Structures) -> a_list_of_lists()
 	when
 	Kind :: ccw | cw,
-	Structures ::list_of_lists().
+	Structures :: a_list_of_lists().
 
 plain_rotate(ccw,Structures) ->
 	plain_rotate_handler(Structures,[]);
@@ -154,10 +154,10 @@ plain_rotate(cw,Structures) ->
 
 %% ----------------------------
 %% @doc The plain rotate procedure handler
--spec plain_rotate_handler(Structures,Output) -> list_of_lists()
+-spec plain_rotate_handler(Structures,Output) -> a_list_of_lists()
 	when
-	Structures :: list_of_lists(),
-	Output :: list_of_lists().
+	Structures :: a_list_of_lists(),
+	Output :: a_list_of_lists().
 
 plain_rotate_handler([],Output) -> Output;
 plain_rotate_handler([Structure|Structures],[]) ->
@@ -240,8 +240,8 @@ rotate_handler([{Id,Structure}|Structures],Kind,Output) ->
 %% @doc Return proplist within values of structures selected and grouped by positions
 -spec values(Structures,Positions,Kind) -> proplists:proplist()
 	when
-	Structures :: {numerated,list_numerated()} | list(),
-	Positions :: list_of_integers() | all,
+	Structures :: {numerated,a_list_numerated()} | list(),
+	Positions :: a_list_of_integers() | all,
 	Kind :: plain | numbered.
 
 values(Structures,all,Kind) ->
@@ -255,8 +255,8 @@ values(Structures,Positions,Kind) ->
 %% @doc Sorting structures by defined list of elements
 -spec sort(Structures,Positions) -> Structures | false
 	when
-	Structures :: list_of_lists(),
-	Positions :: list_of_integers() | all.
+	Structures :: a_list_of_lists(),
+	Positions :: a_list_of_integers() | all.
 
 sort({start,Structures},all) ->
 	[Etalon|_] = Structures,
@@ -284,7 +284,7 @@ sort([],_) -> [].
 %% @doc Making list of elements for sorting
 -spec sorting_elements_handler(Positions,Structure,Output) -> Output
 	when
-	Positions :: list_of_integers(),
+	Positions :: a_list_of_integers(),
 	Structure :: list(),
 	Output :: list().
 
@@ -350,7 +350,7 @@ elements(Structure) ->
 %% @doc Wrapper for elements/3
 -spec elements(Positions,Structure) -> proplists:proplist()
 	when
-	Positions :: list_of_integers(),
+	Positions :: a_list_of_integers(),
 	Structure :: list().
 
 elements(Positions,Structure) -> elements(Positions,Structure,[]).
@@ -360,7 +360,7 @@ elements(Positions,Structure) -> elements(Positions,Structure,[]).
 %% @doc Return proplist within position-value pair of the structure
 -spec elements(Positions,Structure,Elements) -> proplists:proplist()
 	when
-	Positions :: list_of_integers(),
+	Positions :: a_list_of_integers(),
 	Structure :: list(),
 	Elements :: proplists:proplist().
 
@@ -376,10 +376,10 @@ elements([Position|Positions],Structure,Elements) ->
 
 %% ----------------------------
 %% @doc Return data model of the structure
--spec model(Kind,Structure) -> list_of_functions() | list_of_atoms()
+-spec model(Kind,Structure) -> a_list_of_functions() | a_list_of_atoms()
 	when
 	Kind :: verificator | description,
-	Structure :: list_of_values().
+	Structure :: a_list_of_values().
 
 model(Kind,Structure) ->
 	[a_var:inspector(Kind,Element) || Element <- Structure].
@@ -389,8 +389,8 @@ model(Kind,Structure) ->
 %% @doc The structures massive verification
 -spec mass_verify(List_of_structures,Model) -> boolean()
 	when
-	Model :: list_of_functions(),
-	List_of_structures :: list_of_lists().
+	Model :: a_list_of_functions(),
+	List_of_structures :: a_list_of_lists().
 
 mass_verify([],[]) -> true;
 mass_verify(_,[]) -> false;
@@ -405,8 +405,8 @@ mass_verify(Model,List_of_structures) ->
 	{true,List_of_structures} | boolean()
 	when
 	Return_mode :: return_list | return_boolean,
-	Model :: list_of_functions(),
-	List_of_structures :: list_of_lists().
+	Model :: a_list_of_functions(),
+	List_of_structures :: a_list_of_lists().
 
 mass_verify(_,[],[]) -> true;
 mass_verify(_,[],_) -> false;
@@ -424,8 +424,8 @@ mass_verify(_,Model,List_of_structures) ->
 %% @doc The structures massive verification handler
 -spec mass_verify_handler(Model,List_of_structures) -> boolean()
 	when
-	Model :: list_of_functions(),
-	List_of_structures :: list_of_lists().
+	Model :: a_list_of_functions(),
+	List_of_structures :: a_list_of_lists().
 
 mass_verify_handler(_,[]) -> true;
 mass_verify_handler(Model,[Structure|List_of_structures]) ->
@@ -440,8 +440,8 @@ mass_verify_handler(Model,[Structure|List_of_structures]) ->
 -spec verify(Return_mode,Model,Structure) -> boolean() | {true,Structure}
 	when
 	Return_mode :: return_structure | return_boolean,
-	Model :: list_of_functions(),
-	Structure :: list_of_values().
+	Model :: a_list_of_functions(),
+	Structure :: a_list_of_values().
 
 verify(_,[],[]) -> true;
 verify(_,[],_) -> false;
@@ -461,8 +461,8 @@ verify(Return_mode,Model,Structure) ->
 %% @doc Structure verification handler, data return mode
 -spec verify_structure(Model,Structure) -> {true,Structure} | false
 	when
-	Model :: list_of_functions(),
-	Structure :: list_of_values().
+	Model :: a_list_of_functions(),
+	Structure :: a_list_of_values().
 
 verify_structure(Model,Structure) ->
 	case verify_boolean(Model,Structure) of
@@ -475,8 +475,8 @@ verify_structure(Model,Structure) ->
 %% @doc Structure verification handler, boolean return mode
 -spec verify_boolean(Model,Structure) -> boolean()
 	when
-	Model :: list_of_functions(),
-	Structure :: list_of_values().
+	Model :: a_list_of_functions(),
+	Structure :: a_list_of_values().
 
 verify_boolean([],[]) -> true;
 verify_boolean([Inspector|Model],[Element|Structure]) ->

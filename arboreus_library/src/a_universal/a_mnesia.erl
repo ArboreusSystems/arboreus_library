@@ -92,11 +92,11 @@ dirty_delete(Table,Key) ->
 
 %% ----------------------------
 %% @doc Generate validated row ID
--spec generate_id(Kind,Table,Dictionaries,Length) -> id()
+-spec generate_id(Kind,Table,Dictionaries,Length) -> a_id()
 	when
 	Kind :: transactional | dirty,
 	Table :: atom(),
-	Dictionaries :: list_of_atoms(),
+	Dictionaries :: a_list_of_atoms(),
 	Length :: pos_integer().
 
 generate_id(transactional,Table,Dictionaries,Length) ->
@@ -132,7 +132,7 @@ transaction_read(Table,Key) ->
 	when
 	Table :: atom(),
 	Key :: any(),
-	Result :: record() | list_of_records().
+	Result :: a_record() | a_list_of_records().
 
 read(Table,Key) ->
 	case mnesia:read(Table,Key) of
@@ -144,7 +144,7 @@ read(Table,Key) ->
 
 %% ----------------------------
 %% @doc Mnesia dirty_read equivalent
--spec dirty_read(Table,Key) -> {norow,Key} | {ok,record()} | {ok,list_of_records()}
+-spec dirty_read(Table,Key) -> {norow,Key} | {ok,a_record()} | {ok,a_list_of_records()}
 	when
 	Table :: atom(),
 	Key :: any().
@@ -158,7 +158,7 @@ dirty_read(Table,Key) ->
 
 %% ----------------------------
 %% @doc Dirty read by Ids from the table handler, wrapper for dirty_read_by_ids_handler/3
--spec dirty_read_by_ids(Table,Ids) -> list_of_records()
+-spec dirty_read_by_ids(Table,Ids) -> a_list_of_records()
 	when
 	Table :: atom(),
 	Ids :: list().
@@ -169,11 +169,11 @@ dirty_read_by_ids(Table,Ids) ->
 
 %% ----------------------------
 %% @doc Dirty read by Ids from the table handler
--spec dirty_read_by_ids_handler(Table,Ids,Output) -> list_of_records()
+-spec dirty_read_by_ids_handler(Table,Ids,Output) -> a_list_of_records()
 	when
 	Table :: atom(),
 	Ids :: list(),
-	Output :: list_of_records().
+	Output :: a_list_of_records().
 
 dirty_read_by_ids_handler(_,[],Output) -> Output;
 dirty_read_by_ids_handler(Table,[Id|Ids],Output) ->
@@ -185,7 +185,7 @@ dirty_read_by_ids_handler(Table,[Id|Ids],Output) ->
 
 %% ----------------------------
 %% @doc Transaction reading data by Ids from the table
--spec transaction_read_by_ids(Table,Ids) -> {aborted,_Reason} | {atomic,list_of_records()}
+-spec transaction_read_by_ids(Table,Ids) -> {aborted,_Reason} | {atomic,a_list_of_records()}
 	when
 	Table :: atom(),
 	Ids :: list().
@@ -196,7 +196,7 @@ transaction_read_by_ids(Table,Ids) ->
 
 %% ----------------------------
 %% @doc Read by Ids from table, wrapper for read_by_ids_handler/3
--spec read_by_ids(Table,Ids) -> list_of_records()
+-spec read_by_ids(Table,Ids) -> a_list_of_records()
 	when
 	Table :: atom(),
 	Ids :: list().
@@ -206,11 +206,11 @@ read_by_ids(Table,Ids) -> read_by_ids_handler(Table,Ids,[]).
 
 %% ----------------------------
 %% @doc Read by Ids from table handler
--spec read_by_ids_handler(Table,Ids,Output) -> list_of_records()
+-spec read_by_ids_handler(Table,Ids,Output) -> a_list_of_records()
 	when
 	Table :: atom(),
 	Ids :: list(),
-	Output :: list_of_records().
+	Output :: a_list_of_records().
 
 read_by_ids_handler(_,[],Output) -> Output;
 read_by_ids_handler(Table,[Id|Ids],Output) ->
@@ -225,7 +225,7 @@ read_by_ids_handler(Table,[Id|Ids],Output) ->
 -spec transaction_generate_unique(Record,Dictionary,Key_length) ->
 	{aborted,_Reason} | {atomic,{ok,_Id}}
 	when
-	Record :: record(),
+	Record :: a_record(),
 	Dictionary :: [Dictionary_name],
 	Dictionary_name :: numeric | alpha_lower | alpha_upper,
 	Key_length :: pos_integer().
@@ -240,7 +240,7 @@ transaction_generate_unique(Record,Dictionary,Key_length) ->
 %% @doc Transactional generate unique record in DB
 -spec generate_unique(Record,Dictionary,Key_length) -> {ok,_Id}
 	when
-	Record :: record(),
+	Record :: a_record(),
 	Dictionary :: [Dictionary_name],
 	Dictionary_name :: numeric | alpha_lower | alpha_upper,
 	Key_length :: pos_integer().
@@ -257,7 +257,7 @@ generate_unique(Record,Dictionary,Key_length) ->
 %% @doc Create unique transaction
 -spec transaction_create_unique(Record) -> {aborted,_Reason} | {atomic,ok} | {atomic,existed}
 	when
-	Record :: record().
+	Record :: a_record().
 
 transaction_create_unique(Record) ->
 	mnesia:transaction(fun() -> create_unique(Record) end).
@@ -267,7 +267,7 @@ transaction_create_unique(Record) ->
 %% @doc Transactional create unique record after checking previous existence
 -spec create_unique(Record) -> ok | existed
 	when
-	Record :: record().
+	Record :: a_record().
 
 create_unique(Record) ->
 	case mnesia:read(element(1,Record),element(2,Record)) of
@@ -280,7 +280,7 @@ create_unique(Record) ->
 %% @doc Dirty create rows in the table, wrapper for mnesia:dirty_write/1
 -spec dirty_create(Datum) -> ok
 	when
-	Datum :: list_of_records() | record().
+	Datum :: a_list_of_records() | a_record().
 
 dirty_create(Records) when is_list(Records) ->
 	lists:foreach(fun(Record) -> mnesia:dirty_write(Record)	end,Records);
@@ -291,7 +291,7 @@ dirty_create(Record) -> dirty_create([Record]).
 %% @doc Transactional creating row in the table
 -spec transaction_create(Datum) -> {aborted,_Reason} | {atomic,_ResultOfFun}
 	when
-	Datum :: list_of_records() | record().
+	Datum :: a_list_of_records() | a_record().
 
 transaction_create(Datum) ->
 	mnesia:transaction(fun() -> create(Datum) end).
@@ -301,7 +301,7 @@ transaction_create(Datum) ->
 %% @doc Create rows in the table, wrapper for mnesia:write/1
 -spec create(Datum) -> ok
 	when
-	Datum :: list_of_records() | record().
+	Datum :: a_list_of_records() | a_record().
 
 create(Records) when is_list(Records) ->
 	lists:foreach(fun(Record) -> mnesia:write(Record) end,Records);
@@ -312,7 +312,7 @@ create(Record) -> create([Record]).
 %% @doc Update unique transaction
 -spec transaction_update_unique(Record) -> {atomic,{norow,_Id}} | {atomic,{ok,_Id}} | {aborted,_Reason}
 	when
-	Record :: record().
+	Record :: a_record().
 
 transaction_update_unique(Record) ->
 	mnesia:transaction(fun() -> update_unique(Record) end).
@@ -322,7 +322,7 @@ transaction_update_unique(Record) ->
 %% @doc Transactional update record in DB by new values
 -spec update_unique(Record) -> {norow,_} | {ok,_}
 	when
-	Record :: record().
+	Record :: a_record().
 
 update_unique(Record) ->
 	Id = element(2,Record),
@@ -344,7 +344,7 @@ dirty_select_all(Table) ->
 
 %% ----------------------------
 %% @doc Select all from the table transaction
--spec transaction_select_all(Table) -> {aborted,_Reason} | {atomic,list_of_records()}
+-spec transaction_select_all(Table) -> {aborted,_Reason} | {atomic,a_list_of_records()}
 	when
 	Table :: atom().
 

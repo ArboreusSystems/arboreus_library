@@ -31,9 +31,9 @@ test() -> ok.
 
 %%-----------------------------------
 %% @doc Return integer from IPv4
--spec ipv4_to_integer(Ip) -> ipv4_integer()
+-spec ipv4_to_integer(Ip) -> a_ipv4_integer()
 	when
-	Ip :: ipv4_tuple() | ipv4_list() | ipv4_string().
+	Ip :: a_ipv4_tuple() | a_ipv4_list() | a_ipv4_string().
 
 ipv4_to_integer({A,B,C,D}) ->
 	ipv4_to_integer([A,B,C,D]);
@@ -51,9 +51,9 @@ ipv4_to_integer(Ip_string) when is_list(Ip_string) ->
 
 %%-----------------------------------
 %% @doc Return integer from IPv6
--spec ipv6_to_integer(Ip) -> ipv4_integer() | {error,_Reason}
+-spec ipv6_to_integer(Ip) -> a_ipv4_integer() | {error,_Reason}
 	when
-	Ip :: ipv6_string().
+	Ip :: a_ipv6_string().
 
 ipv6_to_integer(Ip_string) ->
 	{ok,_} = inet:parse_ipv6_address(Ip_string),
@@ -63,9 +63,9 @@ ipv6_to_integer(Ip_string) ->
 %%-----------------------------------
 %% @doc Return formatted Ip address from integer
 -spec integer_to_ipv4(Integer,Output_type) ->
-	ipv4_tuple() | ipv4_list() | ipv4_binary() | ipv4_string() | wrong_integer
+	a_ipv4_tuple() | a_ipv4_list() | a_ipv4_binary() | a_ipv4_string() | wrong_integer
 	when
-	Integer :: ipv4_integer(),
+	Integer :: a_ipv4_integer(),
 	Output_type :: tuple | list | binary | string.
 
 integer_to_ipv4(Integer,Output_type) when is_integer(Integer), Integer >= 0 ->

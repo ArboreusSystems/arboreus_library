@@ -130,10 +130,10 @@ test() ->
 
 %% ----------------------------
 %% @doc Rotate the list based structure
--spec plain_rotate(Kind,Structures) -> list_of_tuples()
+-spec plain_rotate(Kind,Structures) -> a_list_of_tuples()
 	when
 	Kind :: ccw | cw,
-	Structures ::list_of_tuples().
+	Structures :: a_list_of_tuples().
 
 plain_rotate(ccw,Structures) ->
 	plain_rotate_handler(Structures,[]);
@@ -143,10 +143,10 @@ plain_rotate(cw,Structures) ->
 
 %% ----------------------------
 %% @doc The plain rotate procedure handler
--spec plain_rotate_handler(Structures,Output) -> list_of_lists()
+-spec plain_rotate_handler(Structures,Output) -> a_list_of_lists()
 	when
-	Structures :: list_of_lists(),
-	Output :: list_of_lists().
+	Structures :: a_list_of_lists(),
+	Output :: a_list_of_lists().
 
 plain_rotate_handler([],Output) -> Output;
 plain_rotate_handler([Structure|Structures],[]) ->
@@ -226,8 +226,8 @@ rotate_handler([{Id,Structure}|Structures],Kind,Output) ->
 %% @doc Return proplist within values of structures selected and grouped by positions
 -spec values(Structures,Positions,Kind) -> proplists:proplist()
 	when
-	Structures :: list_of_tuples(),
-	Positions :: list_of_integers() | all,
+	Structures :: a_list_of_tuples(),
+	Positions :: a_list_of_integers() | all,
 	Kind :: plain | numbered.
 
 values(Structures,all,Kind) ->
@@ -241,8 +241,8 @@ values(Structures,Positions,Kind) ->
 %% @doc Sorting structures by defined list of elements
 -spec sort(Structures,Positions) -> Structures | false
 	when
-	Structures :: list_of_tuples(),
-	Positions :: list_of_integers() | all.
+	Structures :: a_list_of_tuples(),
+	Positions :: a_list_of_integers() | all.
 
 sort({start,Structures},all) ->
 	[Etalon|_] = Structures,
@@ -270,7 +270,7 @@ sort([],_) -> [].
 %% @doc Making list of elements for sorting
 -spec sorting_elements_handler(Positions,Structure,Output) -> Output
 	when
-	Positions :: list_of_integers(),
+	Positions :: a_list_of_integers(),
 	Structure :: tuple(),
 	Output :: list().
 
@@ -336,7 +336,7 @@ elements(Structure) ->
 %% @doc Wrapper for elements/3
 -spec elements(Positions,Structure) -> proplists:proplist()
 	when
-	Positions :: list_of_integers(),
+	Positions :: a_list_of_integers(),
 	Structure :: list().
 
 elements(Positions,Structure) -> elements(Positions,Structure,[]).
@@ -346,7 +346,7 @@ elements(Positions,Structure) -> elements(Positions,Structure,[]).
 %% @doc Return proplist within position-value pair of the structure
 -spec elements(Positions,Structure,Elements) -> proplists:proplist()
 	when
-	Positions :: list_of_integers(),
+	Positions :: a_list_of_integers(),
 	Structure :: list(),
 	Elements :: proplists:proplist().
 
@@ -378,7 +378,7 @@ model(Kind,Structure) ->
 -spec mass_verify(Model,List_of_structures) -> boolean()
 	when
 	Model :: tuple(),
-	List_of_structures :: list_of_tuples().
+	List_of_structures :: a_list_of_tuples().
 
 mass_verify([],[]) -> true;
 mass_verify(_,[]) -> false;
@@ -394,7 +394,7 @@ mass_verify(Model,List_of_structures) ->
 	when
 	Return_mode :: return_list | return_boolean,
 	Model :: tuple(),
-	List_of_structures :: list_of_tuples().
+	List_of_structures :: a_list_of_tuples().
 
 mass_verify(_,[],[]) -> true;
 mass_verify(_,[],_) -> false;
@@ -413,7 +413,7 @@ mass_verify(Model,_,List_of_structures) ->
 -spec mass_verify_handler(Model,List_of_structures) -> boolean()
 	when
 	Model :: tuple(),
-	List_of_structures :: list_of_tuples().
+	List_of_structures :: a_list_of_tuples().
 
 mass_verify_handler(_,[]) -> true;
 mass_verify_handler(Model,[Structure|List_of_structures]) ->

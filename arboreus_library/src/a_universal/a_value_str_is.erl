@@ -280,7 +280,7 @@ test() ->
 %% @doc Verify time-tuple string value
 -spec time_tuple(Utf_string) -> {true,a_time_tuple()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 time_tuple(Binary) ->
 	try
@@ -295,7 +295,7 @@ time_tuple(Binary) ->
 %% @doc Verify UNIX-timestamp string value
 -spec time_timestamp(Utf_string) -> {true,a_time_unix_timestamp()} | false
 	when
-	Utf_string :: utf_text_binary().
+	Utf_string :: a_utf_text_binary().
 
 time_timestamp(Utf_string) -> integer_pos(Utf_string).
 
@@ -304,7 +304,7 @@ time_timestamp(Utf_string) -> integer_pos(Utf_string).
 %% @doc Verify rfc822 unicode time string value
 -spec time_rfc822(Utf_string,Return_mode) -> {true,Time} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Return_mode :: tuple | seconds | timestamp,
 	Time :: pos_integer() | a_time_tuple().
 
@@ -320,7 +320,7 @@ time_rfc822(Utf_string,Return_mode) ->
 %% @doc Verify rfc850 unicode time string value
 -spec time_rfc850(Utf_string,Return_mode) -> {true,Time} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Return_mode :: tuple | seconds | timestamp,
 	Time :: pos_integer() | a_time_tuple().
 
@@ -336,7 +336,7 @@ time_rfc850(Utf_string,Return_mode) ->
 %% @doc Verify ANSI unicode time string value
 -spec time_ansi(Utf_string,Return_mode) -> {true,Time} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Return_mode :: tuple | seconds | timestamp,
 	Time :: pos_integer() | a_time_tuple().
 
@@ -350,10 +350,10 @@ time_ansi(Utf_string,Return_mode) ->
 
 %% ----------------------------
 %% @doc Verify unicode string by pattern
--spec utf_by_pattern(Utf_string,Pattern) -> {true,utf_text_string()} | false
+-spec utf_by_pattern(Utf_string,Pattern) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
-	Pattern :: utf_text_string().
+	Utf_string :: a_utf_text_string(),
+	Pattern :: a_utf_text_string().
 
 utf_by_pattern(Utf_string,Pattern) ->
 	case utf_free(Utf_string) of
@@ -364,9 +364,9 @@ utf_by_pattern(Utf_string,Pattern) ->
 
 %% ----------------------------
 %% @doc Verify limited unicode string
--spec utf_limited(Utf_string,Limit) -> {true,utf_text_string()} | false
+-spec utf_limited(Utf_string,Limit) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -381,9 +381,9 @@ utf_limited(Utf_string,Limit) ->
 
 %% ----------------------------
 %% @doc Verify unicode string
--spec utf_free(Utf_string) -> {true,utf_text_string()} | false
+-spec utf_free(Utf_string) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 utf_free(Utf_string) when is_list(Utf_string) ->
 	case io_lib:printable_unicode_list(Utf_string) of
@@ -395,9 +395,9 @@ utf_free(_) -> false.
 
 %% ----------------------------
 %% @doc Verify password string value
--spec password(Utf_string,Minimal_length,Maximal_length) -> {true,utf_text_string()} | false
+-spec password(Utf_string,Minimal_length,Maximal_length) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Minimal_length :: pos_integer(),
 	Maximal_length :: pos_integer().
 
@@ -409,13 +409,13 @@ password(Binary,Minimal,Maximal) ->
 %% @doc Verify Base64 string limited value
 -spec base64_limited(Utf_string,Return_mode,Limit) -> {true,Result} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Return_mode :: base64 | string,
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
 	Maximal :: pos_integer(),
-	Result :: utf_base64_string() | utf_text_string().
+	Result :: a_utf_base64_string() | a_utf_text_string().
 
 base64_limited(Utf_string,Return_mode,Limit) ->
 	case Return_mode of
@@ -436,9 +436,9 @@ base64_limited(Utf_string,Return_mode,Limit) ->
 %% @doc Verify Base64 string value
 -spec base64(Utf_string,Return_mode) -> {true,Result} | false
 	when
-	Utf_string :: utf_base64_string(),
+	Utf_string :: a_utf_base64_string(),
 	Return_mode :: base64 | string,
-	Result :: utf_base64_string() | utf_text_string().
+	Result :: a_utf_base64_string() | a_utf_text_string().
 
 base64(Utf_string,Return_mode) ->
 	try
@@ -452,9 +452,9 @@ base64(Utf_string,Return_mode) ->
 
 %% ----------------------------
 %% @doc Verify alphanumeric ID string value
--spec id_alphanumeric(Utf_string,Length) -> {true,utf_text_string()} | false
+-spec id_alphanumeric(Utf_string,Length) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Length :: pos_integer().
 
 id_alphanumeric(Utf_string,Length) -> alphanumeric_limited(Utf_string,{equal,Length}).
@@ -462,9 +462,9 @@ id_alphanumeric(Utf_string,Length) -> alphanumeric_limited(Utf_string,{equal,Len
 
 %% ----------------------------
 %% @doc Verify numeric ID string value
--spec id_numeric(Utf_string,Length) -> {true,utf_text_string()} | false
+-spec id_numeric(Utf_string,Length) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Length :: pos_integer().
 
 id_numeric(Utf_string,Length) -> numeric_limited(Utf_string,{equal,Length}).
@@ -472,9 +472,9 @@ id_numeric(Utf_string,Length) -> numeric_limited(Utf_string,{equal,Length}).
 
 %% ----------------------------
 %% @doc Verify limited alphanumeric string value
--spec alphanumeric_limited(Utf_string,Limit) -> {true,utf_text_string()} | false
+-spec alphanumeric_limited(Utf_string,Limit) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -489,18 +489,18 @@ alphanumeric_limited(Utf_string,Limit) ->
 
 %% ----------------------------
 %% @doc Verify alphanumeric string value
--spec alphanumeric(Utf_string) -> {true,utf_text_string()} | false
+-spec alphanumeric(Utf_string) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 alphanumeric(Utf_string) -> by_pattern(Utf_string,"^[a-zA-Z0-9]{1,}$").
 
 
 %% ----------------------------
 %% @doc Verify limited numeric string value
--spec numeric_limited(Utf_string,Limit) -> {true,utf_text_string()} | false
+-spec numeric_limited(Utf_string,Limit) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -515,9 +515,9 @@ numeric_limited(Utf_string,Limit) ->
 
 %% ----------------------------
 %% @doc Verify numeric string value
--spec numeric(Utf_string) -> {true,utf_text_string()} | false
+-spec numeric(Utf_string) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 numeric(Utf_string) -> by_pattern(Utf_string,"^[0-9]{1,}$").
 
@@ -526,9 +526,9 @@ numeric(Utf_string) -> by_pattern(Utf_string,"^[0-9]{1,}$").
 %% @doc Verify IPv6 string value
 -spec ipv6(Utf_string,Return_mode) -> {true,Ip} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Return_mode :: integer | tuple,
-	Ip :: ipv6_tuple() | ipv4_integer().
+	Ip :: a_ipv6_tuple() | a_ipv4_integer().
 
 ipv6(Utf_string,Return_mode) ->
 	try
@@ -548,9 +548,9 @@ ipv6(Utf_string,Return_mode) ->
 %% @doc Verify IPv4 string value
 -spec ipv4(Utf_string,Return_mode) -> {true,Ip} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Return_mode :: integer | tuple,
-	Ip :: ipv4_integer() | ipv4_tuple().
+	Ip :: a_ipv4_integer() | a_ipv4_tuple().
 
 ipv4(Utf_string,Return_mode) ->
 	try
@@ -568,7 +568,7 @@ ipv4(Utf_string,Return_mode) ->
 %% @doc Verify Erlang term string value
 -spec term(Utf_string) -> {true,term()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 term(Utf_string) ->
 	try {true,a_term:from_utf_string(Utf_string)}
@@ -577,9 +577,9 @@ term(Utf_string) ->
 
 %% ----------------------------
 %% @doc Verify FQND string value
--spec fqdn(Utf_string) -> {true,utf_text_string()} | false
+-spec fqdn(Utf_string) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 fqdn(Utf_string) ->
 	case by_size(Utf_string,{less_or_equal,255}) of
@@ -590,9 +590,9 @@ fqdn(Utf_string) ->
 
 %% ----------------------------
 %% @doc Verify email string by pattern
--spec email(Utf_string) -> {true,utf_text_string()} | false
+-spec email(Utf_string) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 email(Utf_string) ->
 	by_pattern(Utf_string,"^([a-z0-9\.\_\-]{1,})\@([a-z0-9\.\_\-]{1,})$").
@@ -600,9 +600,9 @@ email(Utf_string) ->
 
 %% ----------------------------
 %% @doc Verify latin name string value limited by length
--spec latin_name_limited(Utf_string,Limit) -> {true,utf_text_string()} | false
+-spec latin_name_limited(Utf_string,Limit) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -617,9 +617,9 @@ latin_name_limited(Binary,Limit) ->
 
 %% ----------------------------
 %% @doc Verify latin name string by pattern
--spec latin_name(Utf_string) -> {true,utf_text_string()} | false
+-spec latin_name(Utf_string) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 latin_name(Utf_string) ->
 	by_pattern(Utf_string,"^(\ ?[A-Z]{1}[a-z]{0,}){1,}$").
@@ -627,9 +627,9 @@ latin_name(Utf_string) ->
 
 %% ----------------------------
 %% @doc Verify digital boolean string value
--spec boolean_digit(Utf_string) -> {true,boolean_digit()} | false
+-spec boolean_digit(Utf_string) -> {true,a_boolean_digit()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 boolean_digit(Utf_string) -> integer_from_list(Utf_string,[1,0]).
 
@@ -638,7 +638,7 @@ boolean_digit(Utf_string) -> integer_from_list(Utf_string,[1,0]).
 %% @doc Verify boolean string value
 -spec boolean(Utf_string) -> {true,boolean()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 boolean(Utf_string) -> atom_from_list(Utf_string,[true,false]).
 
@@ -647,8 +647,8 @@ boolean(Utf_string) -> atom_from_list(Utf_string,[true,false]).
 %% @doc Verify atom string value from list
 -spec atom_from_list(Utf_string,List) -> {true,atom()} | false
 	when
-	Utf_string :: utf_text_string(),
-	List :: list_of_atoms().
+	Utf_string :: a_utf_text_string(),
+	List :: a_list_of_atoms().
 
 atom_from_list(Utf_string,List) ->
 	case atom(Utf_string) of
@@ -665,7 +665,7 @@ atom_from_list(Utf_string,List) ->
 %% @doc Verify atom string value
 -spec atom(Utf_string) -> {true,atom()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 atom(Utf_string) ->
 	Pattern = "^[a-z]{1}[a-zA-Z0-9\_]*$",
@@ -679,7 +679,7 @@ atom(Utf_string) ->
 %% @doc Verify ranged integer string value
 -spec integer_ranged(Utf_string,Minor,Major) -> {true,integer()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Minor :: number(),
 	Major :: number().
 
@@ -704,8 +704,8 @@ integer_ranged(Utf_string,Minor,Major) ->
 %% @doc Verify integer value string from the listed values
 -spec integer_from_list(Utf_string,List) -> {true,integer()} | false
 	when
-	Utf_string :: utf_text_binary(),
-	List :: list_of_integers().
+	Utf_string :: a_utf_text_binary(),
+	List :: a_list_of_integers().
 
 integer_from_list(Utf_string,List) ->
 	case a_value_str_is:integer(Utf_string) of
@@ -722,7 +722,7 @@ integer_from_list(Utf_string,List) ->
 %% @doc Verify negative integer string value
 -spec integer_neg(Utf_string) -> {true,neg_integer()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 integer_neg(Utf_string) ->
 	case a_value_str_is:integer(Utf_string) of
@@ -739,7 +739,7 @@ integer_neg(Utf_string) ->
 %% @doc Verify positive integer string value
 -spec integer_pos(Utf_string) -> {true,pos_integer()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 integer_pos(Utf_string) ->
 	case a_value_str_is:integer(Utf_string) of
@@ -756,7 +756,7 @@ integer_pos(Utf_string) ->
 %% @doc Verify integer string value
 -spec integer(Utf_string) -> {true,integer()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 integer(Utf_string) ->
 	try {true,list_to_integer(Utf_string)}
@@ -767,7 +767,7 @@ integer(Utf_string) ->
 %% @doc Verify ranged float value
 -spec float_ranged(Utf_string,Range1,Range2) -> {true,float()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Range1 :: number(),
 	Range2 :: number().
 
@@ -792,8 +792,8 @@ float_ranged(Binary,Minor,Major) ->
 %% @doc Verify float string from the listed values
 -spec float_from_list(Utf_string,List) -> {true,float()} | false
 	when
-	Utf_string :: utf_text_string(),
-	List :: list_of_floats().
+	Utf_string :: a_utf_text_string(),
+	List :: a_list_of_floats().
 
 float_from_list(Utf_string,List) ->
 	case a_value_str_is:float(Utf_string) of
@@ -808,9 +808,9 @@ float_from_list(Utf_string,List) ->
 
 %% ----------------------------
 %% @doc Verify negative float string value
--spec float_neg(Utf_string) -> {true,float_pos()} | false
+-spec float_neg(Utf_string) -> {true,a_float_pos()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 float_neg(Utf_string) ->
 	case a_value_str_is:float(Utf_string) of
@@ -825,9 +825,9 @@ float_neg(Utf_string) ->
 
 %% ----------------------------
 %% @doc Verify positive float string value
--spec float_pos(Utf_string) -> {true,float_pos()} | false
+-spec float_pos(Utf_string) -> {true,a_float_pos()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 float_pos(Utf_string) ->
 	case a_value_str_is:float(Utf_string) of
@@ -845,7 +845,7 @@ float_pos(Utf_string) ->
 %% @doc Verify float string value
 -spec float(Utf_string) -> {true,float()} | false
 	when
-	Utf_string :: utf_text_string().
+	Utf_string :: a_utf_text_string().
 
 float(Utf_string) ->
 	try {true,list_to_float(Utf_string)}
@@ -854,10 +854,10 @@ float(Utf_string) ->
 
 %% ----------------------------
 %% @doc Verify string value by regex pattern
--spec by_pattern(Utf_string,Pattern) -> {true,utf_text_string()} | false
+-spec by_pattern(Utf_string,Pattern) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
-	Pattern :: utf_text_string().
+	Utf_string :: a_utf_text_string(),
+	Pattern :: a_utf_text_string().
 
 by_pattern(Utf_string,Pattern) ->
 	case re:run(Utf_string,Pattern) of
@@ -868,9 +868,9 @@ by_pattern(Utf_string,Pattern) ->
 
 %% ----------------------------
 %% @doc Verify string value by size
--spec by_size(Utf_string,Parameters) -> {true,utf_text_string()} | false
+-spec by_size(Utf_string,Parameters) -> {true,a_utf_text_string()} | false
 	when
-	Utf_string :: utf_text_string(),
+	Utf_string :: a_utf_text_string(),
 	Parameters :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),

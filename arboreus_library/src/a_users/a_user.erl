@@ -83,7 +83,7 @@ test() ->
 	{ok,a_user_id()} | {norow,User} | {wrong_password,a_user_id()}
 	when
 	User :: a_user_id(),
-	Password :: utf_text_string().
+	Password :: a_utf_text_string().
 
 verify_password(User,Password) ->
 	case read(User) of
@@ -177,9 +177,9 @@ create(Record) when is_record(Record,a_user) ->
 
 %% ----------------------------
 %% @doc Generate password hash with salt inclusion
--spec generate_password_hash(Password) -> md5_binary()
+-spec generate_password_hash(Password) -> a_md5_binary()
 	when
-	Password :: utf_text_string() | utf_text_binary().
+	Password :: a_utf_text_string() | a_utf_text_binary().
 
 generate_password_hash(Password) ->
 	a_sequence:make_password_hash(Password,?SALT,md5).

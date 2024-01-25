@@ -291,7 +291,7 @@ test() ->
 %% @doc Verify time-tuple binary value
 -spec time_tuple(Binary) -> {true,a_time_tuple()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 time_tuple(Binary) ->
 	try
@@ -306,7 +306,7 @@ time_tuple(Binary) ->
 %% @doc Verify UNIX-timestamp value
 -spec time_timestamp(Binary) -> {true,pos_integer()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 time_timestamp(Binary) -> integer_pos(Binary).
 
@@ -315,7 +315,7 @@ time_timestamp(Binary) -> integer_pos(Binary).
 %% @doc Verify rfc822 unicode time value
 -spec time_rfc822(Binary,Return_mode) -> {true,Time} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Return_mode :: tuple | seconds | timestamp,
 	Time :: pos_integer() | a_time_tuple().
 
@@ -331,7 +331,7 @@ time_rfc822(Binary,Return_mode) ->
 %% @doc Verify rfc850 unicode time value
 -spec time_rfc850(Binary,Return_mode) -> {true,Time} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Return_mode :: tuple | seconds | timestamp,
 	Time :: pos_integer() | a_time_tuple().
 
@@ -347,7 +347,7 @@ time_rfc850(Binary,Return_mode) ->
 %% @doc Verify ANSI unicode time value
 -spec time_ansi(Binary,Return_mode) -> {true,Time} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Return_mode :: tuple | seconds | timestamp,
 	Time :: pos_integer() | a_time_tuple().
 
@@ -361,10 +361,10 @@ time_ansi(Binary,Return_mode) ->
 
 %% ----------------------------
 %% @doc Verify unicode binary by pattern
--spec utf_by_pattern(Binary,Pattern) -> {true,utf_text_binary()} | false
+-spec utf_by_pattern(Binary,Pattern) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
-	Pattern :: utf_text_binary().
+	Binary :: a_utf_text_binary(),
+	Pattern :: a_utf_text_binary().
 
 utf_by_pattern(Binary,Pattern) ->
 	case utf_free(Binary) of
@@ -375,9 +375,9 @@ utf_by_pattern(Binary,Pattern) ->
 
 %% ----------------------------
 %% @doc Verify limited unicode binary
--spec utf_limited(Binary,Limit) -> {true,utf_text_binary()} | false
+-spec utf_limited(Binary,Limit) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -392,9 +392,9 @@ utf_limited(Binary,Limit) ->
 
 %% ----------------------------
 %% @doc Verify unicode binary
--spec utf_free(Binary) -> {true,utf_text_binary()} | false
+-spec utf_free(Binary) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 utf_free(Binary) when is_binary(Binary) -> {true,Binary};
 utf_free(_) -> false.
@@ -402,9 +402,9 @@ utf_free(_) -> false.
 
 %% ----------------------------
 %% @doc Verify password value
--spec password(Binary,Minimal_length,Maximal_length) -> {true,utf_text_binary()} | false
+-spec password(Binary,Minimal_length,Maximal_length) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_base64_binary(),
+	Binary :: a_utf_base64_binary(),
 	Minimal_length :: pos_integer(),
 	Maximal_length :: pos_integer().
 
@@ -416,13 +416,13 @@ password(Binary,Minimal,Maximal) ->
 %% @doc Verify Base64 limited value
 -spec base64_limited(Binary,Return_mode,Limit) -> {true,Result} | false
 	when
-	Binary :: utf_base64_binary(),
+	Binary :: a_utf_base64_binary(),
 	Return_mode :: base64 | binary,
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
 	Maximal :: pos_integer(),
-	Result :: utf_base64_binary() | utf_text_binary().
+	Result :: a_utf_base64_binary() | a_utf_text_binary().
 
 base64_limited(Binary,Return_mode,Limit) ->
 	case Return_mode of
@@ -443,9 +443,9 @@ base64_limited(Binary,Return_mode,Limit) ->
 %% @doc Verify Base64 value
 -spec base64(Binary,Return_mode) -> {true,Result} | false
 	when
-	Binary :: utf_base64_binary(),
+	Binary :: a_utf_base64_binary(),
 	Return_mode :: base64 | binary,
-	Result :: utf_base64_binary() | utf_text_binary().
+	Result :: a_utf_base64_binary() | a_utf_text_binary().
 
 base64(Binary,Return_mode) ->
 	try
@@ -459,9 +459,9 @@ base64(Binary,Return_mode) ->
 
 %% ----------------------------
 %% @doc Verify alphanumeric ID value
--spec id_alphanumeric(Binary,Length) -> {true,utf_text_binary()} | false
+-spec id_alphanumeric(Binary,Length) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Length :: pos_integer().
 
 id_alphanumeric(Binary,Length) -> alphanumeric_limited(Binary,{equal,Length}).
@@ -469,9 +469,9 @@ id_alphanumeric(Binary,Length) -> alphanumeric_limited(Binary,{equal,Length}).
 
 %% ----------------------------
 %% @doc Verify numeric ID value
--spec id_numeric(Binary,Length) -> {true,utf_text_binary()} | false
+-spec id_numeric(Binary,Length) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Length :: pos_integer().
 
 id_numeric(Binary,Length) -> numeric_limited(Binary,{equal,Length}).
@@ -479,9 +479,9 @@ id_numeric(Binary,Length) -> numeric_limited(Binary,{equal,Length}).
 
 %% ----------------------------
 %% @doc Verify limited alphanumeric value
--spec alphanumeric_limited(Binary,Limit) -> {true,utf_text_binary()} | false
+-spec alphanumeric_limited(Binary,Limit) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -496,9 +496,9 @@ alphanumeric_limited(Binary,Limit) ->
 
 %% ----------------------------
 %% @doc Verify alphanumeric value
--spec alphanumeric(Binary) -> {true,utf_text_binary()} | false
+-spec alphanumeric(Binary) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 alphanumeric(Binary) ->
 	by_pattern(Binary,<<("^[a-zA-Z0-9]{1,}$")/utf8>>).
@@ -506,9 +506,9 @@ alphanumeric(Binary) ->
 
 %% ----------------------------
 %% @doc Verify limited numeric value
--spec numeric_limited(Binary,Limit) -> {true,utf_text_binary()} | false
+-spec numeric_limited(Binary,Limit) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -523,9 +523,9 @@ numeric_limited(Binary,Limit) ->
 
 %% ----------------------------
 %% @doc Verify numeric value
--spec numeric(Binary) -> {true,utf_text_binary()} | false
+-spec numeric(Binary) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 numeric(Binary) ->
 	by_pattern(Binary,<<("^[0-9]{1,}$")/utf8>>).
@@ -535,9 +535,9 @@ numeric(Binary) ->
 %% @doc Verify IPv6 value
 -spec ipv6(Binary,Return_mode) -> {true,Ip} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Return_mode :: integer | tuple,
-	Ip :: ipv6_tuple() | ipv4_integer().
+	Ip :: a_ipv6_tuple() | a_ipv4_integer().
 
 ipv6(Binary,Return_mode) ->
 	Ip_string = unicode:characters_to_list(Binary),
@@ -558,9 +558,9 @@ ipv6(Binary,Return_mode) ->
 %% @doc Verify IPv4 value
 -spec ipv4(Binary,Return_mode) -> {true,Ip} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Return_mode :: integer | tuple,
-	Ip :: ipv4_integer() | ipv4_tuple().
+	Ip :: a_ipv4_integer() | a_ipv4_tuple().
 
 ipv4(Binary,Return_mode) ->
 	try
@@ -587,9 +587,9 @@ term(Byte) ->
 
 %% ----------------------------
 %% @doc Verify FQND value
--spec fqdn(Binary) -> {true,utf_text_binary()} | false
+-spec fqdn(Binary) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 fqdn(Binary) ->
 	case by_size(Binary,{less_or_equal,255}) of
@@ -600,9 +600,9 @@ fqdn(Binary) ->
 
 %% ----------------------------
 %% @doc Verify email by pattern
--spec email(Binary) -> {true,utf_text_binary()} | false
+-spec email(Binary) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 email(Binary) ->
 	by_pattern(Binary,<<("^([a-z0-9\.\_\-]{1,})\@([a-z0-9\.\_\-]{1,})$")/utf8>>).
@@ -610,9 +610,9 @@ email(Binary) ->
 
 %% ----------------------------
 %% @doc Verify latin name value limited by length
--spec latin_name_limited(Binary,Limit) -> {true,utf_text_binary()} | false
+-spec latin_name_limited(Binary,Limit) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Limit :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -627,9 +627,9 @@ latin_name_limited(Binary,Limit) ->
 
 %% ----------------------------
 %% @doc Verify latin name binary by pattern
--spec latin_name(Binary) -> {true,utf_text_binary()} | false
+-spec latin_name(Binary) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 latin_name(Binary) ->
 	by_pattern(Binary,<<("^(\ ?[A-Z]{1}[a-z]{0,}){1,}$")/utf8>>).
@@ -637,10 +637,10 @@ latin_name(Binary) ->
 
 %% ----------------------------
 %% @doc verify value by regex pattern
--spec by_pattern(Binary,Pattern) -> {true,utf_text_binary()} | false
+-spec by_pattern(Binary,Pattern) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
-	Pattern :: utf_text_binary().
+	Binary :: a_utf_text_binary(),
+	Pattern :: a_utf_text_binary().
 
 by_pattern(Binary,Pattern) ->
 	case re:run(Binary,Pattern) of
@@ -651,9 +651,9 @@ by_pattern(Binary,Pattern) ->
 
 %% ----------------------------
 %% @doc Verify binary value by size
--spec by_size(Binary,Parameters) -> {true,utf_text_binary()} | false
+-spec by_size(Binary,Parameters) -> {true,a_utf_text_binary()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Parameters :: {equal,Length} | {less_or_equal,Length} | {more_or_equal,Length} | {ranged,Minimal,Maximal},
 	Length :: pos_integer(),
 	Minimal :: pos_integer(),
@@ -691,9 +691,9 @@ by_size(Binary,{ranged,Minimal,Maximal}) ->
 
 %% ----------------------------
 %% @doc Verify digital boolean value
--spec boolean_digit(Binary) -> {true,boolean_digit()} | false
+-spec boolean_digit(Binary) -> {true,a_boolean_digit()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 boolean_digit(Binary) -> integer_from_list(Binary,[1,0]).
 
@@ -702,7 +702,7 @@ boolean_digit(Binary) -> integer_from_list(Binary,[1,0]).
 %% @doc Verify boolean value
 -spec boolean(Binary) -> {true,boolean()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 boolean(Binary) -> atom_from_list(Binary,[true,false]).
 
@@ -711,7 +711,7 @@ boolean(Binary) -> atom_from_list(Binary,[true,false]).
 %% @doc Verify atom value
 -spec atom(Binary) -> {true,atom()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 atom(Binary) ->
 	Pattern = <<("^[a-z]{1}[a-zA-Z0-9\_]*$")/utf8>>,
@@ -725,8 +725,8 @@ atom(Binary) ->
 %% @doc Verify atom from list membership
 -spec atom_from_list(Binary,List) -> {true,atom()} | false
 	when
-	Binary :: utf_text_binary(),
-	List :: list_of_atoms().
+	Binary :: a_utf_text_binary(),
+	List :: a_list_of_atoms().
 
 atom_from_list(Binary,List) ->
 	case atom(Binary) of
@@ -743,7 +743,7 @@ atom_from_list(Binary,List) ->
 %% @doc Verify integer value
 -spec integer(Binary) -> {true,integer()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 integer(Binary) ->
 	try {true,binary_to_integer(Binary)}
@@ -754,7 +754,7 @@ integer(Binary) ->
 %% @doc Verify positive integer binary value
 -spec integer_pos(Binary) -> {true,pos_integer()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 integer_pos(Binary) ->
 	case a_value_bin_is:integer(Binary) of
@@ -771,7 +771,7 @@ integer_pos(Binary) ->
 %% @doc Verify negative integer value
 -spec integer_neg(Binary) -> {true,neg_integer()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 integer_neg(Binary) ->
 	case a_value_bin_is:integer(Binary) of
@@ -788,8 +788,8 @@ integer_neg(Binary) ->
 %% @doc Verify integer value for list membership
 -spec integer_from_list(Binary,List) -> {true,integer()} | false
 	when
-	Binary :: utf_text_binary(),
-	List :: list_of_integers().
+	Binary :: a_utf_text_binary(),
+	List :: a_list_of_integers().
 
 integer_from_list(Binary,List) ->
 	case a_value_bin_is:integer(Binary) of
@@ -806,7 +806,7 @@ integer_from_list(Binary,List) ->
 %% @doc Verify ranged integer value
 -spec integer_ranged(Binary,Minor,Major) -> {true,integer()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Minor :: number(),
 	Major :: number().
 
@@ -831,7 +831,7 @@ integer_ranged(Binary,Minor,Major) ->
 %% @doc Verify float value
 -spec float(Binary) -> {true,float()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 float(Binary) ->
 	try {true,binary_to_float(Binary)}
@@ -840,9 +840,9 @@ float(Binary) ->
 
 %% ----------------------------
 %% @doc Verify positive float value
--spec float_pos(Binary) -> {true,float_pos()} | false
+-spec float_pos(Binary) -> {true,a_float_pos()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 float_pos(Binary) ->
 	case a_value_bin_is:float(Binary) of
@@ -857,9 +857,9 @@ float_pos(Binary) ->
 
 %% ----------------------------
 %% @doc Verify positive float value
--spec float_neg(Binary) -> {true,float_neg()} | false
+-spec float_neg(Binary) -> {true,a_float_neg()} | false
 	when
-	Binary :: utf_text_binary().
+	Binary :: a_utf_text_binary().
 
 float_neg(Binary) ->
 	case a_value_bin_is:float(Binary) of
@@ -876,8 +876,8 @@ float_neg(Binary) ->
 %% @doc Verify float value for list membership.
 -spec float_from_list(Binary,List) -> {true,float()} | false
 	when
-	Binary :: utf_text_binary(),
-	List :: list_of_floats().
+	Binary :: a_utf_text_binary(),
+	List :: a_list_of_floats().
 
 float_from_list(Binary,List) ->
 	case a_value_bin_is:float(Binary) of
@@ -894,7 +894,7 @@ float_from_list(Binary,List) ->
 %% @doc Verify ranged float value
 -spec float_ranged(Binary,Range1,Range2) -> {true,float()} | false
 	when
-	Binary :: utf_text_binary(),
+	Binary :: a_utf_text_binary(),
 	Range1 :: number(),
 	Range2 :: number().
 

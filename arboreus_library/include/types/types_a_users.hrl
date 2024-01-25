@@ -42,13 +42,13 @@
 %% ----------------------------
 %% @doc Arboreus users data primitives types
 
--type a_user_id() :: id_12().
--type a_user_password() :: md5_binary().
--type a_user_login() :: utf_text_binary().
+-type a_user_id() :: a_id_12().
+-type a_user_password() :: a_md5_binary().
+-type a_user_login() :: a_utf_text_binary().
 -type a_user_create_time() :: a_time_unix_timestamp().
 -type a_user_bd() :: pos_integer().
--type a_user_first_name() :: utf_text_binary().
--type a_user_last_name() :: utf_text_binary().
+-type a_user_first_name() :: a_utf_text_binary().
+-type a_user_last_name() :: a_utf_text_binary().
 -type ause_login_kind_id() :: pos_integer().
--type ause_login_description() :: utf_text_binary().
--type ause_login_rule() :: utf_text_binary().
+-type ause_login_description() :: a_utf_text_binary().
+-type ause_login_rule() :: a_utf_text_binary().

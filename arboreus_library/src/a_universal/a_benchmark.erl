@@ -49,13 +49,13 @@ test() ->
 
 %% ----------------------------
 %% @doc Run the set of functions for benchmark
--spec set(Functions,Iterations) -> list_of_tuples()
+-spec set(Functions,Iterations) -> a_list_of_tuples()
 	when
 		Functions :: [{Module,Function,Parameters}],
 		Iterations :: pos_integer(),
 		Module :: atom(),
 		Function :: atom(),
-		Parameters :: list_of_parameters().
+		Parameters :: a_list_of_parameters().
 
 set(Functions,Iterations) -> set_handler(Functions,Iterations,[]).
 
@@ -66,10 +66,9 @@ set(Functions,Iterations) -> set_handler(Functions,Iterations,[]).
 	when
 	Module :: atom(),
 	Function :: atom(),
-	Parameters :: list_of_parameters(),
+	Parameters :: a_list_of_parameters(),
 	Iterations :: pos_integer(),
-	Output :: list_of_tuples().
-	
+	Output :: a_list_of_tuples().
 
 set_handler([],_,Output) -> {ok,lists:keysort(1,Output)};
 set_handler([{Module,Function,Parameters}|Functions],Iterations,Output) ->
@@ -88,9 +87,9 @@ set_handler([{Module,Function,Parameters}|Functions],Iterations,Output) ->
 	when
 	Module :: module(),
 	Function :: atom(),
-	Parameters :: list_of_parameters(),
+	Parameters :: a_list_of_parameters(),
 	Iterations :: integer(),
-	Time_iteration :: float_pos(),
+	Time_iteration :: a_float_pos(),
 	Time_test :: pos_integer(),
 	Time_start :: pos_integer(),
 	Time_stop :: pos_integer().
@@ -109,7 +108,7 @@ do(Module,Function,Parameters,Iterations) ->
 	when
 	Module :: module(),
 	Function :: atom(),
-	Parameters :: list_of_parameters(),
+	Parameters :: a_list_of_parameters(),
 	Iterations :: integer().
 
 do_handler(_,_,_,0) -> ok;

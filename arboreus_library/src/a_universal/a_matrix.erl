@@ -202,7 +202,7 @@ sum(lists,Matrices) -> sum_lists(Matrices).
 %% @doc Summing up gb_tree based matrices
 -spec sum_gb_trees(Matrices) -> false | {true,Sum}
 	when
-	Matrices :: list_of_gb_trees(),
+	Matrices :: a_list_of_gb_trees(),
 	Sum :: gb_trees:tree().
 
 sum_gb_trees(Matrices) ->
@@ -216,7 +216,7 @@ sum_gb_trees(Matrices) ->
 %% @doc Summing up map based matrices
 -spec sum_maps(Matrices) -> false | {true,Sum}
 	when
-	Matrices :: list_of_maps(),
+	Matrices :: a_list_of_maps(),
 	Sum :: map().
 
 sum_maps(Matrices) ->
@@ -230,7 +230,7 @@ sum_maps(Matrices) ->
 %% @doc Summing up proplist based matrices
 -spec sum_proplists(Matrices) -> false | {true,Sum}
 	when
-	Matrices :: list_of_proplists(),
+	Matrices :: a_list_of_proplists(),
 	Sum :: proplists:proplist().
 
 sum_proplists(Matrices) ->
@@ -244,8 +244,8 @@ sum_proplists(Matrices) ->
 %% @doc Summing up record based procedures
 -spec sum_records(Matrices) -> false | {true,Sum}
 	when
-	Matrices :: list_of_records(),
-	Sum :: record().
+	Matrices :: a_list_of_records(),
+	Sum :: a_record().
 
 sum_records(Matrices) ->
 	case verify(records,Matrices) of
@@ -258,7 +258,7 @@ sum_records(Matrices) ->
 %% @doc Summing up tuple based matrices
 -spec sum_tuples(Matrices) -> false | {true,Sum}
 	when
-	Matrices :: list_of_tuples(),
+	Matrices :: a_list_of_tuples(),
 	Sum :: tuple().
 
 sum_tuples(Matrices) ->
@@ -273,7 +273,7 @@ sum_tuples(Matrices) ->
 -spec sum_lists(Matrices) -> {true,Sum} | false
 	when
 	Matrices :: list(),
-	Sum :: list_of_values().
+	Sum :: a_list_of_values().
 
 sum_lists(Matrices) ->
 	case verify(lists,Matrices) of
@@ -288,8 +288,8 @@ sum_lists(Matrices) ->
 	when
 	Kind :: lists | tuples | records | proplists | maps | gb_trees,
 	Matrix1 :: Matrix2,
-	Matrix2 :: list() | proplists:proplist() | record() | tuple() | map() | gb_trees:tree(),
-	Result :: list() | proplists:proplist() | record() | tuple() | map() | gb_trees:tree().
+	Matrix2 :: list() | proplists:proplist() | a_record() | tuple() | map() | gb_trees:tree(),
+	Result :: list() | proplists:proplist() | a_record() | tuple() | map() | gb_trees:tree().
 
 sum_2_matrices(lists,List1,List2) -> sum_2_lists(List1,List2);
 sum_2_matrices(tuples,Tuple1,Tuple2) -> sum_2_tuples(Tuple1,Tuple2,start);
@@ -305,7 +305,7 @@ sum_2_matrices(gb_trees,Tree1,Tree2) -> sum_2_gb_trees(gb_trees:keys(Tree1),Tree
 	when
 	Kind :: lists | tuples | records | proplists | maps | gb_trees,
 	Matrices :: list(),
-	Sum :: list() | proplists:proplist() | record() | tuple() | map() | gb_trees:tree().
+	Sum :: list() | proplists:proplist() | a_record() | tuple() | map() | gb_trees:tree().
 
 sum_handler(_,[],Sum) -> {true,Sum};
 sum_handler(Kind,[Matrix|Matrices],start) ->
@@ -318,7 +318,7 @@ sum_handler(Kind,[Matrix|Matrices],Sum) ->
 %% @doc Summing up 2 gb_trees
 -spec sum_2_gb_trees(Keys,Tree1,Tree2) -> gb_trees:tree()
 	when
-	Keys :: list_of_values(),
+	Keys :: a_list_of_values(),
 	Tree1 :: gb_trees:tree(),
 	Tree2 :: gb_trees:tree().
 
@@ -334,7 +334,7 @@ sum_2_gb_trees([Key|Keys],Tree1,Tree2) ->
 %% @doc Summing up 2 maps
 -spec sum_2_maps(Keys,Map1,Map2) -> map()
 	when
-	Keys :: list_of_values(),
+	Keys :: a_list_of_values(),
 	Map1 :: map(),
 	Map2 :: map().
 
@@ -364,10 +364,10 @@ sum_2_proplists([{Key,Value1}|Proplist1],Proplist2) ->
 
 %% ----------------------------
 %% @doc Summing up 2 record based matrices
--spec sum_2_records(Record1,Record2,Count) -> record()
+-spec sum_2_records(Record1,Record2,Count) -> a_record()
 	when
-	Record1 :: record(),
-	Record2 :: record(),
+	Record1 :: a_record(),
+	Record2 :: a_record(),
 	Count :: start | pos_integer().
 
 sum_2_records(_,Sum,1) -> Sum;
@@ -451,7 +451,7 @@ verify(lists,Matrices) ->
 -spec mass_verify(Kind,Model,Matrices) -> {true,Matrices} | false
 	when
 	Kind :: lists | tuples | records | proplists | maps | gb_trees,
-	Model :: list() | tuple() | record() | proplists:proplist() | map() | gb_trees:tree(),
+	Model :: list() | tuple() | a_record() | proplists:proplist() | map() | gb_trees:tree(),
 	Matrices :: list().
 
 mass_verify(Kind,Model,Matrices) ->
@@ -463,7 +463,7 @@ mass_verify(Kind,Model,Matrices) ->
 -spec mass_verify_handler(Kind,Model,Matrices,Output) -> {true,Matrices} | false
 	when
 	Kind :: lists | tuples | records | proplists | maps | gb_trees,
-	Model :: list() | tuple() | record() | proplists:proplist() | map() | gb_trees:tree(),
+	Model :: list() | tuple() | a_record() | proplists:proplist() | map() | gb_trees:tree(),
 	Matrices :: list(),
 	Output :: list().
 
@@ -494,8 +494,8 @@ mass_verify_handler(Kind,Model,[Matrix|Matrices],Output) ->
 -spec verify(Kind,Model,Matrix) -> {true,Matrix} | false
 	when
 	Kind :: list | tuple | record | proplist | map | gb_tree,
-	Model :: list() | tuple() | record() | proplists:proplist() | map() | gb_trees:tree(),
-	Matrix :: list() | tuple() | record() | proplists:proplist() | map() | gb_trees:tree().
+	Model :: list() | tuple() | a_record() | proplists:proplist() | map() | gb_trees:tree(),
+	Matrix :: list() | tuple() | a_record() | proplists:proplist() | map() | gb_trees:tree().
 
 verify(list,Model,Matrix) -> verify_handler(a_structure_l,Model,Matrix);
 verify(tuple,Model,Matrix) -> verify_handler(a_structure_t,Model,Matrix);
@@ -511,8 +511,8 @@ verify(gb_tree,Model,Matrix) -> verify_handler(a_structure_gb,Model,Matrix).
 	when
 	Handler :: a_structure_l | a_structure_t | a_structure_r | a_structure_pl |
 		a_structure_m | a_structure_gb,
-	Model :: list() | tuple() | record() | proplists:proplist() | map() | gb_trees:tree(),
-	Matrix :: list() | tuple() | record() | proplists:proplist() | map() | gb_trees:tree().
+	Model :: list() | tuple() | a_record() | proplists:proplist() | map() | gb_trees:tree(),
+	Matrix :: list() | tuple() | a_record() | proplists:proplist() | map() | gb_trees:tree().
 
 verify_handler(Handler,Model,Matrix) ->
 	Handler:verify(return_structure,Model,Matrix).
@@ -521,7 +521,7 @@ verify_handler(Handler,Model,Matrix) ->
 %% ----------------------------
 %% @doc Return arithmetical matrix model
 -spec model(Kind,Properties) ->
-	list() | tuple() | record() | proplists:proplist() | map() | gb_trees:tree()
+	list() | tuple() | a_record() | proplists:proplist() | map() | gb_trees:tree()
 	when
 	Kind :: list | tuple | record | proplists | map | gb_tree,
 	Properties :: {Name,Length} | Length | Description,

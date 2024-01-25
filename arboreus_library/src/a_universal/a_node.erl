@@ -105,7 +105,7 @@ test() ->
 
 %% ----------------------------
 %% @doc Node load
--spec load(KIND) -> list_of_properties() | a_node_load()
+-spec load(KIND) -> a_list_of_properties() | a_node_load()
 	when KIND :: list | record.
 
 load(list)->

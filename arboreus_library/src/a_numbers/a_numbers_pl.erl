@@ -78,7 +78,7 @@ test() ->
 %% @doc Calculate average value for the proplist of numbers
 -spec average(List) -> number()
 	when
-	List :: list_of_numbers().
+	List :: a_list_of_numbers().
 
 average(Proplist) -> average_handler(Proplist,0,0).
 

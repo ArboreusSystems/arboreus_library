@@ -47,7 +47,7 @@ test() ->
 %% @doc Do the function for the line from requested file
 -spec do_line(File_path,Function) -> ok | {error,_Reason}
 	when
-	File_path :: unix_path_string(),
+	File_path :: a_unix_path_string(),
 	Function :: function().
 
 do_line(File_path,Function) ->
@@ -76,7 +76,7 @@ do_line_handler(File,Function) ->
 %% @doc Do the defined function in module for the line from file
 -spec do_line(File_path,Module,Function,Arguments) -> ok | {error,_Reason}
 	when
-	File_path :: unix_path_string(),
+	File_path :: a_unix_path_string(),
 	Module :: atom(),
 	Function :: atom(),
 	Arguments :: list().
@@ -93,7 +93,7 @@ do_line(File_path,Module,Function,Arguments) ->
 	File :: io:device(),
 	Module :: atom(),
 	Function :: atom(),
-	Arguments :: list_of_properties().
+	Arguments :: a_list_of_properties().
 
 do_line_handler(File,Module,Function,Arguments) ->
 	case io:get_line(File,'') of

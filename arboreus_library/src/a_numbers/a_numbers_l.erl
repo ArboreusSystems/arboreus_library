@@ -75,7 +75,7 @@ test() ->
 %% @doc Calculate average value for the list of numbers
 -spec average(List) -> number()
 	when
-	List :: list_of_numbers().
+	List :: a_list_of_numbers().
 
 average(List) -> average_handler(List,0,0).
 
@@ -84,7 +84,7 @@ average(List) -> average_handler(List,0,0).
 %% @doc The average procedure handler
 -spec average_handler(List,Counter,Sum) -> Sum
 	when
-	List :: list_of_numbers(),
+	List :: a_list_of_numbers(),
 	Counter :: 0,
 	Sum :: 0.
 
@@ -97,16 +97,16 @@ average_handler([Number|List],Counter,Sum) ->
 %% @doc Generate avarage percentage value of the list of numbers
 -spec average_percentage(List) -> number()
 	when
-	List :: list_of_numbers().
+	List :: a_list_of_numbers().
 
 average_percentage(List) -> average(percentage(List)).
 
 
 %% ----------------------------
 %% @doc Define the bigger value and calculate percentage to each of numbers of the list
--spec percentage(List) -> list_of_numbers()
+-spec percentage(List) -> a_list_of_numbers()
 	when
-	List :: list_of_numbers().
+	List :: a_list_of_numbers().
 
 percentage(List) ->
 	{Minimal,Maximal} = endpoints(List),
@@ -122,7 +122,7 @@ percentage(List) ->
 %% @doc Calculate the range between endpoints of list of numbers
 -spec range(List) -> Range
 	when
-	List :: list_of_numbers(),
+	List :: a_list_of_numbers(),
 	Range :: pos_integer().
 
 range(List) -> a_numbers:range(endpoints(List)).
@@ -132,7 +132,7 @@ range(List) -> a_numbers:range(endpoints(List)).
 %% @doc Find endpoints values of the list of numbers, less and bigger
 -spec endpoints(List) -> {Minimal,Maximal}
 	when
-	List :: list_of_numbers(),
+	List :: a_list_of_numbers(),
 	Minimal :: number(),
 	Maximal :: number().
 

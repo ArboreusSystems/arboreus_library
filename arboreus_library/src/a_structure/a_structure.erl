@@ -37,8 +37,8 @@ test() -> ok.
 -spec values(Module,Structures,Positions,Kind) -> proplists:proplist()
 	when
 	Module :: module(),
-	Structures :: {numbered,list_numerated()} | list(),
-	Positions :: list_of_values(),
+	Structures :: {numbered,a_list_numerated()} | list(),
+	Positions :: a_list_of_values(),
 	Kind :: plain | numbered.
 
 values(Module,{numbered,Structures},Positions,Kind) ->
@@ -110,9 +110,9 @@ values_handler(Kind,[{Structure_id,Elements}|Structures],Output) ->
 -spec sort_handler(Module,Positions,Check,Structures,Smaller,Larger) -> list()
 	when
 	Module :: module(),
-	Positions :: list_of_integers(),
-	Check :: list_of_values(),
-	Structures :: list() | proplists:proplist() | record() | tuple() | map() | gb_trees:tree(),
+	Positions :: a_list_of_integers(),
+	Check :: a_list_of_values(),
+	Structures :: list() | proplists:proplist() | a_record() | tuple() | map() | gb_trees:tree(),
 	Smaller :: list(),
 	Larger :: list().
 
@@ -194,7 +194,7 @@ reference(Module,Structures,Positions,Reference) ->
 		a_structure_gb | a_structure_pl,
 	Structures :: list(),
 	Model :: list(),
-	Positions :: list_of_integers(),
+	Positions :: a_list_of_integers(),
 	Reference :: proplists:proplist().
 
 reference_handler(_,[],_,_,Reference) -> {true,Reference};

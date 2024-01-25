@@ -35,8 +35,8 @@ test() -> ok.
 -spec check(Type,Parameter,Type_properties) -> nomatch | _Checked_parameter
 	when
 	Type :: atom(),
-	Parameter :: post_parameter(),
-	Type_properties :: list_of_properties().
+	Parameter :: a_post_parameter(),
+	Type_properties :: a_list_of_properties().
 
 check(user_defined,Parameter,[Module,Function,Arguments]) ->
 	apply(Module,Function,[Parameter,Arguments]);
@@ -66,7 +66,7 @@ checkout(Parameter_name,Parameters,Type,Type_properties) ->
 -spec parameter_value(Type,Parameter,Type_properties) -> nomatch | _Checked_parameter | {error,_Reason}
 	when
 	Type :: atom(),
-	Parameter :: post_parameter(),
+	Parameter :: a_post_parameter(),
 	Type_properties::list().
 
 %% List of typed elements

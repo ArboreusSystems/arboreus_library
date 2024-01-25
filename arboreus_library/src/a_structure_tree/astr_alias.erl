@@ -73,7 +73,7 @@ test() ->
 	{ok,_Datum} | {norow,Properties} | {aborted,_Reason}
 	when
 	Kind :: by_point,
-	Properties :: list_of_properties(),
+	Properties :: a_list_of_properties(),
 	Return_mode :: return_ids | return_records | return_record.
 
 dirty_select(run,[Properties,Match_head,Guard,Result],Return_mode) ->
@@ -97,7 +97,7 @@ dirty_select(by_point,[Point],Return_mode) ->
 	{ok,_Datum} | {norow,Properties} | {aborted,_Reason}
 	when
 	Kind :: by_point,
-	Properties :: list_of_properties(),
+	Properties :: a_list_of_properties(),
 	Return_mode :: return_ids | return_records | return_record.
 
 select(run,[Properties,Match_head,Guard,Result],Return_mode) ->
@@ -119,7 +119,7 @@ select(by_point,[Point],Return_mode) ->
 %% @doc Select datum from record by defined field, additional for select/3
 -spec select_return(Datum,Return_mode) -> {ok,_Datum}
 	when
-	Datum :: astr_alias() | list_of_records(),
+	Datum :: astr_alias() | a_list_of_records(),
 	Return_mode :: return_ids | return_records | return_record.
 
 select_return(return_ids,Records) ->

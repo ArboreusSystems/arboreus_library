@@ -8,5 +8,5 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
--type name_scope() :: {local,name_process()} | {global,name_process()} | {via,module(),name_process()}.
--type name_process() :: atom() | any().
+-type a_name_scope() :: {local,a_name_process()} | {global,a_name_process()} | {via,module(),a_name_process()}.
+-type a_name_process() :: atom() | any().

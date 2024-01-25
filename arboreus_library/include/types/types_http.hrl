@@ -9,4 +9,4 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 
--type post_parameter() :: utf_text_string().
+-type a_post_parameter() :: a_utf_text_string().

@@ -156,7 +156,7 @@ rotate(Structures,Kind) ->
 %% @doc Rotate structures functionality handler
 -spec rotate_handler(Structures,Kind,Output) -> Output
 	when
-	Structures :: [{Id,record()}],
+	Structures :: [{Id,a_record()}],
 	Id :: pos_integer(),
 	Kind :: plain | numbered,
 	Output :: proplists:proplist().
@@ -192,8 +192,8 @@ rotate_handler([{Id,Structure}|Structures],Kind,Output) ->
 %% @doc Return proplist within values of structures selected and grouped by positions
 -spec values(Structures,Positions,Kind) -> proplists:proplist()
 	when
-	Structures :: list_of_records(),
-	Positions :: list_of_integers() | all,
+	Structures :: a_list_of_records(),
+	Positions :: a_list_of_integers() | all,
 	Kind :: plain | numbered.
 
 values(Structures,all,Kind) ->
@@ -210,8 +210,8 @@ values(Structures,Positions,Kind) ->
 %% @doc Sorting structures by defined list of elements
 -spec sort(Structures,Positions) -> Structures | false
 	when
-	Structures :: list_of_records(),
-	Positions :: list_of_integers().
+	Structures :: a_list_of_records(),
+	Positions :: a_list_of_integers().
 
 sort({start,Structures},all) ->
 	[Etalon|_] = Structures,
@@ -239,8 +239,8 @@ sort([],_) -> [].
 %% @doc Making list of elements for sorting
 -spec sorting_elements_handler(Positions,Structure,Output) -> Output
 	when
-	Positions :: list_of_integers(),
-	Structure :: record(),
+	Positions :: a_list_of_integers(),
+	Structure :: a_record(),
 	Output :: list().
 
 sorting_elements_handler([],_,Output) -> Output;
@@ -355,7 +355,7 @@ elements(Structure) ->
 %% @doc Wrapper for elements/3
 -spec elements(Positions,Structure) -> proplists:proplist()
 	when
-	Positions :: list_of_integers(),
+	Positions :: a_list_of_integers(),
 	Structure :: list().
 
 elements(Positions,Structure) ->
@@ -367,7 +367,7 @@ elements(Positions,Structure) ->
 -spec model(Kind,Structure) -> tuple()
 	when
 	Kind :: verificator | description,
-	Structure :: record().
+	Structure :: a_record().
 
 model(Kind,Structure) ->
 	if
@@ -401,7 +401,7 @@ model(Kind,Structure) ->
 -spec mass_verify(Model,List_of_structures) -> boolean()
 	when
 	Model :: tuple(),
-	List_of_structures :: list_of_records().
+	List_of_structures :: a_list_of_records().
 
 mass_verify(Model,List_of_structures) ->
 	a_structure_t:mass_verify(Model,List_of_structures).
@@ -414,7 +414,7 @@ mass_verify(Model,List_of_structures) ->
 	when
 	Return_mode :: return_list | return_boolean,
 	Model :: tuple(),
-	List_of_structures :: list_of_records().
+	List_of_structures :: a_list_of_records().
 
 mass_verify(Return_mode,Model,List_of_structures) ->
 	a_structure_t:mass_verify(Return_mode,Model,List_of_structures).
@@ -426,7 +426,7 @@ mass_verify(Return_mode,Model,List_of_structures) ->
 	when
 	Return_mode :: return_structure | return_boolean,
 	Model :: tuple(),
-	Structure :: record().
+	Structure :: a_record().
 
 verify(Return_mode,Model,Structure) ->
 	a_structure_t:verify(Return_mode,Model,Structure).

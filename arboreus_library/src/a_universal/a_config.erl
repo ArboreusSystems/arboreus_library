@@ -66,7 +66,7 @@ test() ->
 %% @doc Parse configuration file
 -spec parse_file(Path) -> {ok,proplists:proplist()} | {error,Path}
 	when
-	Path :: unix_path_string().
+	Path :: a_unix_path_string().
 
 parse_file(Path) ->
 	{ok,Config_string} = clear_commentary(Path),
@@ -81,8 +81,8 @@ parse_file(Path) ->
 -spec parse_parameters(Positions,Config_string) -> {ok,Output}
 	when
 	Positions :: [[{pos_integer(),pos_integer()}]],
-	Config_string :: utf_text_string(),
-	Output :: utf_text_string().
+	Config_string :: a_utf_text_string(),
+	Output :: a_utf_text_string().
 
 parse_parameters(Positions,Config_string) ->
 	parse_parameters_handler(Positions,Config_string,[]).
@@ -93,8 +93,8 @@ parse_parameters(Positions,Config_string) ->
 -spec parse_parameters_handler(Positions,Config_string,Output) -> {ok,Output}
 	when
 	Positions :: [[{pos_integer(),pos_integer()}]],
-	Config_string :: utf_text_string(),
-	Output :: utf_text_string().
+	Config_string :: a_utf_text_string(),
+	Output :: a_utf_text_string().
 
 parse_parameters_handler([],_,Output) -> {ok,Output};
 parse_parameters_handler([[{A_begin,A_length},_]],Config_string,Output) ->
@@ -131,7 +131,7 @@ parse_parameters_handler([[{A_begin,A_length},_],[{B_begin,B_length},_]|Position
 %% @doc Parse configuration term from string
 -spec parse(String) -> term()
 	when
-	String :: utf_text_string().
+	String :: a_utf_text_string().
 
 parse(String) ->
 	a_term:from_utf_string(
@@ -141,7 +141,7 @@ parse(String) ->
 
 %% ----------------------------
 %% @doc Wipe out commentary from configuration file
--spec clear_commentary(Config_path) -> {ok,utf_text_string()} | {error,_Reason}
+-spec clear_commentary(Config_path) -> {ok,a_utf_text_string()} | {error,_Reason}
 	when
 	Config_path :: file:io_device().
 
@@ -153,10 +153,10 @@ clear_commentary(Config_path) ->
 %% ----------------------------
 %% @doc Wipe out commentary from the configuration file line
 -spec clear_commentary_handler(Config_file,Output) ->
-	{ok,utf_text_string()} | {error,_Reason}
+	{ok,a_utf_text_string()} | {error,_Reason}
 	when
 	Config_file :: file:io_device(),
-	Output :: utf_text_string().
+	Output :: a_utf_text_string().
 
 clear_commentary_handler(Config_file,Output) ->
 	case io:get_line(Config_file,'') of

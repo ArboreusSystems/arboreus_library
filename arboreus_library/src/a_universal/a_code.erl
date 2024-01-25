@@ -147,7 +147,7 @@ l_handler([Module|Modules],Output) ->
 -spec is_module(Module) -> {Module,Path} | false
 	when
 	Module :: module(),
-	Path :: unix_path_string().
+	Path :: a_unix_path_string().
 
 is_module(Module) ->
 	lists:keyfind(Module,1,code:all_loaded()).
@@ -155,7 +155,7 @@ is_module(Module) ->
 
 %% ----------------------------
 %% @doc Check the path for presence in the Erlang environment.
--spec is_path(Path::unix_path_string()) -> boolean().
+-spec is_path(Path::a_unix_path_string()) -> boolean().
 
 is_path(Path) ->
 	lists:member(Path,code:get_path()).

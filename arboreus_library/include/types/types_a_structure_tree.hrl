@@ -44,9 +44,9 @@
 -type astr_point_container() :: any().
 -type astr_point_kind() :: any().
 -type astr_link_strength() :: 0 | integer().
--type astr_link_id() :: md5_binary().
+-type astr_link_id() :: a_md5_binary().
 -type astr_link_points() :: [astr_point_id()|astr_point_id()].
 -type astr_alias_id() :: any().
--type astr_alias_description() :: utf_text_binary().
+-type astr_alias_description() :: a_utf_text_binary().
 -type astr_twig_id() :: any().
--type astr_twig_description() :: utf_text_binary().
+-type astr_twig_description() :: a_utf_text_binary().

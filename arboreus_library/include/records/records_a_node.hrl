@@ -14,9 +14,9 @@
 
 -record(a_node_start_properties,{
 
-	name :: node_name_string(),
+	name :: a_node_name_string(),
 	detached :: boolean(),
-	cookie :: cookie_string(),
+	cookie :: a_cookie_string(),
 	port_range :: boolean(),
 	port_range_min :: port(),
 	port_range_max :: port(),

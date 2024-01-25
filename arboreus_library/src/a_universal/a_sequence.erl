@@ -34,10 +34,10 @@ test() -> ok.
 
 %% ----------------------------
 %% @doc Generate password hash
--spec make_password_hash(Password,Salt,Encryption_type) -> md()
+-spec make_password_hash(Password,Salt,Encryption_type) -> a_md()
 	when
-	Password :: utf_text_string() | utf_text_binary(),
-	Salt :: utf_text_string() | utf_text_binary(),
+	Password :: a_utf_text_string() | a_utf_text_binary(),
+	Salt :: a_utf_text_string() | a_utf_text_binary(),
 	Encryption_type :: md5 | md4.
 
 make_password_hash(Password,Salt,Encryption_type) when is_list(Salt) ->

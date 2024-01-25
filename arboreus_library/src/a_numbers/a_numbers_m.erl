@@ -94,7 +94,7 @@ average(Map) -> average_handler(Map,maps:keys(Map),0).
 -spec average_handler(Map,Keys,Sum) -> Sum
 	when
 	Map :: map(),
-	Keys :: list_of_values(),
+	Keys :: a_list_of_values(),
 	Sum :: 0.
 
 average_handler(Map,[],Sum) -> Sum/maps:size(Map);
@@ -132,7 +132,7 @@ percentage(Map) ->
 -spec percentage_handler(Map,Keys,Range,Delta) -> map()
 	when
 	Map :: map(),
-	Keys :: list_of_values(),
+	Keys :: a_list_of_values(),
 	Range :: number(),
 	Delta :: number().
 
@@ -180,7 +180,7 @@ endpoints(Map) ->
 -spec endpoints_handler(Map,Keys,Minimal,Maximal) -> {Minimal,Maximal}
 	when
 	Map :: map(),
-	Keys :: list_of_values(),
+	Keys :: a_list_of_values(),
 	Minimal :: number(),
 	Maximal :: number().
 

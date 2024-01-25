@@ -86,7 +86,7 @@ test() ->
 	{ok,_Datum} | {norow,Properties} | {aborted,_Reason}
 	when
 	Kind :: by_user,
-	Properties :: list_of_properties(),
+	Properties :: a_list_of_properties(),
 	Return_mode :: logins | return_records | return_record.
 
 select(run,[Properties,Match_head,Guard],Return_mode) ->
@@ -107,7 +107,7 @@ select(by_user,[User],Return_mode) ->
 %% @doc Select datum from record by defined field, additional for select/3
 -spec select_return(Datum,Return_mode) -> {ok,_Datum}
 	when
-	Datum :: ause_login() | list_of_records(),
+	Datum :: ause_login() | a_list_of_records(),
 	Return_mode :: logins | return_records | return_record.
 
 select_return(logins,Records) ->

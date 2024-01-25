@@ -12,18 +12,25 @@
 %% System include
 
 %% Application includes
+-include("../../include/types/types_a_network.hrl").
 -include("../../include/types/types_a_yaws.hrl").
 
 %% Module API
 -export([
 	test/0,
+	access_control_allow_origin/1,
+	access_control_allow_methods/1,
+	content_type/1,
+	content_disposition/1,
+	pragma/1,
+	cache_control/1,
 	last_modified/1,
 	expires/1,
 	cache/1,
 	json/2,
 	csv/2,
 	xml/2,
-	cross_domain/0,cross_domain/1
+	cors/0,cors/1
 ]).
 
 
@@ -35,26 +42,127 @@ test() -> ok.
 
 
 %% ----------------------------
-%% @doc Wrapper function for cross_domain/1, return default value for any domain.
--spec cross_domain() -> list().
+%% @doc Return HTTP Yaws header Access-Control-Allow-Origin within DOMAIN value
+-spec access_control_allow_origin(DOMAIN) -> YAWS_HEADER
+	when
+		DOMAIN :: a_host_name_binary() | a_host_name_string() | a_ipv4_binary() | a_ipv4_string(),
+		YAWS_HEADER :: a_yaws_http_header().
 
-cross_domain() -> cross_domain("*").
+access_control_allow_origin(DOMAIN) when is_list(DOMAIN)->
+
+	{header,["Access-Control-Allow-Origin:",DOMAIN]};
+
+access_control_allow_origin(DOMAIN) ->
+
+	access_control_allow_origin(a_var:to_string(DOMAIN)).
+
+
+%% ----------------------------
+%% @doc Return HTTP Yaws header Access-Control-Allow-Origin within DOMAIN value
+-spec access_control_allow_methods(DOMAIN) -> YAWS_HEADER
+	when
+		DOMAIN :: a_host_name_binary() | a_host_name_string() | a_ipv4_binary() | a_ipv4_string(),
+		YAWS_HEADER :: a_yaws_http_header().
+
+access_control_allow_methods(DOMAIN) when is_list(DOMAIN)->
+
+	{header,["Access-Control-Allow-Methods:",DOMAIN]};
+
+access_control_allow_methods(DOMAIN) ->
+
+	access_control_allow_origin(a_var:to_string(DOMAIN)).
+
+
+
+%% ----------------------------
+%% @doc Return HTTP Yaws header Content-Type within TYPE value
+-spec content_type(TYPE) -> YAWS_HEADER
+	when
+		TYPE :: a_utf_text_string(),
+		YAWS_HEADER :: a_yaws_http_header().
+
+content_type(TYPE) when is_list(TYPE) ->
+
+	{header,["Content-Type:",TYPE]};
+
+content_type(_) ->
+
+	{header,["Content-Type:","WrongContentType"]}.
+
+
+%% ----------------------------
+%% @doc Return HTTP Yaws header Content-Disposition within DISPOSITION value
+-spec content_disposition(DISPOSITION) -> YAWS_HEADER
+	when
+		DISPOSITION :: a_utf_text_string(),
+		YAWS_HEADER :: a_yaws_http_header().
+
+content_disposition(TYPE) when is_list(TYPE) ->
+
+	{header,["Content-Disposition:",TYPE]};
+
+content_disposition(_) ->
+
+	{header,["Content-Disposition:","WrongContentDisposition"]}.
+
+
+%% ----------------------------
+%% @doc Return HTTP Yaws header Pragma within PRAGMA_VALUE
+-spec pragma(PRAGMA_VALUE) -> YAWS_HEADER
+	when
+		PRAGMA_VALUE :: a_utf_text_string(),
+		YAWS_HEADER :: a_yaws_http_header().
+
+pragma(PRAGMA_VALUE) when is_list(PRAGMA_VALUE) ->
+
+	{header,["Pragma:",PRAGMA_VALUE]};
+
+pragma(_) ->
+
+	{header,["Pragma:","WrongPragma"]}.
+
+
+%% ----------------------------
+%% @doc Return HTTP Yaws header Cache-Control within CACHE value
+-spec cache_control(CACHE) -> YAWS_HEADER
+when
+	CACHE :: a_utf_text_string(),
+	YAWS_HEADER :: a_yaws_http_header().
+
+cache_control(CACHE) when is_list(CACHE) ->
+
+	{header,["Cache-Control:",CACHE]};
+
+cache_control(_) ->
+
+	{header,["Cache-Control:","WrongCacheControl"]}.
+
+
+%% ----------------------------
+%% @doc Wrapper function for cors/1, return default value for any domain.
+-spec cors() -> YAWS_HEADERS
+	when YAWS_HEADERS :: a_yaws_http_headers().
+
+cors() -> cors("*").
 
 
 %% ----------------------------
 %% @doc Return list within header for Yaws Appmod
--spec cross_domain(DOMAIN) -> YAWS_HEADER
+-spec cors(DOMAIN) -> YAWS_HEADERS
 	when
-		DOMAIN :: string() | binary() | atom() | integer() | float(),
-		YAWS_HEADER :: a_yaws_http_header().
+		DOMAIN :: a_host_name_binary() | a_host_name_string() | a_ipv4_binary() | a_ipv4_string(),
+		YAWS_HEADERS :: a_yaws_http_headers().
 
-cross_domain(DOMAIN) when is_list(DOMAIN) ->
+cors(DOMAIN) when is_list(DOMAIN) ->
 
-	{header,["Access-Control-Allow-Origin:",DOMAIN]};
+	[
+		access_control_allow_origin(DOMAIN),
+		access_control_allow_methods(DOMAIN)
+	];
 
-cross_domain(DOMAIN) ->
+cors(DOMAIN) ->
 
-	cross_domain(a_var:to_string(DOMAIN)).
+	cors(a_var:to_string(DOMAIN)).
 
 
 %%-----------------------------------
@@ -62,14 +170,8 @@ cross_domain(DOMAIN) ->
 %% Example: "Last-Modified: Fri, 30 Oct 1998 14:19:41 GMT"
 -spec last_modified(TIME) -> YAWS_HEADER
 	when
-		TIME_TUPLE :: {{YEAR,MONTH,DAY},{HOUR,MINUTE,SECOND}},
-		YEAR :: pos_integer(),
-		MONTH :: 1..12,
-		DAY :: 1..31,
-		HOUR :: 0..23,
-		MINUTE :: 0..59,
-		SECOND :: 0..59,
 		TIME :: pos_integer() | TIME_TUPLE | current,
+		TIME_TUPLE :: {a_date(),a_time()},
 		YAWS_HEADER :: a_yaws_http_header().
 
 last_modified(TIME) when is_integer(TIME), TIME > 0 ->
@@ -107,38 +209,32 @@ last_modified(current) ->
 %% Example: "Expires: Fri, 30 Oct 1998 14:19:41 GMT"
 -spec expires(TIME) -> YAWS_HEADER
 	when
-		TIME_TUPLE :: {{YEAR,MONTH,DAY},{HOUR,MINUTE,SECOND}},
-		YEAR :: pos_integer(),
-		MONTH :: pos_integer(),
-		DAY :: pos_integer(),
-		HOUR :: pos_integer(),
-		MINUTE :: pos_integer(),
-		SECOND :: pos_integer(),
 		TIME :: pos_integer() | TIME_TUPLE | current,
+		TIME_TUPLE :: {a_date(),a_time()},
 		YAWS_HEADER :: a_yaws_http_header().
 
-expires(Timestamp) when is_integer(Timestamp) == true, Timestamp > 0 ->
+expires(TIME) when is_integer(TIME) == true, TIME > 0 ->
 
 	{header,[
 		"Expires:",
 		a_var:to_string(a_time:format(
-			rfc822,{timestamp_tuple,a_time:timestamp_to_tuple(Timestamp)})
+			rfc822,{timestamp_tuple,a_time:timestamp_to_tuple(TIME)})
 		)
 	]};
 
-expires({{Year,Month,Day},{Hour,Minute,Second}})
+expires({{YEAR,MONTH,DAY},{HOUR,MINUTE,SECOND}})
 	when
-		is_integer(Year) == true, Year > 0,
-		is_integer(Month) == true, Month > 0, Month =< 12,
-		is_integer(Day) == true, Day > 0, Day =< 31,
-		is_integer(Hour) == true, Hour >= 0, Hour =< 23,
-		is_integer(Minute) == true, Minute >= 0, Minute =< 59,
-		is_integer(Second) == true, Second >= 0, Second =< 59 ->
+		is_integer(YEAR) == true, YEAR > 0,
+		is_integer(MONTH) == true, MONTH > 0, MONTH =< 12,
+		is_integer(DAY) == true, DAY > 0, DAY =< 31,
+		is_integer(HOUR) == true, HOUR >= 0, HOUR =< 23,
+		is_integer(MINUTE) == true, MINUTE >= 0, MINUTE =< 59,
+		is_integer(SECOND) == true, SECOND >= 0, SECOND =< 59 ->
 
 	{header,[
 		"Expires:",
 		a_var:to_string(a_time:format(
-			rfc822,{date_tuple,{{Year,Month,Day},{Hour,Minute,Second}}})
+			rfc822,{date_tuple,{{YEAR,MONTH,DAY},{HOUR,MINUTE,SECOND}}})
 		)
 	]};
 
@@ -147,14 +243,16 @@ expires(current) -> expires(erlang:localtime()).
 
 %%-----------------------------------
 %% @doc Return a list() within HTTP headers fromated for Yaws out() function.
--spec cache(Operation) -> list()
+-spec cache(OPERATION) -> YAWS_HEADERS
 	when
-	Operation :: no.
+		OPERATION :: no,
+		YAWS_HEADERS :: a_yaws_http_headers().
 
 cache(no) ->
+
 	[
-		{header,"Cache-Control: no-cache, no-store, must-revalidate"},
-		{header,"Pragma: no-cache"},
+		cache_control("no-cache, no-store, must-revalidate"),
+		pragma("no-cache"),
 		expires(1),
 		last_modified(current)
 	].
@@ -162,59 +260,82 @@ cache(no) ->
 
 %%-----------------------------------
 %% @doc Return a list within headers for JSON
--spec json(Type,File_name) -> list()
+-spec json(TYPE,FILE_NAME) -> YAWS_HEADERS
 	when
-		Type :: no_cache | solid,
-		File_name :: unicode:latin1_chardata().
+		TYPE :: no_cache | solid,
+		FILE :: unicode:latin1_chardata(),
+		YAWS_HEADERS :: a_yaws_http_headers().
 
-json(no_cache,File_name) ->
+json(no_cache,FILE_NAME) ->
+
 	[
 		cache(no),
-		json(solid,File_name)
+		json(solid,FILE_NAME)
 	];
-json(solid,File_name) ->
+
+json(solid,FILE_NAME) ->
+
 	[
-		{header,["Content-Type:","application/json; charset=utf-8"]},
-		{header,["Content-Disposition:",lists:concat(["attachment; filename=",File_name])]}
+		content_type("application/json; charset=utf-8"),
+		content_disposition(lists:concat(["attachment; filename=",FILE_NAME]))
 	].
 
 
 %%-----------------------------------
 %% @doc Return a list within HTTP headers for CSV file format
--spec csv(Type,File_name) -> list() | {error,_Reason}
+-spec csv(TYPE,FILE_NAME) -> YAWS_HEADERS
 	when
-		Type :: no_cache | solid,
-		File_name :: unicode:latin1_chardata().
+		TYPE :: no_cache | solid,
+		FILE_NAME :: unicode:latin1_chardata(),
+		YAWS_HEADERS :: a_yaws_http_headers().
 
-csv(no_cache,File_name) ->
+csv(no_cache,FILE_NAME) ->
+
 	[
 		cache(no),
-		csv(solid,File_name)
+		csv(solid,FILE_NAME)
 	];
-csv(solid,File_name) ->
+
+csv(solid,FILE_NAME) ->
+
 	[
-		{header,["Content-Type:","text/csv; charset=utf-8"]},
-		{header,["Content-Disposition:",lists:concat(["attachment; filename=",File_name])]}
+		content_type("text/csv; charset=utf-8"),
+		content_disposition(lists:concat(["attachment; filename=",FILE_NAME]))
 	].
 
 
 %%-----------------------------------
 %% @doc Return list within XML MIME type headers for Yaws out() function
--spec xml(Content_type,File_name) -> list() | {error,_Reason}
+-spec xml(TYPE,FILE_NAME) -> YAWS_HEADERS
 	when
-		Content_type :: text_xml | application_xml,
-		File_name :: unicode:latin1_chardata().
+		TYPE :: no_cache | solid,
+		FILE_NAME :: unicode:latin1_chardata(),
+		YAWS_HEADERS :: a_yaws_http_headers().
 
-xml(text,File_name) ->
+xml(text,FILE_NAME) ->
+
 	[
-		{header,["Content-Type:","text/xml; charset=utf-8"]},
-		{header,["Content-Disposition:",lists:concat(["attachment; filename=",File_name])]}
+		content_type("text/xml; charset=utf-8"),
+		content_disposition(lists:concat(["attachment; filename=",FILE_NAME]))
 	];
-xml(text_no_cache,File_name) -> [cache(no),xml(text,File_name)];
-xml(application,File_name) ->
+
+xml(text_no_cache,FILE_NAME) ->
+
 	[
-		{header,["Content-Type:","application/xml; charset=utf-8"]},
-		{header,["Content-Disposition:",lists:concat(["attachment; filename=",File_name])]}
+		cache(no),
+		xml(text,FILE_NAME)
 	];
+
+xml(application,FILE_NAME) ->
+
+	[
+		content_type("application/xml; charset=utf-8"),
+		content_disposition(lists:concat(["attachment; filename=",FILE_NAME]))
+	];
+
 xml(application_no_cache,File_name) ->
-	[cache(no),xml(application,File_name)].
+
+	[
+		cache(no),
+		xml(application,File_name)
+	].

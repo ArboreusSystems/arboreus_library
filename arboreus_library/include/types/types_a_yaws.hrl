@@ -8,11 +8,6 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr Kirilov, https://alexandr.kirilov.me").
 
-%% System includes
-
-%% Application includes
--include("types/types_a_general.hrl").
-
 
 %% ----------------------------
 %% @doc Yaws Web Server data types

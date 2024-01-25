@@ -12,6 +12,8 @@
 %% System include
 
 %% Application includes
+-include("../../include/types/types_a_general.hrl").
+-include("../../include/types/types_a_time.hrl").
 -include("../../include/types/types_a_network.hrl").
 -include("../../include/types/types_a_yaws.hrl").
 
@@ -263,7 +265,7 @@ cache(no) ->
 -spec json(TYPE,FILE_NAME) -> YAWS_HEADERS
 	when
 		TYPE :: no_cache | solid,
-		FILE :: unicode:latin1_chardata(),
+		FILE_NAME :: unicode:latin1_chardata(),
 		YAWS_HEADERS :: a_yaws_http_headers().
 
 json(no_cache,FILE_NAME) ->

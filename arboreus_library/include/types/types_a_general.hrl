@@ -9,6 +9,9 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 
+%% ------------------------------------------
+%% General types
+
 -type a_float_pos() :: float().
 -type a_float_neg() :: float().
 

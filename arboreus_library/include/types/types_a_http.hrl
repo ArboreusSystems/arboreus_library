@@ -9,4 +9,9 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 
--type a_post_parameter() :: a_utf_text_string().
+%% ------------------------------------------
+%% HTTP request types
+
+-type a_http_post_parameter() :: a_utf_text_string().
+-type a_http_url() :: unicode:latin1_chardata().
+-type a_http_json_binary() :: unicode:unicode_binary().

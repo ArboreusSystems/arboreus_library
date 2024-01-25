@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+
 %% ------------------------------------------
 %% Network types
 
@@ -34,5 +35,6 @@
 -type a_node_name_string() :: a_utf_text_string().
 -type a_node_name_binary() :: a_utf_text_binary().
 
--type a_cookie_string() :: a_utf_base64_string().
--type a_cookie_binary() :: a_utf_text_binary().
+-type a_node_cookie() :: atom().
+-type a_node_cookie_string() :: a_utf_base64_string().
+-type a_node_cookie_binary() :: a_utf_text_binary().

@@ -11,7 +11,7 @@
 %% System includes
 
 %% Application includes
--include("types/types_general.hrl").
+-include("types/types_a_general.hrl").
 
 
 %% ----------------------------
@@ -23,3 +23,4 @@
 -type a_yaws_http_header() :: {atom(),list()}.
 -type a_yaws_http_headers() :: [a_yaws_http_header()].
 -type a_yaws_appmode_output() :: list().
+-type a_yaws_post_parameters() :: proplists:proplist().

@@ -17,17 +17,25 @@
 
 -type a_boolean_digit() :: 1 | 0.
 
+-type a_file_path() :: a_file_path_string().
+-type a_file_path_string() :: a_utf_text_string().
+-type a_file_path_binary() :: a_utf_text_binary().
+
 -type a_unix_path() :: a_unix_path_binary() | a_unix_path_string().
--type a_unix_path_string() :: unicode:charlist().
--type a_unix_path_binary() :: unicode:unicode_binary().
+-type a_unix_path_string() :: a_utf_text_string().
+-type a_unix_path_binary() :: a_utf_text_binary().
+
+-type a_shell_command() :: a_shell_command_string() | a_shell_command_binary().
+-type a_shell_command_string() :: a_utf_text_string().
+-type a_shell_command_binary() :: a_utf_text_binary().
 
 -type a_utf_text() :: a_utf_text_binary() | a_utf_text_string().
 -type a_utf_text_string() :: unicode:charlist().
 -type a_utf_text_binary() :: unicode:unicode_binary().
 
 -type a_utf_base64_text() :: a_utf_base64_string() | a_utf_base64_binary().
--type a_utf_base64_string() :: unicode:charlist().
--type a_utf_base64_binary() :: unicode:unicode_binary().
+-type a_utf_base64_string() :: a_utf_text_string().
+-type a_utf_base64_binary() :: a_utf_text_binary().
 
 -type a_md() :: a_md5() | a_md4().
 -type a_md_binary() :: a_md5_binary() | a_md4_binary().
@@ -83,5 +91,3 @@
 -type a_process_id() :: any().
 
 -type a_size() :: integer().
-
--type a_file_path_string() :: a_utf_text_string().

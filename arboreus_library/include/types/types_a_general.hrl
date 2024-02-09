@@ -17,7 +17,11 @@
 
 -type a_boolean_digit() :: 1 | 0.
 
--type a_file_path() :: a_file_path_string().
+-type a_file_name() :: a_file_name_string() | a_file_name_binary().
+-type a_file_name_string() :: a_utf_text_string().
+-type a_file_name_binary() :: a_utf_text_binary().
+
+-type a_file_path() :: a_file_path_string() | a_file_path_binary().
 -type a_file_path_string() :: a_utf_text_string().
 -type a_file_path_binary() :: a_utf_text_binary().
 
@@ -66,6 +70,7 @@
 -type a_list_of_parameters() :: [any()].
 -type a_list_of_records() :: [a_record()].
 -type a_list_of_integers() :: [integer()].
+-type a_list_of_pos_integers() :: [pos_integer()].
 -type a_list_of_floats() :: [float()].
 -type a_list_of_atoms() :: [atom()].
 -type a_list_of_functions() :: [function()].

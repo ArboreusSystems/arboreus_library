@@ -38,3 +38,22 @@
 -type a_node_cookie() :: atom().
 -type a_node_cookie_string() :: a_utf_base64_string().
 -type a_node_cookie_binary() :: a_utf_text_binary().
+
+-type a_network_user() :: a_network_user_string() | a_network_user_binary().
+-type a_network_user_string() :: a_utf_text_string().
+-type a_network_user_binary() :: a_utf_text_binary().
+
+-type a_network_password() :: a_network_password_string() | a_network_password_binary().
+-type a_network_password_string() :: a_utf_text_string().
+-type a_network_password_binary() :: a_utf_text_binary().
+
+-type a_network_user_credentials() :: {a_network_user(),a_network_password()}.
+
+-type a_port() :: 0..65353.
+
+-type a_url_string() :: a_utf_text_string().
+-type a_url_binary() :: a_utf_text_binary().
+-type a_url_scheme_string() :: a_utf_text_string().
+-type a_url_scheme_binary() :: a_utf_text_binary().
+-type a_url_path_string() :: a_utf_text_string().
+-type a_url_path_binary() :: a_utf_text_binary().

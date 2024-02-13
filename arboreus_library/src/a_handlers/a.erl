@@ -15,7 +15,7 @@
 ]).
 
 %% System include
--include("../include/types/types_general.hrl").
+-include("../include/types/types_a_general.hrl").
 
 
 %%-----------------------------------

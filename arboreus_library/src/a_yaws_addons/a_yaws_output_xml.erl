@@ -10,7 +10,7 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% System include
--include("../include/types/types_general.hrl").
+-include("../include/types/types_a_general.hrl").
 -include("../include/constants/a_constants_general.hrl").
 
 %% API

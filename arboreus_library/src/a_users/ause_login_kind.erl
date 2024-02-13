@@ -14,8 +14,8 @@
 -define(ID_DISCTIONARY,[numeric,alpha_lower,alpha_upper]).
 
 %% Data types
--include("../include/types/types_general.hrl").
--include("../include/types/types_time.hrl").
+-include("../include/types/types_a_general.hrl").
+-include("../include/types/types_a_time.hrl").
 -include("../include/types/types_a_users.hrl").
 
 %% Data models

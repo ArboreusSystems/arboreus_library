@@ -10,7 +10,7 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% Data types
--include("../include/types/types_general.hrl").
+-include("../include/types/types_a_general.hrl").
 -include("../include/types/types_a_structure_tree.hrl").
 
 %% Data models

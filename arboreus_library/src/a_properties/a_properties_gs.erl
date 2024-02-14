@@ -74,6 +74,7 @@ init([STATE]) ->
 		ordered_set,private,{keypos,#a_properties_pair.key}
 	]) of
 		TABLE_REFERENCE when is_reference(TABLE_REFERENCE) ->
+			on_init(STATE),
 			process_flag(trap_exit,true),
 			{ok,STATE#a_properties_state{
 				storage_id = ?A_PROPERTIES_ID_STORAGE,
@@ -195,6 +196,21 @@ code_change(_OLD_VERSION,STATE = #a_properties_state{},_EXTRA) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+%% ----------------------------
+%% @doc Perform on-init function
+-spec on_init(STATE) -> ok
+	when STATE :: #a_properties_state{}.
+
+on_init(STATE) when STATE#a_properties_state.on_init == true ->
+
+	erlang:apply(
+		STATE#a_properties_state.on_init_module,
+		STATE#a_properties_state.on_init_function,
+		STATE#a_properties_state.on_init_parameters
+	);
+
+on_init(_STATE) -> ok.
 
 %% ----------------------------
 %% @doc Put key-value pair to proplist storage

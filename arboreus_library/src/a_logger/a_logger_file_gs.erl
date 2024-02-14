@@ -102,6 +102,7 @@ init([INITIAL_STATE]) ->
 								"\n",
 							file:write(IO_DEVICE,OPENING_MESSAGE)
 					end,
+					on_init(INITIAL_STATE),
 					process_flag(trap_exit, true),
 					{ok,INITIAL_STATE#a_logger_file_state{
 						io_device = IO_DEVICE,
@@ -280,8 +281,25 @@ code_change(_OLD_VERSION,STATE = #a_logger_file_state{},_EXTRA) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
 %% ----------------------------
-%% @doc
+%% @doc Perform on-init function
+-spec on_init(STATE) -> ok
+	when STATE :: #a_logger_file_state{}.
+
+on_init(STATE) when STATE#a_logger_file_state.on_init == true ->
+
+	erlang:apply(
+		STATE#a_logger_file_state.on_init_module,
+		STATE#a_logger_file_state.on_init_function,
+		STATE#a_logger_file_state.on_init_parameters
+	);
+
+on_init(_STATE) -> ok.
+
+
+%% ----------------------------
+%% @doc Write error message to logbook file
 -spec write_error(STATE,MESSAGE_BODY) -> ok | {error, REASON}
 	when
 		STATE :: #a_logger_file_state{},

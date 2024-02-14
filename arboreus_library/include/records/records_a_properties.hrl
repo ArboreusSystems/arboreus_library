@@ -11,7 +11,11 @@
 -record(a_properties_state,{
 
 	storage_id :: atom(),
-	storage_tid :: ets:tid()
+	storage_tid :: ets:tid(),
+	on_init = false :: boolean(),
+	on_init_module = undefined :: atom(),
+	on_init_function = undefined :: atom(),
+	on_init_parameters = [] :: list()
 }).
 
 -record(a_properties_pair,{

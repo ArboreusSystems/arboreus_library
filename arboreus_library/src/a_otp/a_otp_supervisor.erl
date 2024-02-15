@@ -9,10 +9,13 @@
 -module(a_otp_supervisor).
 -author("Alexandr Kirilov, https://alexandr.kirilov.me").
 
+%% Data types
+-include("../include/types/types_a_general.hrl").
+
 %% API
 -export([
 	test/0,
-	find_child/3,
+	find_child/3,find_supervisor_child/2,
 	first_child/1,
 	find_and_remove_child/3,
 	remove_child/2
@@ -50,6 +53,28 @@ find_child(by_pid,SUPERVISOR_PID,CHILD_PID) ->
 find_child(_,_,_) ->
 
 	false.
+
+
+%% ----------------------------
+%% @doc Return child process from application supervisor
+-spec find_supervisor_child(MODULE,PROCESS_ID)-> {ok,PROCESS_PID} | {error,REASON}
+	when
+		MODULE :: module(),
+		PROCESS_ID :: atom() | a_utf_text_string() | a_utf_text_binary(),
+		PROCESS_PID :: pid(),
+		REASON :: term().
+
+find_supervisor_child(MODULE,PROCESS_ID) ->
+
+	case application:get_supervisor(MODULE) of
+		{ok,APPLICATION_SUPERVISOR_PID} ->
+			case find_child(by_id,APPLICATION_SUPERVISOR_PID,PROCESS_ID) of
+				{PROCESS_ID,CHILD_PID,_TYPE,_MODULES} -> {ok,CHILD_PID};
+				false -> {error,no_child}
+			end;
+		{error,GET_SUPERVISOR_ERROR} ->
+			{error,{no_supervisor,GET_SUPERVISOR_ERROR}}
+	end.
 
 
 %% ----------------------------

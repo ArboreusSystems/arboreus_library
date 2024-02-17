@@ -32,6 +32,7 @@
 	file_extension = "txt":: string(),
 	file_start_time = true :: boolean(),
 	file_closing_time = true :: boolean(),
+	init_by_call = true :: boolean(),
 	on_init = false :: boolean(),
 	on_init_module = undefined :: atom(),
 	on_init_function = undefined :: atom(),

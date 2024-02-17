@@ -73,44 +73,11 @@ start_link(INITIAL_STATE) ->
 
 init([INITIAL_STATE]) ->
 
-	case filelib:ensure_path(INITIAL_STATE#a_logger_file_state.path) of
-		ok ->
-			START_TIME = integer_to_list(a_time_now:microseconds()),
-			FILE_PATH =
-				INITIAL_STATE#a_logger_file_state.path ++ "/" ++
-				INITIAL_STATE#a_logger_file_state.file_name ++ "_" ++ START_TIME ++ "." ++
-				INITIAL_STATE#a_logger_file_state.file_extension,
-			case file:open(FILE_PATH,[write]) of
-				{ok,IO_DEVICE} ->
-					if
-						INITIAL_STATE#a_logger_file_state.message_opening == true ->
-							TIME = case INITIAL_STATE#a_logger_file_state.file_start_time of
-								true ->
-									integer_to_list(a_time_now:microseconds()) ++
-									INITIAL_STATE#a_logger_file_state.separator;
-								_ -> ""
-							end,
-							TYPE = case INITIAL_STATE#a_logger_file_state.message_type of
-								true ->
-									INITIAL_STATE#a_logger_file_state.message_opening_type ++
-									INITIAL_STATE#a_logger_file_state.separator;
-								_ -> ""
-							end,
-							OPENING_MESSAGE =
-								TIME ++ TYPE ++
-								INITIAL_STATE#a_logger_file_state.message_opening_text ++
-								"\n",
-							file:write(IO_DEVICE,OPENING_MESSAGE)
-					end,
-					on_init(INITIAL_STATE),
-					process_flag(trap_exit, true),
-					{ok,INITIAL_STATE#a_logger_file_state{
-						io_device = IO_DEVICE,
-						file_path = FILE_PATH
-					}};
-				REPLY -> REPLY
-			end;
-		REPLY -> REPLY
+	process_flag(trap_exit, true),
+
+	case INITIAL_STATE#a_logger_file_state.init_by_call of
+		true ->	{ok,INITIAL_STATE};
+		false -> init_handler(INITIAL_STATE)
 	end;
 
 init([]) -> {error,wrong_initial_data}.
@@ -142,6 +109,15 @@ handle_call({write_binary,MESSAGE_BODY},_FROM,STATE = #a_logger_file_state{}) ->
 handle_call({write_text,MESSAGE_BODY},_FROM,STATE = #a_logger_file_state{}) ->
 
 	{reply,write_text_message(STATE,MESSAGE_BODY),STATE};
+
+handle_call({init,INITIAL_STATE},_FROM,STATE = #a_logger_file_state{}) ->
+
+	case init_handler(INITIAL_STATE) of
+		{ok,NEW_STATE} -> {reply,ok,NEW_STATE};
+		{ok,NEW_STATE,_TIMEOUT} -> {reply,ok,NEW_STATE};
+		{stop,REASON} -> {stop,REASON,STATE};
+		{error,REASON} -> {stop,{error,REASON},STATE}
+	end;
 
 handle_call(REQUEST,FROM,STATE = #a_logger_file_state{}) ->
 
@@ -281,6 +257,58 @@ code_change(_OLD_VERSION,STATE = #a_logger_file_state{},_EXTRA) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+%% ----------------------------
+%% @doc Init process handler
+-spec init_handler(INITIAL_STATE) ->
+	{ok,NEW_STATE} | {ok,NEW_STATE,TIMEOUT} | {stop,REASON} | {error,REASON} | ignore
+	when
+		INITIAL_STATE :: #a_logger_file_state{},
+		NEW_STATE :: #a_logger_file_state{},
+		TIMEOUT :: timeout() | hibernate,
+		REASON :: term().
+
+init_handler(INITIAL_STATE) ->
+
+	case filelib:ensure_path(INITIAL_STATE#a_logger_file_state.path) of
+		ok ->
+			START_TIME = integer_to_list(a_time_now:microseconds()),
+			FILE_PATH =
+				INITIAL_STATE#a_logger_file_state.path ++ "/" ++
+				INITIAL_STATE#a_logger_file_state.file_name ++ "_" ++ START_TIME ++ "." ++
+				INITIAL_STATE#a_logger_file_state.file_extension,
+			case file:open(FILE_PATH,[write]) of
+				{ok,IO_DEVICE} ->
+					if
+						INITIAL_STATE#a_logger_file_state.message_opening == true ->
+							TIME = case INITIAL_STATE#a_logger_file_state.file_start_time of
+								true ->
+									integer_to_list(a_time_now:microseconds()) ++
+									INITIAL_STATE#a_logger_file_state.separator;
+								_ -> ""
+							end,
+							TYPE = case INITIAL_STATE#a_logger_file_state.message_type of
+								true ->
+									INITIAL_STATE#a_logger_file_state.message_opening_type ++
+									INITIAL_STATE#a_logger_file_state.separator;
+								_ -> ""
+							end,
+							OPENING_MESSAGE =
+								TIME ++ TYPE ++
+								INITIAL_STATE#a_logger_file_state.message_opening_text ++
+								"\n",
+							file:write(IO_DEVICE,OPENING_MESSAGE)
+					end,
+					on_init(INITIAL_STATE),
+					{ok,INITIAL_STATE#a_logger_file_state{
+						io_device = IO_DEVICE,
+						file_path = FILE_PATH
+					}};
+				REPLY -> REPLY
+			end;
+		REPLY -> REPLY
+	end.
+
 
 %% ----------------------------
 %% @doc Perform on-init function

@@ -15,6 +15,7 @@ extern "C" {
 #endif
 
 // Functionality
+static ERL_NIF_TERM atNIFNanoseconds(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);
 static ERL_NIF_TERM atNIFMicroseconds(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);
 static ERL_NIF_TERM atNIFMilliseconds(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);
 static ERL_NIF_TERM atNIFSeconds(ErlNifEnv *env, int argc, const ERL_NIF_TERM *argv);

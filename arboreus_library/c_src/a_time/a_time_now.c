@@ -22,7 +22,8 @@
 
 // NIF API Functionality
 static ErlNifFunc nif_funcs[] = {
-	
+
+	{"nanoseconds",0,atNIFNanoseconds},
 	{"microseconds",0,atNIFMicroseconds},
 	{"milliseconds",0,atNIFMilliseconds},
 	{"seconds",0,atNIFSeconds},
@@ -37,14 +38,27 @@ static ErlNifFunc nif_funcs[] = {
 
 
 // Return time in microseconds
-static ERL_NIF_TERM atNIFMicroseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
-	
-	long long int Microseconds = 0;
-	atnhMicroseconds(&Microseconds);
-	if (Microseconds == 0){
+static ERL_NIF_TERM atNIFNanoseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
+
+	long long int oNanoseconds = 0;
+	atnhNanoseconds(&oNanoseconds);
+	if (oNanoseconds == 0){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_uint64(env,(unsigned long)Microseconds);
+		return enif_make_uint64(env,(unsigned long)oNanoseconds);
+	}
+}
+
+
+// Return time in microseconds
+static ERL_NIF_TERM atNIFMicroseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
+	
+	long long int oMicroseconds = 0;
+	atnhMicroseconds(&oMicroseconds);
+	if (oMicroseconds == 0){
+		return enif_make_atom(env,"false");
+	} else {
+		return enif_make_uint64(env,(unsigned long)oMicroseconds);
 	}
 }
 
@@ -52,12 +66,12 @@ static ERL_NIF_TERM atNIFMicroseconds(ErlNifEnv* env, int argc, const ERL_NIF_TE
 // Return time in milliseconds
 static ERL_NIF_TERM atNIFMilliseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	long long int Milliseconds = 0;
-	atnhMilliseconds(&Milliseconds);
-	if (Milliseconds == 0){
+	long long int oMilliseconds = 0;
+	atnhMilliseconds(&oMilliseconds);
+	if (oMilliseconds == 0){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_uint64(env,(unsigned long)Milliseconds);
+		return enif_make_uint64(env,(unsigned long)oMilliseconds);
 	}
 }
 
@@ -65,12 +79,12 @@ static ERL_NIF_TERM atNIFMilliseconds(ErlNifEnv* env, int argc, const ERL_NIF_TE
 // Return time in seconds
 static ERL_NIF_TERM atNIFSeconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	long long int Seconds = 0;
-	atnhSeconds(&Seconds);
-	if (Seconds == 0){
+	long long int oSeconds = 0;
+	atnhSeconds(&oSeconds);
+	if (oSeconds == 0){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_uint64(env,(unsigned long)Seconds);
+		return enif_make_uint64(env,(unsigned long)oSeconds);
 	}
 }
 
@@ -78,12 +92,12 @@ static ERL_NIF_TERM atNIFSeconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM ar
 // Return time in integer
 static ERL_NIF_TERM atNIFInteger(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	long long int Integer = 0;
-	atnhInt(&Integer);
-	if (Integer == 0){
+	long long int oInteger = 0;
+	atnhInt(&oInteger);
+	if (oInteger == 0){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_uint64(env,(unsigned long)Integer);
+		return enif_make_uint64(env,(unsigned long)oInteger);
 	}
 }
 
@@ -91,12 +105,12 @@ static ERL_NIF_TERM atNIFInteger(ErlNifEnv* env, int argc, const ERL_NIF_TERM ar
 // Return date in integer
 static ERL_NIF_TERM atNIFIntegerDate(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	long long int Int_date = 0;
-	atnhIntDate(&Int_date);
-	if (Int_date == 0){
+	long long int oIntegrDate = 0;
+	atnhIntDate(&oIntegrDate);
+	if (oIntegrDate == 0){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_uint64(env,(unsigned long)Int_date);
+		return enif_make_uint64(env,(unsigned long)oIntegrDate);
 	}
 }
 
@@ -104,12 +118,12 @@ static ERL_NIF_TERM atNIFIntegerDate(ErlNifEnv* env, int argc, const ERL_NIF_TER
 // Return full date in integer
 static ERL_NIF_TERM atNIFIntegerFull(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	long long int Int_full = 0;
-	atnhIntFull(&Int_full);
-	if (Int_full == 0){
+	long long int oIntegerFull = 0;
+	atnhIntFull(&oIntegerFull);
+	if (oIntegerFull == 0){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_uint64(env,(unsigned long)Int_full);
+		return enif_make_uint64(env,(unsigned long)oIntegerFull);
 	}
 }
 
@@ -117,12 +131,12 @@ static ERL_NIF_TERM atNIFIntegerFull(ErlNifEnv* env, int argc, const ERL_NIF_TER
 // Return extended date integer
 static ERL_NIF_TERM atNIFIntegerExtend(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	long long int Int_full = 0;
-	atnhIntExtend(&Int_full);
-	if (Int_full == 0){
+	long long int oIntegerExtended = 0;
+	atnhIntExtend(&oIntegerExtended);
+	if (oIntegerExtended == 0){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_uint64(env,(unsigned long)Int_full);
+		return enif_make_uint64(env,(unsigned long)oIntegerExtended);
 	}
 }
 
@@ -130,11 +144,11 @@ static ERL_NIF_TERM atNIFIntegerExtend(ErlNifEnv* env, int argc, const ERL_NIF_T
 // Return RFC822 string within current time
 static ERL_NIF_TERM atNIFRFC822(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	char *RFC_822;
-	if (atnhRFC822(&RFC_822) != EXIT_SUCCESS){
+	char *oRFC_822;
+	if (atnhRFC822(&oRFC_822) != EXIT_SUCCESS){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_string(env,RFC_822,ERL_NIF_LATIN1);
+		return enif_make_string(env,oRFC_822,ERL_NIF_LATIN1);
 	}
 }
 
@@ -142,11 +156,11 @@ static ERL_NIF_TERM atNIFRFC822(ErlNifEnv* env, int argc, const ERL_NIF_TERM arg
 // Return RFC850 string within current time
 static ERL_NIF_TERM atNIFRFC850(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	char *RFC_850;
-	if (atnhRFC850(&RFC_850) != EXIT_SUCCESS){
+	char *oRFC_850;
+	if (atnhRFC850(&oRFC_850) != EXIT_SUCCESS){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_string(env,RFC_850,ERL_NIF_LATIN1);
+		return enif_make_string(env,oRFC_850,ERL_NIF_LATIN1);
 	}
 }
 
@@ -154,11 +168,11 @@ static ERL_NIF_TERM atNIFRFC850(ErlNifEnv* env, int argc, const ERL_NIF_TERM arg
 // Return ANSI string within current time
 static ERL_NIF_TERM atNIFANSI(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]){
 	
-	char *ANSI;
-	if (atnhANSI(&ANSI) != EXIT_SUCCESS){
+	char *oANSI;
+	if (atnhANSI(&oANSI) != EXIT_SUCCESS){
 		return enif_make_atom(env,"false");
 	} else {
-		return enif_make_string(env,ANSI,ERL_NIF_LATIN1);
+		return enif_make_string(env,oANSI,ERL_NIF_LATIN1);
 	}
 }
 

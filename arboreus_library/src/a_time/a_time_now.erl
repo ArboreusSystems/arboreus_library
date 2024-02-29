@@ -20,7 +20,7 @@
 %% API
 -export([
 	test/0,
-	microseconds/0,milliseconds/0,seconds/0,
+	nanoseconds/0,microseconds/0,milliseconds/0,seconds/0,
 	integer/0,integer_date/0,integer_full/0,integer_extend/0,
 	rfc_822/0,rfc_850/0,ansi/0
 ]).
@@ -72,7 +72,7 @@ test() ->
 		"Module (a_time_now) testing finished at:~n~p (~p)~n",
 		[a_time:from_timestamp(rfc850,TIME_STOP),TIME_STOP]
 	),
-	io:format("Test time is: ~p~n", [TIME_STOP - TIME_START]),
+	io:format("Test time is ~p microseconds ~n", [TIME_STOP - TIME_START]),
 	ok.
 
 
@@ -144,3 +144,10 @@ milliseconds() -> a_error:nif_not_loaded(?MODULE,?LINE).
 -spec microseconds() -> a_time_unix_microseconds() | false.
 
 microseconds() -> a_error:nif_not_loaded(?MODULE,?LINE).
+
+
+%%-----------------------------------
+%% @doc Return current UNIX timestamp in microseconds. Wrapper for NIF function
+-spec nanoseconds() -> a_time_unix_nanoseconds() | false.
+
+nanoseconds() -> a_error:nif_not_loaded(?MODULE,?LINE).

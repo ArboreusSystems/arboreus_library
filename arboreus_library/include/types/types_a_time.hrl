@@ -18,6 +18,7 @@
 -type a_local_time() :: {a_date(),a_time()}.
 
 -type a_time_unix_timestamp() :: pos_integer().
+-type a_time_unix_nanoseconds() :: pos_integer().
 -type a_time_unix_microseconds() :: pos_integer().
 -type a_time_unix_milliseconds() :: pos_integer().
 -type a_time_unix_seconds() :: pos_integer().

@@ -62,6 +62,9 @@ int atANSIFromTimestamp(long long int Timestamp, char **ANSI){
 	time_t Time = Timestamp;
 	struct tm *Time_struct = localtime(&Time);
 	char ***Output = &ANSI;
-	if (atANSIFromStruct(*Time_struct, *Output) != EXIT_SUCCESS){FAILURE;}
+	if (atANSIFromStruct(*Time_struct, *Output) != EXIT_SUCCESS){
+		FAILURE;
+	}
+
 	SUCCESS;
 }

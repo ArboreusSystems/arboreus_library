@@ -53,7 +53,7 @@ clean:
 
 build_a_time_now_nif:
 	echo "Building a_time_now NIF"
-	gcc \
+	clang \
 		-o ${A_PRIV_DIR}/a_time_now.so \
 		-undefined dynamic_lookup -fPIC -shared \
 		-O3 -std=c99 -finline-functions -Wall -Wmissing-prototypes \
@@ -65,7 +65,7 @@ build_a_time_now_nif:
 
 build_a_time:
 	echo "Building a_time application"
-	gcc \
+	clang \
     	-o ${A_PRIV_DIR}/a_time \
     	-fPIC -O3 -std=c99 -finline-functions \
     	-Wall -Wmissing-prototypes \

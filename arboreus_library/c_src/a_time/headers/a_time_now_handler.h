@@ -15,6 +15,7 @@ extern "C" {
 #endif
 
 // Functionality
+int atnhNanoseconds(long long int *Pointer);
 int atnhMicroseconds(long long int *Pointer);
 int atnhMilliseconds(long long int *Pointer);
 int atnhSeconds(long long int *Pointer);

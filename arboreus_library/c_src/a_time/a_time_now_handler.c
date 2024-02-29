@@ -10,8 +10,9 @@
 // System includes
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
-#include <sys/timeb.h>
+#include <time.h>
+#include <stdint.h>
+#include <inttypes.h>
 
 // Application includes
 #include "../../../arboreus_library/c_src/constants/a_constants_general.h"
@@ -25,42 +26,60 @@
 #include "../a_universal/headers/a_string.h"
 
 
+// Return time in nanoseconds
+int atnhNanoseconds(long long int *inPointer){
+
+	struct timespec oTimeSpecification;
+	if (clock_gettime(CLOCK_REALTIME,&oTimeSpecification)) {
+		*inPointer = -1;
+		FAILURE;
+	}
+
+	*inPointer = oTimeSpecification.tv_sec * 1000000000 + oTimeSpecification.tv_nsec;
+	SUCCESS;
+}
+
+
 // Return time in microseconds
-int atnhMicroseconds(long long int *Pointer){
-	
-	struct timeval Time;
-	if (!gettimeofday(&Time, NULL)) {
-		*Pointer =
-			((long long int)Time.tv_sec)*1000000ll +
-			(long long int)Time.tv_usec;
-	} else {
-		*Pointer = -1;
+int atnhMicroseconds(long long int *inPointer){
+
+	struct timespec oTimeSpecification;
+	if (clock_gettime(CLOCK_REALTIME,&oTimeSpecification)) {
+		*inPointer = -1;
+		FAILURE;
 	}
 	
+	*inPointer = oTimeSpecification.tv_sec * 1000000 + oTimeSpecification.tv_nsec / 1000;
+
 	SUCCESS;
 }
 
 
 // Return time in milliseconds
-int atnhMilliseconds(long long int *Pointer){
-	
-	struct timeb Time;
-	if (!ftime(&Time)) {
-		*Pointer =
-			((long long int)Time.time)*1000ll +
-			(long long int)Time.millitm;
-	} else {
-		*Pointer = -1;
+int atnhMilliseconds(long long int *inPointer){
+
+	struct timespec oTimeSpecification;
+	if (clock_gettime(CLOCK_REALTIME,&oTimeSpecification)) {
+		*inPointer = -1;
+		FAILURE;
 	}
+	
+	*inPointer = oTimeSpecification.tv_sec * 1000 + oTimeSpecification.tv_nsec / 1000000;
 	
 	SUCCESS;
 }
 
 
 // Return time in seconds
-int atnhSeconds(long long int *Pointer){
-	
-	*Pointer = time(NULL);
+int atnhSeconds(long long int *inPointer){
+
+	struct timespec oTimeSpecification;
+	if (clock_gettime(CLOCK_REALTIME,&oTimeSpecification)) {
+		*inPointer = -1;
+		FAILURE;
+	}
+
+	*inPointer = oTimeSpecification.tv_sec;
 	
 	SUCCESS;
 }
@@ -146,7 +165,10 @@ int atnhRFC822(char **RFC_822){
 	struct tm *Today;
 	Today = localtime(&Time);
 	char ***Output = &RFC_822;
-	if (atRFC822FromStruct(*Today, *Output) != EXIT_SUCCESS){FAILURE;}
+	if (atRFC822FromStruct(*Today, *Output) != EXIT_SUCCESS){
+		FAILURE;
+	}
+
 	SUCCESS;
 }
 
@@ -158,7 +180,10 @@ int atnhRFC850(char **RFC_850){
 	struct tm *Today;
 	Today = localtime(&Time);
 	char ***Output = &RFC_850;
-	if (atRFC850FromStruct(*Today, *Output) != EXIT_SUCCESS){FAILURE;}
+	if (atRFC850FromStruct(*Today, *Output) != EXIT_SUCCESS){
+		FAILURE;
+	}
+
 	SUCCESS;
 }
 
@@ -170,6 +195,9 @@ int atnhANSI(char **ANSI){
 	struct tm *Today;
 	Today = localtime(&Time);
 	char ***Output = &ANSI;
-	if (atANSIFromStruct(*Today, *Output) != EXIT_SUCCESS){FAILURE;}
+	if (atANSIFromStruct(*Today, *Output) != EXIT_SUCCESS){
+		FAILURE;
+	}
+
 	SUCCESS;
 }

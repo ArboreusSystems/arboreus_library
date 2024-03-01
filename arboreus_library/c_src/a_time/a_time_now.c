@@ -11,8 +11,6 @@
 #include <stdio.h>
 #include <erl_nif.h>
 #include <time.h>
-#include <sys/time.h>
-#include <sys/timeb.h>
 
 // Application includes
 #include "../../../arboreus_library/c_src/constants/a_constants_general.h"

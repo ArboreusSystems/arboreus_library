@@ -11,8 +11,7 @@
 #define ARBOREUS_A_TIME_ANSI_H
 
 // System include
-#include <sys/time.h>
-#include <sys/timeb.h>
+#include <time.h>
 
 #ifdef __cplusplus
 extern "C" {

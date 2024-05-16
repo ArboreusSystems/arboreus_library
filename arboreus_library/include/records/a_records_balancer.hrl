@@ -8,12 +8,17 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-ifndef(A_RECORDS_BALANCER).
+-define(A_RECORDS_BALANCER,1).
 
 %% ----------------------------
 %% @doc Balancer data model definition
 
 -record(a_node_load,{
+
 	processes = 0 :: anod_processes(),
 	ports = 0 :: anod_ports(),
 	memory_total = 0 :: anod_memory_total()
 }).
+
+-endif. %% A_RECORDS_BALANCER

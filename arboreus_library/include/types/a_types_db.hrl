@@ -8,8 +8,12 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr Kirilov, https://alexandr.kirilov.me").
 
+-ifndef(A_TYPES_DB).
+-define(A_TYPES_DB,1).
 
 %% ------------------------------------------
 %% DB types
 
 -type a_db_table_name() :: atom().
+
+-endif. %% A_TYPES_DB

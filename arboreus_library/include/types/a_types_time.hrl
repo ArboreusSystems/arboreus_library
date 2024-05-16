@@ -8,6 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-ifndef(A_TYPES_TIME).
+-define(A_TYPES_TIME,1).
 
 %% ------------------------------------------
 %% Time types
@@ -31,3 +33,5 @@
 -type a_time_rfc822() :: string().
 -type a_time_rfc850() :: string().
 -type a_time_ansi() :: string().
+
+-endif. %% A_TYPES_TIME

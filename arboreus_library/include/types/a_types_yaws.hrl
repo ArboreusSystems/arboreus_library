@@ -8,6 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr Kirilov, https://alexandr.kirilov.me").
 
+-ifndef(A_TYPES_YAWS).
+-define(A_TYPES_YAWS,1).
 
 %% ----------------------------
 %% @doc Yaws Web Server data types
@@ -19,3 +21,5 @@
 -type a_yaws_http_headers() :: [a_yaws_http_header()].
 -type a_yaws_appmode_output() :: list().
 -type a_yaws_post_parameters() :: proplists:proplist().
+
+-endif. %% A_TYPES_YAWS

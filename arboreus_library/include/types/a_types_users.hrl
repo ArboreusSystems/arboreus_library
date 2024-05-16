@@ -8,36 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
-
-%% ----------------------------
-%% @doc Arboreus users data models types
-
--type a_user() :: {
-	a_user,
-	a_user_id(),
-	a_user_password()
-}.
--type a_user_properties() :: {
-	a_user_properties,
-	a_user_id(),
-	a_user_create_time(),
-	a_user_bd(),
-	a_user_first_name(),
-	a_user_last_name()
-}.
--type ause_login() :: {
-	ause_login,
-	a_user_login(),
-	ause_login_kind_id(),
-	a_user_id()
-}.
--type ause_login_kind() :: {
-	ause_login_kind,
-	ause_login_kind_id(),
-	ause_login_description(),
-	ause_login_rule()
-}.
-
+-ifndef(A_TYPES_USERS).
+-define(A_TYPES_USERS,1).
 
 %% ----------------------------
 %% @doc Arboreus users data primitives types
@@ -52,3 +24,5 @@
 -type ause_login_kind_id() :: pos_integer().
 -type ause_login_description() :: a_utf_text_binary().
 -type ause_login_rule() :: a_utf_text_binary().
+
+-endif. %% A_TYPES_USERS

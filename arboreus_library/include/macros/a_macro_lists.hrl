@@ -8,6 +8,9 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-ifndef(A_MACRO_LISTS).
+-define(A_MACRO_LISTS,1).
+
 %% Definitions
 -define(A_LIST_FROM_RECORD(RECORD),
 	fun(VALUE) ->
@@ -16,3 +19,5 @@
 		lists:zip(FIELDS,VALUES)
 	end
 ).
+
+-endif. %% A_MACRO_LISTS

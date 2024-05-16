@@ -8,6 +8,9 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr Kirilov, https://alexandr.kirilov.me").
 
+-ifndef(A_RECORDS_PROPERTIES).
+-define(A_RECORDS_PROPERTIES,1).
+
 -record(a_properties_state,{
 
 	storage_id :: atom(),
@@ -23,3 +26,5 @@
 	key :: atom() | a_utf_text_binary() | a_utf_text_string(),
 	value :: any()
 }).
+
+-endif. %% A_RECORDS_PROPERTIES

@@ -8,16 +8,14 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-ifndef(A_TYPES_BALANCER).
+-define(A_TYPES_BALANCER,1).
+
 %% ----------------------------
 %% @doc Arboreus balancer data models types
-
--type a_node_load() :: {
-	a_node_load,
-	anod_processes(),
-	anod_ports(),
-	anod_memory_total()
-}.
 
 -type anod_processes() :: 0 | pos_integer().
 -type anod_ports() :: 0 | pos_integer().
 -type anod_memory_total() :: 0 | pos_integer().
+
+-endif. %% A_TYPES_BALANCER

@@ -10,11 +10,11 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_structure_tree.hrl").
+-include("../include/types/a_types_general.hrl").
+-include("../include/types/a_types_structure_tree.hrl").
 
 %% Data models
--include("../include/records/records_a_structure_tree.hrl").
+-include("../include/records/a_records_structure_tree.hrl").
 
 %% Constants
 -include("../include/constants/a_constants_structure_tree.hrl").
@@ -119,7 +119,7 @@ select(by_point,[Point],Return_mode) ->
 %% @doc Select datum from record by defined field, additional for select/3
 -spec select_return(Datum,Return_mode) -> {ok,_Datum}
 	when
-	Datum :: astr_alias() | a_list_of_records(),
+	Datum :: #astr_alias{} | a_list_of_records(),
 	Return_mode :: return_ids | return_records | return_record.
 
 select_return(return_ids,Records) ->
@@ -132,7 +132,7 @@ select_return(_,Datum) -> {ok,Datum}.
 -spec delete(Alias) ->
 	{ok,Astr_alias_id} | {norow,Astr_alias_id} | {error,Astr_alias_id}
 	when
-	Alias :: astr_alias() | astr_alias_id(),
+	Alias :: #astr_alias{} | astr_alias_id(),
 	Astr_alias_id :: astr_alias_id().
 
 delete(Record) when is_record(Record,astr_alias) ->
@@ -158,7 +158,7 @@ delete(Astr_alias_id) ->
 	{ok,astr_alias_id()} | {nopoint,astr_point_id()} | {error,astr_alias_id()}
 	when
 	Description :: astr_alias_description(),
-	Record :: astr_alias().
+	Record :: #astr_alias{}.
 
 update_description(Description,Record) -> update([{description,Description}],Record).
 
@@ -169,7 +169,7 @@ update_description(Description,Record) -> update([{description,Description}],Rec
 	{ok,astr_alias_id()} | {nopoint,astr_point_id()} | {error,astr_alias_id()}
 	when
 	Point :: astr_point_id(),
-	Record :: astr_alias().
+	Record :: #astr_alias{}.
 	
 update_point(Point,Record) -> update([{point,Point}],Record).
 
@@ -180,7 +180,7 @@ update_point(Point,Record) -> update([{point,Point}],Record).
 	{ok,astr_alias_id()} | {nopoint,astr_point_id()} | {error,astr_alias_id()} | {norow,astr_alias_id()}
 	when
 	Values :: proplists:proplist(),
-	Astr_alias :: astr_alias() | astr_alias_id().
+	Astr_alias :: #astr_alias{} | astr_alias_id().
 
 update(Values,Record) when is_record(Record,astr_alias) ->
 	case mnesia:transaction(fun() ->
@@ -216,7 +216,7 @@ update(Values,Astr_alias_id) ->
 	{norow,Astr_alias_id} | {ok,Astr_alias} | {error,Astr_alias_id}
 	when
 	Astr_alias_id :: astr_alias_id(),
-	Astr_alias :: astr_alias().
+	Astr_alias :: #astr_alias{}.
 
 read(Astr_alias_id) ->
 	case mnesia:dirty_read(?MODEL_NAME,Astr_alias_id) of
@@ -231,8 +231,8 @@ read(Astr_alias_id) ->
 -spec create(Record) ->
 	{ok,_Astr_alias} | {existed,Astr_alias} | {aborted,_Reason}
 	when
-	Record :: astr_alias(),
-	Astr_alias :: astr_alias().
+	Record :: #astr_alias{},
+	Astr_alias :: #astr_alias{}.
 
 create(Record) when is_record(Record,astr_alias) ->
 	case mnesia:transaction(fun() ->

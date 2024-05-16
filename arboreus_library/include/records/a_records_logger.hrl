@@ -8,6 +8,9 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr Kirilov, https://alexandr.kirilov.me").
 
+-ifndef(A_RECORDS_LOGGER).
+-define(A_RECORDS_LOGGER, 1).
+
 -record(a_logger_file_state,{
 
 	path = "NoDefinedPath" :: string(),
@@ -38,3 +41,5 @@
 	on_init_function = undefined :: atom(),
 	on_init_parameters = [] :: list()
 }).
+
+-endif. %% A_RECORDS_LOGGER

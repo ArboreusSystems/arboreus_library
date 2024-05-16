@@ -8,27 +8,51 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-ifndef(A_RECORDS_USERS).
+-define(A_RECORDS_USERS,1).
+
 %% ----------------------------
 %% @doc User data model definition
 
 -record(a_user,{
+
 	id :: a_user_id(),
 	password :: a_user_password()
 }).
+
+
+%% ----------------------------
+%% @doc
+
 -record(a_user_properties,{
+
 	id :: a_user_id(),
 	created :: a_user_create_time(),
 	bd :: a_user_bd(),
 	first_name :: a_user_first_name(),
 	last_name :: a_user_last_name()
 }).
+
+
+%% ----------------------------
+%% @doc
+
 -record(ause_login,{
+
 	login :: a_user_login(),
 	kind :: ause_login_kind_id(),
 	user :: a_user_id()
 }).
+
+
+%% ----------------------------
+%% @doc
+
 -record(ause_login_kind,{
+
 	id :: ause_login_kind_id(),
 	description :: ause_login_description(),
 	rule :: ause_login_rule()
 }).
+
+-endif. %% A_RECORDS_BALANCER

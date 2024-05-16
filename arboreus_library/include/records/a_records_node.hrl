@@ -8,6 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-ifndef(A_RECORDS_NODE).
+-define(A_RECORDS_NODE,1).
 
 %% ----------------------------
 %% @doc
@@ -23,3 +25,5 @@
 	command_timeout :: integer(),
 	shutdown_time :: integer()
 }).
+
+-endif. %% A_RECORDS_NODE

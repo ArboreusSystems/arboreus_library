@@ -8,6 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-ifndef(A_TYPES_GENERAL).
+-define(A_TYPES_GENERAL,1).
 
 %% ------------------------------------------
 %% General types
@@ -96,3 +98,5 @@
 -type a_process_id() :: any().
 
 -type a_size() :: integer().
+
+-endif. %% A_TYPES_GENERAL

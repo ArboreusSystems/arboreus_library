@@ -10,11 +10,11 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_structure_tree.hrl").
+-include("../include/types/a_types_general.hrl").
+-include("../include/types/a_types_structure_tree.hrl").
 
 %% Data models
--include("../include/records/records_a_structure_tree.hrl").
+-include("../include/records/a_records_structure_tree.hrl").
 
 %% Constants
 -include("../include/constants/a_constants_structure_tree.hrl").
@@ -164,7 +164,7 @@ dirty_select(by_points,[Point_a,Point_b],Return_mode) ->
 %% @doc Select datum from record by defined field
 -spec select_return(Datum,Return_mode) -> {ok,_Datum}
 	when
-	Datum :: astr_link() | a_list_of_records(),
+	Datum :: #astr_link{} | a_list_of_records(),
 	Return_mode :: return_id | return_ids | return_record | return_records.
 
 select_return(return_id,[Record]) ->
@@ -179,7 +179,7 @@ select_return(_,Datum) -> {ok,Datum}.
 -spec delete(Link) ->
 	{ok,Astr_link_id} | {norow,Astr_link_id} | {error,_Reason}
 	when
-	Link :: astr_link() | astr_link_id() | astr_link_points(),
+	Link :: #astr_link{} | astr_link_id() | astr_link_points(),
 	Astr_link_id :: astr_link_id().
 
 delete([Point_a,Point_b]) ->
@@ -211,7 +211,7 @@ delete(Astr_link_id) ->
 	{ok,Astr_link_id} | {norow,Astr_link_id} | {error,_Reason}
 	when
 	Strength :: astr_link_strength(),
-	Properties :: a_list_of_properties() | astr_link() | astr_link_id(),
+	Properties :: a_list_of_properties() | #astr_link{} | astr_link_id(),
 	Astr_link_id :: astr_link_id().
 
 update_strength(Strength,[Point_a,Point_b]) ->
@@ -240,7 +240,7 @@ update_strength(Strength,Astr_link_id) ->
 	{norow,Astr_link_id} | {ok,Astr_link} | {error,Astr_link_id}
 	when
 	Astr_link_id :: astr_link_id(),
-	Astr_link :: astr_link().
+	Astr_link :: #astr_link{}.
 
 read(Astr_link_id) ->
 	case mnesia:dirty_read(?MODEL_NAME,Astr_link_id) of
@@ -256,7 +256,7 @@ read(Astr_link_id) ->
 	{ok,astr_link_id()} | {existed,astr_link_id()} | {nopoint,astr_point_id()} |
 	{error,Record} | {equalpoints,[astr_point_id()|astr_point_id()]}
 	when
-	Record :: astr_link().
+	Record :: #astr_link{}.
 
 create(Record) when is_record(Record,astr_link) ->
 	case mnesia:transaction(fun() ->

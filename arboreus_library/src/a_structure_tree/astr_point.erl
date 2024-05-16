@@ -10,11 +10,11 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_structure_tree.hrl").
+-include("../include/types/a_types_general.hrl").
+-include("../include/types/a_types_structure_tree.hrl").
 
 %% Data models
--include("../include/records/records_a_structure_tree.hrl").
+-include("../include/records/a_records_structure_tree.hrl").
 
 %% Constants
 -include("../include/constants/a_constants_structure_tree.hrl").
@@ -64,7 +64,7 @@ test() ->
 -spec delete(Point) ->
 	{ok,astr_point_id()} | {norow,astr_point_id()} | {error,_Reason}
 	when
-	Point :: astr_point() | astr_point_id().
+	Point :: #astr_point{} | astr_point_id().
 
 delete(Astr_point) when is_record(Astr_point,astr_point) ->
 	delete(Astr_point#astr_point.id);
@@ -101,7 +101,7 @@ delete(Astr_point_id) ->
 	{ok,_Astr_point_id} | {norow,_Astr_point_id} | {error,_Reason}
 	when
 	Weight :: astr_point_weight(),
-	Point :: astr_point() | astr_point_id().
+	Point :: #astr_point{} | astr_point_id().
 
 update_weight(Weight,Point) ->
 	update([{weight,Weight}],Point).
@@ -113,7 +113,7 @@ update_weight(Weight,Point) ->
 	{ok,_Astr_point_id} | {norow,_Astr_point_id} | {error,_Reason}
 	when
 	Kind :: astr_point_kind(),
-	Point :: astr_point() | astr_point_id().
+	Point :: #astr_point{} | astr_point_id().
 
 update_kind(Kind,Point) ->
 	update([{kind,Kind}],Point).
@@ -125,7 +125,7 @@ update_kind(Kind,Point) ->
 	{ok,_Astr_point_id} | {norow,_Astr_point_id} | {error,_Reason}
 	when
 	Container :: astr_point_container(),
-	Point :: astr_point() | astr_point_id().
+	Point :: #astr_point{} | astr_point_id().
 
 update_container(Container,Point) ->
 	update([{container,Container}],Point).
@@ -137,7 +137,7 @@ update_container(Container,Point) ->
 	{ok,Astr_point_id} | {norow,Astr_point_id} | {error,_Reason}
 	when
 	Values :: proplists:proplist(),
-	Point :: astr_point() | astr_point_id(),
+	Point :: #astr_point{} | astr_point_id(),
 	Astr_point_id :: astr_point_id().
 
 update(Values,Astr_point) when is_record(Astr_point,astr_point) ->
@@ -173,7 +173,7 @@ update(Values,Astr_point_id) ->
 	{norow,Astr_point_id} | {ok,Astr_point} | {error,Astr_point_id}
 	when
 	Astr_point_id :: astr_point_id(),
-	Astr_point :: astr_point().
+	Astr_point :: #astr_point{}.
 
 read(Astr_point_id) when is_binary(Astr_point_id) ->
 	case mnesia:dirty_read(?MODEL_NAME,Astr_point_id) of
@@ -187,7 +187,7 @@ read(Astr_point_id) when is_binary(Astr_point_id) ->
 %% @doc Create new point
 -spec create(Record) -> {ok,Astr_point_id} | {error,_Reply}
 	when
-	Record :: astr_point(),
+	Record :: #astr_point{},
 	Astr_point_id :: astr_point_id().
 
 create(Record) when is_record(Record,astr_point) ->

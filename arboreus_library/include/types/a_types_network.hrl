@@ -8,6 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-ifndef(A_TYPES_NETWORK).
+-define(A_TYPES_NETWORK,1).
 
 %% ------------------------------------------
 %% Network types
@@ -57,3 +59,5 @@
 -type a_url_scheme_binary() :: a_utf_text_binary().
 -type a_url_path_string() :: a_utf_text_string().
 -type a_url_path_binary() :: a_utf_text_binary().
+
+-endif. %% A_TYPES_NETWORK

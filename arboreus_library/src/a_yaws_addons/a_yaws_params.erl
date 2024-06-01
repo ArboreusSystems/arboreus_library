@@ -9,9 +9,8 @@
 -module(a_yaws_params).
 -author("Alexandr KIRILOV (http://alexandr.kirilov.me)").
 
-%% System include
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_http.hrl").
+%% Data types
+-include("a_includes.hrl").
 
 %% Module API
 -export([

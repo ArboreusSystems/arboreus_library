@@ -11,8 +11,8 @@
 
 %% Constants
 
-%% Data types
--include_lib("../include/types/types_a_general.hrl").
+%% Includes
+-include("a_includes.hrl").
 
 %% Data models
 

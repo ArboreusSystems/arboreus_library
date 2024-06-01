@@ -11,10 +11,7 @@
 -behaviour(gen_server).
 
 %% Data types
--include("../include/types/types_a_general.hrl").
-
-%% Records
--include_lib("../include/records/records_a_properties.hrl").
+-include("a_includes.hrl").
 
 %% API
 -export([

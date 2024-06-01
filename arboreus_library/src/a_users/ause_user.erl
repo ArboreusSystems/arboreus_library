@@ -14,12 +14,9 @@
 -define(SERVER, ?MODULE).
 
 %% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_time.hrl").
--include("../include/types/types_a_users.hrl").
+-include("a_includes.hrl").
 
-%% Data models
--include("../include/records/records_a_users.hrl").
+%% Records
 -record(state, {}).
 
 %% API

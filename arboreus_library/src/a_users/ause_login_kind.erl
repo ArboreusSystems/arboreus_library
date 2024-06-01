@@ -14,12 +14,7 @@
 -define(ID_DISCTIONARY,[numeric,alpha_lower,alpha_upper]).
 
 %% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_time.hrl").
--include("../include/types/types_a_users.hrl").
-
-%% Data models
--include("../include/records/records_a_users.hrl").
+-include("a_includes.hrl").
 
 %% API
 -export([
@@ -132,7 +127,7 @@ update(New_values,Id) ->
 
 %% ----------------------------
 %% @doc Read ause_login_kind by id
--spec read(Id) -> {norow,Id} | {ok,ause_login_kind()}
+-spec read(Id) -> {norow,Id} | {ok,#ause_login_kind{}}
 	when
 	Id :: ause_login_kind_id().
 
@@ -144,7 +139,7 @@ read(Id) -> a_mnesia:dirty_read(?TABLE,Id).
 -spec create(Record) ->
 	{ok,ause_login_kind_id()} | {existed,ause_login_kind_id()} | {aborted,_Reason}
 	when
-	Record :: ause_login_kind().
+	Record :: #ause_login_kind{}.
 
 create(Record) when is_record(Record,ause_login_kind) ->
 	case a_mnesia:transaction_create_unique(Record) of

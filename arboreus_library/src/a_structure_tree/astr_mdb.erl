@@ -9,12 +9,8 @@
 -module(astr_mdb).
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
-%% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_structure_tree.hrl").
-
-%% Data models
--include("../include/records/records_a_structure_tree.hrl").
+%% Includes
+-include("a_includes.hrl").
 
 %% API
 -export([

@@ -10,8 +10,8 @@
 -author("Alexandr Kirilov, https://alexandr.kirilov.me").
 -behaviour(gen_server).
 
-%% Data types
--include_lib("../include/records/records_a_logger.hrl").
+%% Includes
+-include_lib("a_includes.hrl").
 
 %% API
 -export([

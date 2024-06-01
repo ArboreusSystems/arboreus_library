@@ -9,8 +9,8 @@
 -module(a_otp_supervisor).
 -author("Alexandr Kirilov, https://alexandr.kirilov.me").
 
-%% Data types
--include("../include/types/types_a_general.hrl").
+%% Includes
+-include("a_includes.hrl").
 
 %% API
 -export([

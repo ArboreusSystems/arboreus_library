@@ -11,11 +11,8 @@
 
 %% System include
 
-%% Application includes
--include("../../include/types/types_a_general.hrl").
--include("../../include/types/types_a_time.hrl").
--include("../../include/types/types_a_network.hrl").
--include("../../include/types/types_a_yaws.hrl").
+%% Includes
+-include("a_includes.hrl").
 
 %% Module API
 -export([

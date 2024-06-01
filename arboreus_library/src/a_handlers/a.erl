@@ -14,9 +14,8 @@
 	test/0
 ]).
 
-%% System include
--include("../include/types/types_a_general.hrl").
-
+%% Data types
+-include("a_includes.hrl").
 
 %%-----------------------------------
 %% @doc Test application usage

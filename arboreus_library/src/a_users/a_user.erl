@@ -14,12 +14,7 @@
 -define(SALT,<<("salt_password")/utf8>>).
 
 %% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_time.hrl").
--include("../include/types/types_a_users.hrl").
-
-%% Data models
--include("../include/records/records_a_users.hrl").
+-include("a_includes.hrl").
 
 %% API
 -export([
@@ -135,7 +130,7 @@ delete(Key) -> a_mnesia:transaction_delete(?TABLE,Key).
 %% @doc Update a_user record
 -spec update(Record) -> {ok,a_user_id()} | {norow,a_user_id()} | {error,_Reason}
 	when
-	Record :: a_user().
+	Record :: #a_user{}.
 
 update(Record) when is_record(Record,a_user) ->
 	case mnesia:transaction(fun() ->
@@ -153,7 +148,7 @@ update(Record) when is_record(Record,a_user) ->
 
 %% ----------------------------
 %% @doc Read a_user record from db
--spec read(A_user_id) -> {norow,A_user_id} | {ok,a_user()}
+-spec read(A_user_id) -> {norow,A_user_id} | {ok,#a_user{}}
 	when
 	A_user_id :: a_user_id().
 
@@ -164,7 +159,7 @@ read(A_user_id) -> a_mnesia:dirty_read(?TABLE,A_user_id).
 %% @doc Create new a_user
 -spec create(Record) -> {ok,a_user_id()} | {error,_Reason}
 	when
-	Record :: a_user().
+	Record :: #a_user{}.
 
 create(Record) when is_record(Record,a_user) ->
 	case a_mnesia:transaction_generate_unique(

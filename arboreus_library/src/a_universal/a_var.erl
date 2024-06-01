@@ -9,8 +9,8 @@
 -module(a_var).
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
-%% System include
--include_lib("../include/types/types_a_general.hrl").
+%% Data types
+-include("a_includes.hrl").
 
 %% API
 -export([

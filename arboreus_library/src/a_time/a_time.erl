@@ -10,8 +10,7 @@
 -author("Alexandr KIRILOV (http://alexandr.kirilov.me)").
 
 %% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_time.hrl").
+-include("a_includes.hrl").
 
 %% Module API
 -export([

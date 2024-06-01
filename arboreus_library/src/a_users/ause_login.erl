@@ -12,13 +12,8 @@
 %% Constants
 -define(TABLE,?MODULE).
 
-%% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_time.hrl").
--include("../include/types/types_a_users.hrl").
-
-%% Data models
--include("../include/records/records_a_users.hrl").
+%% Includes
+-include("a_includes.hrl").
 
 %% API
 -export([
@@ -107,7 +102,7 @@ select(by_user,[User],Return_mode) ->
 %% @doc Select datum from record by defined field, additional for select/3
 -spec select_return(Datum,Return_mode) -> {ok,_Datum}
 	when
-	Datum :: ause_login() | a_list_of_records(),
+	Datum :: #ause_login{} | a_list_of_records(),
 	Return_mode :: logins | return_records | return_record.
 
 select_return(logins,Records) ->
@@ -145,7 +140,7 @@ delete(Login) ->
 
 %% ----------------------------
 %% @doc Read ause_login
--spec read(Login) -> {norow,Login} | {ok,ause_login()}
+-spec read(Login) -> {norow,Login} | {ok,#ause_login{}}
 	when
 	Login :: a_user_login().
 
@@ -156,7 +151,7 @@ read(Login) -> a_mnesia:dirty_read(?TABLE,Login).
 %% @doc Create new ause_login
 -spec create(Record) -> {nokind,Login} | {ok,Login} | {existed,Login} | {aborted,_Reason}
 	when
-	Record :: ause_login(),
+	Record :: #ause_login{},
 	Login :: a_user_login().
 
 create(Record) when is_record(Record,ause_login) ->

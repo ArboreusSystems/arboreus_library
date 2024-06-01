@@ -13,12 +13,7 @@
 -define(TABLE,?MODULE).
 
 %% Data types
--include("../include/types/types_a_general.hrl").
--include("../include/types/types_a_time.hrl").
--include("../include/types/types_a_users.hrl").
-
-%% Data models
--include("../include/records/records_a_users.hrl").
+-include("a_includes.hrl").
 
 %% API
 -export([
@@ -78,7 +73,7 @@ delete(Key) -> a_mnesia:transaction_delete(?TABLE,Key).
 
 %% ----------------------------
 %% @doc Read a_user record from db
--spec read(A_user_id) -> {norow,A_user_id} | {ok,a_user_properties()}
+-spec read(A_user_id) -> {norow,A_user_id} | {ok,#a_user_properties{}}
 	when
 	A_user_id :: a_user_id().
 
@@ -89,7 +84,7 @@ read(A_user_id) -> a_mnesia:dirty_read(?TABLE,A_user_id).
 %% @doc Create a_user_properties
 -spec create(Record) -> {ok,Id} | {existed,Id} | {aborted,_Reason}
 	when
-	Record :: a_user_properties(),
+	Record :: #a_user_properties{},
 	Id :: a_user_id().
 
 create(Record) when is_record(Record,a_user_properties) ->

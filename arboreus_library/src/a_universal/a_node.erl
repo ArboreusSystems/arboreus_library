@@ -10,16 +10,7 @@
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
 %% Data types
--include_lib("../include/types/types_a_general.hrl").
--include_lib("../include/types/types_a_balancer.hrl").
--include_lib("../include/types/types_a_network.hrl").
-
-%% Records
--include_lib("../include/records/records_a_node.hrl").
--include_lib("../include/records/records_a_balancer.hrl").
-
-%% Macros
--include_lib("../include/macros/macro_a_lists.hrl").
+-include("a_includes.hrl").
 
 %% API
 -export([
@@ -105,7 +96,7 @@ test() ->
 
 %% ----------------------------
 %% @doc Node load
--spec load(KIND) -> a_list_of_properties() | a_node_load()
+-spec load(KIND) -> a_list_of_properties() | #a_node_load{}
 	when KIND :: list | record.
 
 load(list)->

@@ -9,8 +9,8 @@
 -module(a_sequence).
 -author("Alexandr KIRILOV (http://alexandr.kirilov.me)").
 
-%% Data types
--include_lib("../include/types/types_a_general.hrl").
+%% Includes
+-include("a_includes.hrl").
 
 %% Module API
 -export([

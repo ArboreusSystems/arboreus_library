@@ -14,7 +14,9 @@
 
 %% API
 -export([
+
 	test/0,
+
 	create_schema/1,
 	create/1,transaction_create/1,dirty_create/1,
 	create_unique/1,transaction_create_unique/1,
@@ -25,6 +27,7 @@
 	select_all/1,transaction_select_all/1,dirty_select_all/1,
 	delete/2,transaction_delete/2,dirty_delete/2,
 	generate_id/4
+
 ]).
 
 
@@ -37,282 +40,316 @@ test() -> ok.
 
 %% ----------------------------
 %% @doc Delete objects transaction
--spec transaction_delete(Table,Key) -> {ok,Key} | {norow,Key} | {error,_Reason}
+-spec transaction_delete(TABLE,KEY) -> {ok,KEY} | {norow,KEY} | {error,_REASON}
 	when
-	Table :: atom(),
-	Key :: any().
+		TABLE :: atom(),
+		KEY :: any().
 
-transaction_delete(Table,Key) ->
+transaction_delete(TABLE,KEY) ->
+
 	case mnesia:transaction(fun() ->
-		case delete(Table,Key) of
+		case delete(TABLE,KEY) of
 			{ok,_} -> ok;
 			{norow,_} -> norow;
 			_ -> error
 		end
 	end) of
-		{atomic,ok} -> {ok,Key};
-		{atomic,norow} -> {norow,Key};
-		Transaction_result -> {error,Transaction_result}
+		{atomic,ok} -> {ok,KEY};
+		{atomic,norow} -> {norow,KEY};
+		TRANSACTION_RESULT -> {error,TRANSACTION_RESULT}
 	end.
 
 
 %% ----------------------------
 %% @doc Transactional delete objects by key
--spec delete(Table,Key) -> {norow,Key} | {ok,Key}
+-spec delete(TABLE,KEY) -> {norow,KEY} | {ok,KEY}
 	when
-	Table :: atom(),
-	Key :: any().
+		TABLE :: atom(),
+		KEY :: any().
 
-delete(Table,Key) ->
-	case mnesia:read(Table,Key) of
-		[] -> {norow,Key};
-		Records ->
-			{lists:foreach(fun(Record) ->
-				mnesia:delete_object(Record)
-			end,Records),Key}
+delete(TABLE,KEY) ->
+	case mnesia:read(TABLE,KEY) of
+		[] -> {norow,KEY};
+		RECORDS ->
+			{lists:foreach(fun(RECORD) ->
+				mnesia:delete_object(RECORD)
+			end,RECORDS),KEY}
 	end.
 
 
 %% ----------------------------
 %% @doc Dirty delete equivalent of transaction_delete\2
--spec dirty_delete(Table,Key) -> {norow,Key} | {ok,Key}
+-spec dirty_delete(TABLE,KEY) -> {norow,KEY} | {ok,KEY}
 	when
-	Table :: atom(),
-	Key :: any().
+		TABLE :: atom(),
+		KEY :: any().
 
-dirty_delete(Table,Key) ->
-	case mnesia:dirty_read(Table,Key) of
-		[] -> {norow,Key};
-		Records ->
-			{lists:foreach(fun(Record) ->
-				mnesia:dirty_delete_object(Record)
-			end,Records),Key}
+dirty_delete(TABLE,KEY) ->
+	case mnesia:dirty_read(TABLE,KEY) of
+		[] -> {norow,KEY};
+		RECORDS ->
+			{lists:foreach(fun(RECORD) ->
+				mnesia:dirty_delete_object(RECORD)
+			end,RECORDS),KEY}
 	end.
 
 
 %% ----------------------------
 %% @doc Generate validated row ID
--spec generate_id(Kind,Table,Dictionaries,Length) -> a_id()
+-spec generate_id(KIND,TABLE,DICTIONARIES,LENGTH) -> a_id()
 	when
-	Kind :: transactional | dirty,
-	Table :: atom(),
-	Dictionaries :: a_list_of_atoms(),
-	Length :: pos_integer().
+		KIND :: transactional | dirty,
+		TABLE :: atom(),
+		DICTIONARIES :: a_list_of_atoms(),
+		LENGTH :: pos_integer().
 
-generate_id(transactional,Table,Dictionaries,Length) ->
-	Id = a_sequence:random(Dictionaries,Length),
-	case mnesia:read(Table,Id) of
-		[] -> Id;
-		_ -> generate_id(transactional,Table,Dictionaries,Length)
+generate_id(transactional,TABLE,DICTIONARIES,LENGTH) ->
+
+	ID = a_sequence:random(DICTIONARIES,LENGTH),
+	case mnesia:read(TABLE,ID) of
+		[] -> ID;
+		_ -> generate_id(transactional,TABLE,DICTIONARIES,LENGTH)
 	end;
-generate_id(dirty,Table,Dictionaries,Length) ->
-	Id = a_sequence:random(Dictionaries,Length),
-	case mnesia:dirty_read(Table,Id) of
-		[] -> Id;
-		_ -> generate_id(dirty,Table,Dictionaries,Length)
+
+generate_id(dirty,TABLE,DICTIONARIES,LENGTH) ->
+
+	ID = a_sequence:random(DICTIONARIES,LENGTH),
+	case mnesia:dirty_read(TABLE,ID) of
+		[] -> ID;
+		_ -> generate_id(dirty,TABLE,DICTIONARIES,LENGTH)
 	end.
 
 
 %% ----------------------------
 %% @doc Read transaction
--spec transaction_read(Table,Key) -> {ok,_Result} | {norow,Key} | {aborted,_Reason}
+-spec transaction_read(TABLE,KEY) -> {ok,RESULT} | {norow,KEY} | {aborted,REASON}
 	when
-	Table :: atom(),
-	Key :: any().
+		TABLE :: atom(),
+		KEY :: any(),
+		RESULT :: a_record() | a_list_of_records(),
+		REASON :: term().
 
 transaction_read(Table,Key) ->
+
 	case mnesia:transaction(fun() -> read(Table,Key) end) of
-		{atomic,Transaction_result} -> Transaction_result;
-		Result -> Result
+		{atomic,TRANSACTION_RESULT} -> TRANSACTION_RESULT;
+		RESULT -> RESULT
 	end.
 
 %% ----------------------------
 %% @doc Mnesia read equivalent
--spec read(Table,Key) -> {norow,Key} | {ok,Result}
+-spec read(TABLE,KEY) -> {norow,KEY} | {ok,RESULT}
 	when
-	Table :: atom(),
-	Key :: any(),
-	Result :: a_record() | a_list_of_records().
+		TABLE :: atom(),
+		KEY :: any(),
+		RESULT :: a_record() | a_list_of_records().
 
-read(Table,Key) ->
-	case mnesia:read(Table,Key) of
-		[] -> {norow,Key};
-		[Record] -> {ok,Record};
-		Records -> {ok,Records}
+read(TABLE,KEY) ->
+
+	case mnesia:read(TABLE,KEY) of
+		[] -> {norow,KEY};
+		[RECORD] -> {ok,RECORD};
+		RECORDS -> {ok,RECORDS}
 	end.
 
 
 %% ----------------------------
 %% @doc Mnesia dirty_read equivalent
--spec dirty_read(Table,Key) -> {norow,Key} | {ok,a_record()} | {ok,a_list_of_records()}
+-spec dirty_read(TABLE,KEY) -> {norow,KEY} | {ok,a_record()} | {ok,a_list_of_records()}
 	when
-	Table :: atom(),
-	Key :: any().
+	TABLE :: atom(),
+	KEY :: any().
 
-dirty_read(Table,Key) ->
-	case mnesia:dirty_read(Table,Key) of
-		[] -> {norow,Key};
-		[Record] -> {ok,Record};
-		Records -> {ok,Records}
+dirty_read(TABLE,KEY) ->
+
+	case mnesia:dirty_read(TABLE,KEY) of
+		[] -> {norow,KEY};
+		[RECORD] -> {ok,RECORD};
+		RECORDS -> {ok,RECORDS}
 	end.
 
 %% ----------------------------
 %% @doc Dirty read by Ids from the table handler, wrapper for dirty_read_by_ids_handler/3
--spec dirty_read_by_ids(Table,Ids) -> a_list_of_records()
+-spec dirty_read_by_ids(TABLE,IDS) -> OUTPUT
 	when
-	Table :: atom(),
-	Ids :: list().
+		TABLE :: atom(),
+		IDS :: list(),
+		OUTPUT :: a_list_of_records().
 
-dirty_read_by_ids(Table,Ids) ->
-	dirty_read_by_ids_handler(Table,Ids,[]).
+dirty_read_by_ids(TABLE,IDS) ->
+
+	dirty_read_by_ids_handler(TABLE,IDS,[]).
 
 
 %% ----------------------------
 %% @doc Dirty read by Ids from the table handler
--spec dirty_read_by_ids_handler(Table,Ids,Output) -> a_list_of_records()
+-spec dirty_read_by_ids_handler(TABLE,IDS,OUTPUT) -> a_list_of_records()
 	when
-	Table :: atom(),
-	Ids :: list(),
-	Output :: a_list_of_records().
+		TABLE :: atom(),
+		IDS :: list(),
+		OUTPUT :: a_list_of_records().
 
-dirty_read_by_ids_handler(_,[],Output) -> Output;
-dirty_read_by_ids_handler(Table,[Id|Ids],Output) ->
+dirty_read_by_ids_handler(_,[],OUTPUT) -> OUTPUT;
+
+dirty_read_by_ids_handler(TABLE,[ID|IDS],OUTPUT) ->
+
 	dirty_read_by_ids_handler(
-		Table,Ids,
-		lists:append([Output,mnesia:dirty_read(Table,Id)])
+		TABLE,IDS,
+		lists:append([OUTPUT,mnesia:dirty_read(TABLE,ID)])
 	).
 
 
 %% ----------------------------
 %% @doc Transaction reading data by Ids from the table
--spec transaction_read_by_ids(Table,Ids) -> {aborted,_Reason} | {atomic,a_list_of_records()}
+-spec transaction_read_by_ids(TABLE,IDS) -> {aborted,REASON} | {atomic,OUTPUT}
 	when
-	Table :: atom(),
-	Ids :: list().
+		TABLE :: atom(),
+		IDS :: list(),
+		OUTPUT :: a_list_of_records(),
+		REASON :: term().
 
-transaction_read_by_ids(Table,Ids) ->
-	mnesia:transaction(fun() -> read_by_ids(Table,Ids) end).
+transaction_read_by_ids(TABLE,IDS) ->
+
+	mnesia:transaction(fun() -> read_by_ids(TABLE,IDS) end).
 
 
 %% ----------------------------
 %% @doc Read by Ids from table, wrapper for read_by_ids_handler/3
--spec read_by_ids(Table,Ids) -> a_list_of_records()
+-spec read_by_ids(TABLE,IDS) -> OUTPUT
 	when
-	Table :: atom(),
-	Ids :: list().
+		TABLE :: atom(),
+		IDS :: list(),
+		OUTPUT :: a_list_of_records().
 
-read_by_ids(Table,Ids) -> read_by_ids_handler(Table,Ids,[]).
+read_by_ids(TABLE,IDS) -> read_by_ids_handler(TABLE,IDS,[]).
 
 
 %% ----------------------------
 %% @doc Read by Ids from table handler
--spec read_by_ids_handler(Table,Ids,Output) -> a_list_of_records()
+-spec read_by_ids_handler(TABLE,IDS,OUTPUT) -> OUTPUT
 	when
-	Table :: atom(),
-	Ids :: list(),
-	Output :: a_list_of_records().
+		TABLE :: atom(),
+		IDS :: list(),
+		OUTPUT :: a_list_of_records().
 
-read_by_ids_handler(_,[],Output) -> Output;
-read_by_ids_handler(Table,[Id|Ids],Output) ->
+read_by_ids_handler(_,[],OUTPUT) -> OUTPUT;
+
+read_by_ids_handler(TABLE,[ID|IDS],OUTPUT) ->
+
 	read_by_ids_handler(
-		Table,Ids,
-		lists:append([Output,mnesia:read(Table,Id)])
+		TABLE,IDS,
+		lists:append([OUTPUT,mnesia:read(TABLE,ID)])
 	).
 
 
 %% ----------------------------
 %% @doc Generate unique transaction
--spec transaction_generate_unique(Record,Dictionary,Key_length) ->
-	{aborted,_Reason} | {atomic,{ok,_Id}}
+-spec transaction_generate_unique(RECORD,DICTIONARY,KEY_LENGTH) ->
+	{aborted,REASON} | {atomic,{ok,ID}}
 	when
-	Record :: a_record(),
-	Dictionary :: [Dictionary_name],
-	Dictionary_name :: numeric | alpha_lower | alpha_upper,
-	Key_length :: pos_integer().
+		RECORD :: a_record(),
+		DICTIONARY :: [DICTIONARY_NAME],
+		DICTIONARY_NAME :: numeric | alpha_lower | alpha_upper,
+		KEY_LENGTH :: pos_integer(),
+		REASON :: term(),
+		ID :: any().
 
-transaction_generate_unique(Record,Dictionary,Key_length) ->
+transaction_generate_unique(RECORD,DICTIONARY,KEY_LENGTH) ->
+
 	mnesia:transaction(fun() ->
-		generate_unique(Record,Dictionary,Key_length)
+		generate_unique(RECORD,DICTIONARY,KEY_LENGTH)
 	end).
 
 
 %% ----------------------------
 %% @doc Transactional generate unique record in DB
--spec generate_unique(Record,Dictionary,Key_length) -> {ok,_Id}
+-spec generate_unique(RECORD,DICTIONARY,KEY_LENGTH) -> {ok,ID}
 	when
-	Record :: a_record(),
-	Dictionary :: [Dictionary_name],
-	Dictionary_name :: numeric | alpha_lower | alpha_upper,
-	Key_length :: pos_integer().
+		RECORD :: a_record(),
+		DICTIONARY :: [DICTIONARY_NAME],
+		DICTIONARY_NAME :: numeric | alpha_lower | alpha_upper,
+		KEY_LENGTH :: pos_integer(),
+		ID :: any().
 
-generate_unique(Record,Dictionary,Key_length) ->
-	Id = a_sequence:random(Dictionary,Key_length),
-	case create_unique(setelement(2,Record,Id)) of
-		existed -> generate_unique(Record,Dictionary,Key_length);
-		ok -> {ok,Id}
+generate_unique(RECORD,DICTIONARY,KEY_LENGTH) ->
+
+	ID = a_sequence:random(DICTIONARY,KEY_LENGTH),
+	case create_unique(setelement(2,RECORD,ID)) of
+		existed -> generate_unique(RECORD,DICTIONARY,KEY_LENGTH);
+		ok -> {ok,ID}
 	end.
 
 
 %% ----------------------------
 %% @doc Create unique transaction
--spec transaction_create_unique(Record) -> {aborted,_Reason} | {atomic,ok} | {atomic,existed}
+-spec transaction_create_unique(RECORD) ->
+	{aborted,REASON} | {atomic,ok} | {atomic,existed}
 	when
-	Record :: a_record().
+		RECORD :: a_record(),
+		REASON :: term().
 
-transaction_create_unique(Record) ->
-	mnesia:transaction(fun() -> create_unique(Record) end).
+transaction_create_unique(RECORD) ->
+
+	mnesia:transaction(fun() -> create_unique(RECORD) end).
 
 
 %% ----------------------------
 %% @doc Transactional create unique record after checking previous existence
--spec create_unique(Record) -> ok | existed
-	when
-	Record :: a_record().
+-spec create_unique(RECORD) -> ok | existed
+	when RECORD :: a_record().
 
-create_unique(Record) ->
-	case mnesia:read(element(1,Record),element(2,Record)) of
-		[] -> mnesia:write(Record);
+create_unique(RECORD) ->
+
+	case mnesia:read(element(1,RECORD),element(2,RECORD)) of
+		[] -> mnesia:write(RECORD);
 		_ -> existed
 	end.
 
 
 %% ----------------------------
 %% @doc Dirty create rows in the table, wrapper for mnesia:dirty_write/1
--spec dirty_create(Datum) -> ok
-	when
-	Datum :: a_list_of_records() | a_record().
+-spec dirty_create(DATUM) -> ok
+	when DATUM :: a_list_of_records() | a_record().
 
-dirty_create(Records) when is_list(Records) ->
-	lists:foreach(fun(Record) -> mnesia:dirty_write(Record)	end,Records);
-dirty_create(Record) -> dirty_create([Record]).
+dirty_create(RECORDS) when is_list(RECORDS) ->
+
+	lists:foreach(fun(RECORD) -> mnesia:dirty_write(RECORD)	end,RECORDS);
+
+dirty_create(RECORD) -> dirty_create([RECORD]).
 
 
 %% ----------------------------
 %% @doc Transactional creating row in the table
--spec transaction_create(Datum) -> {aborted,_Reason} | {atomic,_ResultOfFun}
+-spec transaction_create(DATUM) -> {aborted,REASON} | {atomic,RESULT}
 	when
-	Datum :: a_list_of_records() | a_record().
+		DATUM :: a_list_of_records() | a_record(),
+		REASON :: term(),
+		RESULT :: any().
 
-transaction_create(Datum) ->
-	mnesia:transaction(fun() -> create(Datum) end).
+transaction_create(DATUM) ->
+
+	mnesia:transaction(fun() -> create(DATUM) end).
 
 
 %% ----------------------------
 %% @doc Create rows in the table, wrapper for mnesia:write/1
--spec create(Datum) -> ok
-	when
-	Datum :: a_list_of_records() | a_record().
+-spec create(DATUM) -> ok
+	when DATUM :: a_list_of_records() | a_record().
 
-create(Records) when is_list(Records) ->
-	lists:foreach(fun(Record) -> mnesia:write(Record) end,Records);
-create(Record) -> create([Record]).
+create(RECORDS) when is_list(RECORDS) ->
+
+	lists:foreach(fun(RECORD) -> mnesia:write(RECORD) end,RECORDS);
+
+create(RECORD) -> create([RECORD]).
 
 
 %% ----------------------------
 %% @doc Update unique transaction
--spec transaction_update_unique(Record) -> {atomic,{norow,_Id}} | {atomic,{ok,_Id}} | {aborted,_Reason}
+-spec transaction_update_unique(RECORD) -> {atomic,{norow,ID}} | {atomic,{ok,ID}} | {aborted,REASON}
 	when
-	Record :: a_record().
+		RECORD :: a_record(),
+		ID :: any(),
+		REASON :: term().
 
 transaction_update_unique(Record) ->
 	mnesia:transaction(fun() -> update_unique(Record) end).
@@ -320,53 +357,63 @@ transaction_update_unique(Record) ->
 
 %% ----------------------------
 %% @doc Transactional update record in DB by new values
--spec update_unique(Record) -> {norow,_} | {ok,_}
+-spec update_unique(RECORD) -> {norow,ID} | {ok,ID}
 	when
-	Record :: a_record().
+		RECORD :: a_record(),
+		ID :: any().
 
 update_unique(Record) ->
-	Id = element(2,Record),
-	case mnesia:read(element(1,Record),Id) of
-		[] -> {norow,Id};
-		[_|[]] -> {mnesia:write(Record),Id}
+
+	ID = element(2,Record),
+	case mnesia:read(element(1,Record),ID) of
+		[] -> {norow,ID};
+		[_|[]] -> {mnesia:write(Record),ID}
 	end.
 
 
 %% ----------------------------
 %% @doc Dirty select all rows from table
--spec dirty_select_all(Table) -> [_Datum] | {aborted,_Reason}
+-spec dirty_select_all(TABLE) -> [DATA] | {aborted,REASON}
 	when
-	Table :: atom().
+		TABLE :: atom(),
+		DATA :: any(),
+		REASON :: term().
 
-dirty_select_all(Table) ->
-	mnesia:dirty_select(Table,[{'_',[],['$_']}]).
+dirty_select_all(TABLE) ->
+
+	mnesia:dirty_select(TABLE,[{'_',[],['$_']}]).
 
 
 %% ----------------------------
 %% @doc Select all from the table transaction
--spec transaction_select_all(Table) -> {aborted,_Reason} | {atomic,a_list_of_records()}
+-spec transaction_select_all(TABLE) -> {aborted,REASON} | {atomic,OUTPUT}
 	when
-	Table :: atom().
+		TABLE :: atom(),
+		REASON :: term(),
+		OUTPUT :: a_list_of_records().
 
-transaction_select_all(Table) ->
-	mnesia:transaction(fun() -> select_all(Table) end).
+transaction_select_all(TABLE) ->
+
+	mnesia:transaction(fun() -> select_all(TABLE) end).
 
 
 %% ----------------------------
 %% @doc Select all rows from te table for transaction usage
--spec select_all(Table) -> [_Datum] | {aborted,_Reason}
+-spec select_all(TABLE) -> [DATA] | {aborted,REASON}
 	when
-	Table :: atom().
+		TABLE :: atom(),
+		DATA :: any(),
+		REASON :: term().
 
-select_all(Table) ->
-	mnesia:select(Table,[{'_',[],['$_']}]).
+select_all(TABLE) ->
+
+	mnesia:select(TABLE,[{'_',[],['$_']}]).
 
 
 %% ----------------------------
 %% @doc Create schema on the defined nodes
--spec create_schema(Nodes) -> ok | error
-	when
-	Nodes :: [node()].
+-spec create_schema(NODES) -> ok | error
+	when NODES :: [node()].
 
 create_schema(Nodes) ->
 	create_schema_handler(mnesia_check,Nodes).
@@ -374,27 +421,32 @@ create_schema(Nodes) ->
 
 %% ----------------------------
 %% @doc Create schema on the defined nodes
--spec create_schema_handler(Action,Nodes) -> ok | error
+-spec create_schema_handler(ACTION,NODES) -> ok | error
 	when
-	Action :: mnesia_check | create | rebuild,
-	Nodes :: [node()].
+		ACTION :: mnesia_check | create | rebuild | if_not_exists,
+		NODES :: [node()].
 
-create_schema_handler(mnesia_check,Nodes) ->
+create_schema_handler(mnesia_check,NODES) ->
+
 	case mnesia:system_info(is_running) of
 		yes ->
 			mnesia:stop(),
-			create_schema_handler(create,Nodes);
+			create_schema_handler(create,NODES);
 		no ->
-			create_schema_handler(create,Nodes)
+			create_schema_handler(create,NODES)
 	end;
-create_schema_handler(create,Nodes) ->
-	ok = create_schema_handler(rebuild,Nodes),
+
+create_schema_handler(create,NODES) ->
+
+	ok = create_schema_handler(rebuild,NODES),
 	ok = mnesia:start();
-create_schema_handler(rebuild,Nodes) ->
-	case mnesia:create_schema(Nodes) of
+
+create_schema_handler(rebuild,NODES) ->
+
+	case mnesia:create_schema(NODES) of
 		{error,{_,{already_exists,_}}} ->
-			mnesia:delete_schema(Nodes),
-			mnesia:create_schema(Nodes);
+			mnesia:delete_schema(NODES),
+			mnesia:create_schema(NODES);
 		ok -> ok;
 		_ -> error
 	end.

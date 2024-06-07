@@ -416,6 +416,7 @@ select_all(TABLE) ->
 	when NODES :: [node()].
 
 create_schema(Nodes) ->
+	
 	create_schema_handler(mnesia_check,Nodes).
 
 

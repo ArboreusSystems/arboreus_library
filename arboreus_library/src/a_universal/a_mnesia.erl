@@ -17,7 +17,8 @@
 
 	test/0,
 
-	create_schema/1,
+	create_schema_local/0,create_schema_remotely/1,
+	delete_schema_local/0,delete_schema_remotely/1,
 	create/1,transaction_create/1,dirty_create/1,
 	create_unique/1,transaction_create_unique/1,
 	generate_unique/3,transaction_generate_unique/3,
@@ -411,43 +412,128 @@ select_all(TABLE) ->
 
 
 %% ----------------------------
-%% @doc Create schema on the defined nodes
--spec create_schema(NODES) -> ok | error
-	when NODES :: [node()].
-
-create_schema(Nodes) ->
-	
-	create_schema_handler(mnesia_check,Nodes).
-
-
-%% ----------------------------
-%% @doc Create schema on the defined nodes
--spec create_schema_handler(ACTION,NODES) -> ok | error
+%% @doc
+-spec create_schema_local() -> {ok,NODE} | {error,NODE,REASON}
 	when
-		ACTION :: mnesia_check | create | rebuild | if_not_exists,
-		NODES :: [node()].
+		NODE :: node(),
+		REASON :: term().
 
-create_schema_handler(mnesia_check,NODES) ->
+create_schema_local() ->
+
+	F_CREATE_SCHEMA = fun() ->
+		NODE = node(),
+		case mnesia:create_schema([NODE]) of
+			{error,{_,{already_exists,_}}} ->
+				mnesia:delete([NODE]),
+				create_schema_local();
+			ok ->
+				{ok,NODE};
+			{error,REASON} ->
+				{error,NODE,REASON}
+		end
+	end,
 
 	case mnesia:system_info(is_running) of
 		yes ->
 			mnesia:stop(),
-			create_schema_handler(create,NODES);
+			F_CREATE_SCHEMA();
 		no ->
-			create_schema_handler(create,NODES)
-	end;
-
-create_schema_handler(create,NODES) ->
-
-	ok = create_schema_handler(rebuild,NODES),
-	ok = mnesia:start();
-
-create_schema_handler(rebuild,NODES) ->
-
-	case mnesia:create_schema(NODES) of
-		{error,{_,{already_exists,_}}} ->
-			mnesia:delete_schema(NODES),
-			mnesia:create_schema(NODES);
-		ok -> ok;
-		_ -> error
+			F_CREATE_SCHEMA()
 	end.
+
+
+%% ----------------------------
+%% @doc Create Mnesia DB schema on current node
+-spec create_schema_remotely(NODES) -> OUTPUT
+	when
+		NODES :: [NODE],
+		NODE :: node(),
+		OUTPUT :: [NODE_REPLY],
+		NODE_REPLY :: {ok,NODE} | {error,NODE,REASON},
+		REASON :: term().
+
+create_schema_remotely(NODES) -> create_schema_remotely_handler(NODES,[]).
+
+
+%% ----------------------------
+%% @doc Handler function for create_schema_remotely/1
+-spec create_schema_remotely_handler(NODES,OUTPUT) -> OUTPUT
+	when
+		NODES :: [NODE],
+		NODE :: node(),
+		OUTPUT :: [NODE_REPLY],
+		NODE_REPLY :: {ok,NODE} | {error,NODE,REASON},
+		REASON :: term().
+
+create_schema_remotely_handler([NODE|NODES],OUTPUT) ->
+
+	create_schema_remotely_handler(
+		NODES,
+		lists:append(
+			[a_rpc:async_call(NODE,a_mnesia,create_schema_local,[])],OUTPUT
+		)
+	);
+
+create_schema_remotely_handler([],OUTPUT) -> OUTPUT.
+
+
+%% ----------------------------
+%% @doc Delete Mnesia DB schema on current nodes
+-spec delete_schema_local() -> {ok,NODE} | {error,NODE,REASON}
+	when
+		NODE :: node(),
+		REASON :: term().
+
+delete_schema_local() ->
+
+	F_DELETE_SCHEMA = fun() ->
+		NODE = node(),
+		case mnesia:delete_schema([NODE]) of
+			ok -> {ok,NODE};
+			{error,REASON} -> {error,NODE,REASON}
+		end
+	end,
+
+	case mnesia:system_info(is_running) of
+		yes ->
+			mnesia:stop(),
+			F_DELETE_SCHEMA();
+		no ->
+			F_DELETE_SCHEMA()
+	end.
+
+
+%% ----------------------------
+%% @doc Delete Mnesia DB schema on defined nodes
+-spec delete_schema_remotely(NODES) -> OUTPUT
+	when
+		NODES :: [NODE],
+		NODE :: node(),
+		OUTPUT :: [NODE_REPLY],
+		NODE_REPLY :: {ok,NODE} | {error,NODE,REASON},
+		REASON :: term().
+
+delete_schema_remotely(NODES) -> delete_schema_remotely_handler(NODES,[]).
+
+
+%% ----------------------------
+%% @doc Handler function for delete_schema_remotely/1
+-spec delete_schema_remotely_handler(NODES,OUTPUT) -> OUTPUT
+	when
+		NODES :: [NODE],
+		NODE :: node(),
+		OUTPUT :: [NODE_REPLY],
+		NODE_REPLY :: {ok,NODE} | {error,NODE,REASON},
+		REASON :: term().
+
+delete_schema_remotely_handler([NODE|NODES],OUTPUT) ->
+
+	create_schema_remotely_handler(
+		NODES,
+		lists:append(
+			[a_rpc:async_call(NODE,a_mnesia,delete_schema_local,[])],OUTPUT
+		)
+	);
+
+delete_schema_remotely_handler([],OUTPUT) -> OUTPUT.
+

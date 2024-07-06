@@ -17,6 +17,7 @@
 -include("macros/a_macro_lists.hrl").
 
 -include("records/a_records_balancer.hrl").
+-include("records/a_records_cluster.hrl").
 -include("records/a_records_logger.hrl").
 -include("records/a_records_node.hrl").
 -include("records/a_records_properties.hrl").

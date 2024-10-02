@@ -14,17 +14,21 @@
 
 %% API
 -export([
+
 	test/0,
+
 	change_name/1,change_name/2,
 	name_type/0,name_type/1,
 	parse_name/0,parse_name/1,
 	load/1,
-	names/0,
+	names/0,names/1,
 	fqdn/0,
 	default_node_properties/0,
 	start/1,
 	stop/1,stop/4,
-	ensure/4
+	ensure/4,
+	is_started/1,is_started/2
+
 ]).
 
 
@@ -41,49 +45,60 @@ test() ->
 		"Module (a_node) testing started at:~n~p (~p)~n",
 		[a_time:from_timestamp(rfc850,TIME_START),TIME_START]
 	),
-	LOAD_LIST_STRUCTURE = [(fun is_integer/1),(fun is_integer/1),(fun is_integer/1)],
-	LOAD_LIST = load(list),
-	LOAD_LIST_WRONG = [wrong,list,structure],
-	true = a_structure_l:verify(return_boolean,LOAD_LIST_STRUCTURE,LOAD_LIST),
-	false = a_structure_l:verify(return_boolean,LOAD_LIST_STRUCTURE,LOAD_LIST_WRONG),
-	LOAD_RECORD_STRUCTURE = {
-		(fun is_atom/1),
-		(fun is_integer/1),
-		(fun is_integer/1),
-		(fun is_integer/1)
-	},
-	LOAD_RECORD = load(record),
-	LOAD_RECORD_WRONG = #a_node_load{
-		processes = processes,
-		memory_total = memory_total,
-		ports = ports
-	},
-	true = a_structure_r:verify(return_boolean,LOAD_RECORD_STRUCTURE,LOAD_RECORD),
-	false = a_structure_r:verify(return_boolean,LOAD_RECORD_STRUCTURE,LOAD_RECORD_WRONG),
-	io:format("DONE! Fun load/1 test passed~n"),
-	NEW_NAME_STRING = "new_name",
-	CHANGE_NAME_TEST = case node() of
-		'nonode@nohost' ->
-			nonetkernel = change_name(test),
-			OLD_NAME_STRING = "old_name",
-			{ok,_} = net_kernel:start([list_to_atom(OLD_NAME_STRING)]),
-			{ok,{OLD_NAME_STRING,DOMAIN}} = parse_name(),
-			OLD_NAME = node(),
-			{ok,NEW_NAME} = change_name(list_to_atom(NEW_NAME_STRING)),
-			{ok,{NEW_NAME_STRING,DOMAIN}} = parse_name(NEW_NAME),
-			{ok,OLD_NAME} = change_name(list_to_atom(OLD_NAME_STRING)),
-			net_kernel:stop();
-		OLD_NODE_NAME ->
-			{ok,{OLD_NAME_STRING,DOMAIN}} = parse_name(),
-			case change_name(list_to_atom(NEW_NAME_STRING)) of
-				{ok,NEW_NAME} ->
-					{ok,{NEW_NAME_STRING,DOMAIN}} = parse_name(NEW_NAME),
-					{ok,OLD_NODE_NAME} = change_name(list_to_atom(OLD_NAME_STRING)),
-					ok;
-				RESULT -> RESULT
-			end
-	end,
-	io:format("DONE! Change name functionality test result: ~p~n",[CHANGE_NAME_TEST]),
+
+	NODE_PROPERTIES = default_node_properties(),
+
+	erlang:display(
+		start(NODE_PROPERTIES#a_node_start_properties{
+			name = "test_node",
+			cookie = "12345"
+		})
+	),
+
+%%	LOAD_LIST_STRUCTURE = [(fun is_integer/1),(fun is_integer/1),(fun is_integer/1)],
+%%	LOAD_LIST = load(list),
+%%	LOAD_LIST_WRONG = [wrong,list,structure],
+%%	true = a_structure_l:verify(return_boolean,LOAD_LIST_STRUCTURE,LOAD_LIST),
+%%	false = a_structure_l:verify(return_boolean,LOAD_LIST_STRUCTURE,LOAD_LIST_WRONG),
+%%	LOAD_RECORD_STRUCTURE = {
+%%		(fun is_atom/1),
+%%		(fun is_integer/1),
+%%		(fun is_integer/1),
+%%		(fun is_integer/1)
+%%	},
+%%	LOAD_RECORD = load(record),
+%%	LOAD_RECORD_WRONG = #a_node_load{
+%%		processes = processes,
+%%		memory_total = memory_total,
+%%		ports = ports
+%%	},
+%%	true = a_structure_r:verify(return_boolean,LOAD_RECORD_STRUCTURE,LOAD_RECORD),
+%%	false = a_structure_r:verify(return_boolean,LOAD_RECORD_STRUCTURE,LOAD_RECORD_WRONG),
+%%	io:format("DONE! Fun load/1 test passed~n"),
+%%	NEW_NAME_STRING = "new_name",
+%%	CHANGE_NAME_TEST = case node() of
+%%		'nonode@nohost' ->
+%%			nonetkernel = change_name(test),
+%%			OLD_NAME_STRING = "old_name",
+%%			{ok,_} = net_kernel:start([list_to_atom(OLD_NAME_STRING)]),
+%%			{ok,{OLD_NAME_STRING,DOMAIN}} = parse_name(),
+%%			OLD_NAME = node(),
+%%			{ok,NEW_NAME} = change_name(list_to_atom(NEW_NAME_STRING)),
+%%			{ok,{NEW_NAME_STRING,DOMAIN}} = parse_name(NEW_NAME),
+%%			{ok,OLD_NAME} = change_name(list_to_atom(OLD_NAME_STRING)),
+%%			net_kernel:stop();
+%%		OLD_NODE_NAME ->
+%%			{ok,{OLD_NAME_STRING,DOMAIN}} = parse_name(),
+%%			case change_name(list_to_atom(NEW_NAME_STRING)) of
+%%				{ok,NEW_NAME} ->
+%%					{ok,{NEW_NAME_STRING,DOMAIN}} = parse_name(NEW_NAME),
+%%					{ok,OLD_NODE_NAME} = change_name(list_to_atom(OLD_NAME_STRING)),
+%%					ok;
+%%				RESULT -> RESULT
+%%			end
+%%	end,
+%%	io:format("DONE! Change name functionality test result: ~p~n",[CHANGE_NAME_TEST]),
+
 	TIME_STOP = a_time:current(timestamp),
 	io:format("*** -------------------~n"),
 	io:format(
@@ -265,6 +280,23 @@ names() ->
 
 
 %% ----------------------------
+%% @doc Return list of started nodes on current server
+-spec names(SERVER) -> proplists:proplist()
+	when SERVER :: a_host_name_string().
+
+names(SERVER) ->
+
+	case a_ssh:execute(SERVER,"epmd -names") of
+		{true,COMMAND_OUTPUT} ->
+			[_EPMD | NODE_DESCRIPTIONS] = string:tokens(COMMAND_OUTPUT,"\n"),
+			NODES = [parse_node_description(DESCRIPTION) || DESCRIPTION <- NODE_DESCRIPTIONS],
+			{true,[{list_to_atom(string:concat(string:concat(NODE_NAME,"@"),SERVER)),PORT} || {NODE_NAME,PORT} <- NODES]};
+		{false,{SERVER,COMMAND}} ->
+			{false,{SERVER,COMMAND}}
+	end.
+
+
+%% ----------------------------
 %% @doc Check the node description and return term within node data
 -spec parse_node_description(NODE_DESCRIPTION) -> {nomatch,REPLY} | {NODE_NAME_STRING,PORT_NUMBER}
 	when
@@ -301,22 +333,27 @@ default_node_properties() ->
 
 	#a_node_start_properties{
 		name = "test_node",
+		host = fqdn(),
 		detached = true,
 		cookie = "no_cookie",
 		port_range = false,
 		port_range_min = 0,
 		port_range_max = 0,
-		command_timeout = 0,
+		command_timeout = 500,
 		shutdown_time = 0
 	}.
 
 
 %% ----------------------------
-%% @doc Starting node with parameters
--spec start(PARAMETERS) -> no_return()
-	when PARAMETERS :: #a_node_start_properties{}.
+%% @doc Return unix shell command for starting erlang node
+-spec start_command(PARAMETERS) -> OUTPUT
+	when
+		PARAMETERS :: #a_node_start_properties{},
+		OUTPUT :: {ok,COMMAND} | {error,REASON},
+		COMMAND :: a_shell_command_string(),
+		REASON :: term().
 
-start(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties)->
+start_command(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties) ->
 
 	PARAMETER_NODE_NAME = string:concat(" -name ",PARAMETERS#a_node_start_properties.name),
 	PARAMETER_COOKIE = string:concat(" -setcookie ",PARAMETERS#a_node_start_properties.cookie),
@@ -341,15 +378,68 @@ start(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties)->
 	ERL_COMMAND = "erl" ++
 		PARAMETER_NODE_NAME ++ PARAMETER_COOKIE ++
 		PARAMETER_DETACHED ++ PARAMETER_PORT_RANGE ++
-		PARAMETER_SHUTDOWN_TIME,
+		PARAMETER_SHUTDOWN_TIME ++
+		"; echo ok;",
 
-	os:cmd(ERL_COMMAND),
-	timer:sleep(PARAMETERS#a_node_start_properties.command_timeout),
+	{ok,ERL_COMMAND};
 
-	NODE_NAME = list_to_atom(PARAMETERS#a_node_start_properties.name ++ "@" ++ fqdn()),
-	case lists:keyfind(NODE_NAME,1,names()) of
-		{NODE_NAME,_PORT_NAMUBER} -> {ok,NODE_NAME};
-		_ -> {error,PARAMETERS}
+start_command(PARAMETERS) ->
+
+	{error,[
+		{"PARAMETERS",is_record(PARAMETERS,a_node_start_properties)}
+	]}.
+
+
+%% ----------------------------
+%% @doc Starting node with parameters
+-spec start(PARAMETERS) -> no_return()
+	when PARAMETERS :: #a_node_start_properties{}.
+
+start(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties) ->
+
+	FQDN = fqdn(),
+	HOST = PARAMETERS#a_node_start_properties.host,
+	NODE_NAME = PARAMETERS#a_node_start_properties.name,
+	NODE_FULL_NAME = NODE_NAME ++ "@" ++ HOST,
+
+	IS_STARTED = if
+		FQDN == HOST -> is_started(NODE_NAME);
+		true -> is_started(NODE_NAME,HOST)
+	end,
+	case IS_STARTED of
+		true -> {already_started,NODE_FULL_NAME};
+		false ->
+
+			case start_command(PARAMETERS) of
+				{ok,ERL_COMMAND} ->
+
+					START_OUTPUT = if
+						FQDN == HOST -> os:cmd(ERL_COMMAND);
+						true -> a_ssh:execute(HOST,ERL_COMMAND)
+					end,
+
+					CHECK_SUCCESS = fun() ->
+						timer:sleep(PARAMETERS#a_node_start_properties.command_timeout),
+						CHECK = if
+							FQDN == HOST -> is_started(NODE_NAME);
+							true -> is_started(NODE_NAME,HOST)
+						end,
+						case CHECK of
+							true -> {ok,NODE_FULL_NAME};
+							_ -> {error,{ERL_COMMAND,NODE_FULL_NAME}}
+						end
+					end,
+
+					case START_OUTPUT of
+						"ok\n" -> CHECK_SUCCESS();
+						{true,"ok\n"} -> CHECK_SUCCESS();
+						_ -> {error,START_OUTPUT}
+					end;
+
+				{error,REASON} ->
+					{error,REASON}
+			end
+
 	end;
 
 start(PARAMETERS) ->
@@ -444,3 +534,41 @@ stop(NODE_FQDN,MODULE,FUNCTION,ARGUMENTS) ->
 		{"FUNCTION",is_atom(FUNCTION)},
 		{"ARGUMENTS",is_list(ARGUMENTS)}
 	]}.
+
+
+%% ----------------------------
+%% @doc Checking if node started locally
+-spec is_started(NODE_NAME) -> OUTPUT
+	when
+		OUTPUT :: true | false,
+		NODE_NAME :: a_node_name_string().
+
+is_started(NODE_NAME) when is_list(NODE_NAME) ->
+
+	NODE_FULL_NAME = list_to_atom(NODE_NAME ++ "@" ++ fqdn()),
+	case lists:keyfind(NODE_FULL_NAME,1,names()) of
+		{NODE_FULL_NAME,_PORT_NUMBER} -> true;
+		_ -> false
+	end.
+
+
+%% ----------------------------
+%% @doc Checking if node started on server
+-spec is_started(NODE_NAME,HOST) -> OUTPUT
+	when
+		OUTPUT :: true | false,
+		NODE_NAME :: a_node_name_string(),
+		HOST :: a_host_name_string().
+
+is_started(NODE_NAME,HOST) when is_list(NODE_NAME) ->
+
+	case names(HOST) of
+		{true,NAMES} ->
+			NODE_FULL_NAME = list_to_atom(NODE_NAME ++ "@" ++ HOST),
+			case lists:keyfind(NODE_FULL_NAME,1,NAMES) of
+				{NODE_FULL_NAME,_PORT_NUMBER} -> true;
+				_ -> false
+			end;
+		{false,_} ->
+			false
+	end.

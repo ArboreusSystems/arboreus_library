@@ -8,6 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("Alexandr KIRILOV, http://alexandr.kirilov.me").
 
+-include("a_includes.hrl").
+
 -ifndef(A_RECORDS_NODE).
 -define(A_RECORDS_NODE,1).
 
@@ -17,6 +19,7 @@
 -record(a_node_start_properties,{
 
 	name :: a_node_name_string(),
+	host :: a_host_name_string(),
 	detached :: boolean(),
 	cookie :: a_node_cookie_string(),
 	port_range :: boolean(),

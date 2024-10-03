@@ -27,7 +27,9 @@
 	start/1,
 	stop/1,stop/4,
 	ensure/4,
-	is_started/1,is_started/2
+	is_started/1,is_started/2,
+	is_connected/1,
+	connect/1
 
 ]).
 
@@ -534,4 +536,44 @@ is_started(NODE_NAME,HOST) when is_list(NODE_NAME) ->
 			end;
 		{false,_} ->
 			false
+	end.
+
+
+%% ----------------------------
+%% @doc Check if defined node connected
+-spec is_connected(NODE_NAME) -> OUTPUT
+	when
+		NODE_NAME :: a_node_name_string() | atom(),
+		OUTPUT :: boolean().
+
+is_connected(NODE_NAME) when is_list(NODE_NAME) ->
+
+	is_connected(list_to_atom(NODE_NAME));
+
+is_connected(NODE_NAME) when is_atom(NODE_NAME) ->
+
+	lists:member(NODE_NAME,nodes()).
+
+
+%% ----------------------------
+%% @doc Connect to defined node
+-spec connect(NODE_NAME) -> OUTPUT
+	when
+		NODE_NAME :: a_node_name_string() | atom(),
+		OUTPUT :: {true,NODE_NAME} | {false,NODE_NAME}.
+
+connect(NODE_NAME) when is_list(NODE_NAME) ->
+
+	connect(list_to_atom(NODE_NAME));
+
+connect(NODE_NAME) when is_atom(NODE_NAME) ->
+
+	case is_connected(NODE_NAME) of
+		true ->
+			{true,NODE_NAME};
+		false ->
+			case net_adm:ping(NODE_NAME) of
+				ping -> {true,NODE_NAME};
+				_ -> {false,NODE_NAME}
+			end
 	end.

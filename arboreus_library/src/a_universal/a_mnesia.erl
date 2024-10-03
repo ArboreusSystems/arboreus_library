@@ -424,7 +424,7 @@ create_schema_local() ->
 		NODE = node(),
 		case mnesia:create_schema([NODE]) of
 			{error,{_,{already_exists,_}}} ->
-				mnesia:delete([NODE]),
+				mnesia:delete_schema([NODE]),
 				create_schema_local();
 			ok ->
 				{ok,NODE};

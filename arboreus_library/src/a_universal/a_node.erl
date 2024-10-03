@@ -349,9 +349,8 @@ default_node_properties() ->
 -spec start_command(PARAMETERS) -> OUTPUT
 	when
 		PARAMETERS :: #a_node_start_properties{},
-		OUTPUT :: {ok,COMMAND} | {error,REASON},
-		COMMAND :: a_shell_command_string(),
-		REASON :: term().
+		OUTPUT :: COMMAND,
+		COMMAND :: a_shell_command_string().
 
 start_command(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties) ->
 
@@ -381,19 +380,17 @@ start_command(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties) ->
 		PARAMETER_SHUTDOWN_TIME ++
 		"; echo ok;",
 
-	{ok,ERL_COMMAND};
-
-start_command(PARAMETERS) ->
-
-	{error,[
-		{"PARAMETERS",is_record(PARAMETERS,a_node_start_properties)}
-	]}.
+	ERL_COMMAND.
 
 
 %% ----------------------------
 %% @doc Starting node with parameters
--spec start(PARAMETERS) -> no_return()
-	when PARAMETERS :: #a_node_start_properties{}.
+-spec start(PARAMETERS) -> OUTPUT
+	when
+		PARAMETERS :: #a_node_start_properties{},
+		OUTPUT :: {already_started,NODE_FULL_NAME} | {ok,NODE_FULL_NAME} | {error,REASON},
+		NODE_FULL_NAME :: atom(),
+		REASON :: term().
 
 start(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties) ->
 
@@ -410,43 +407,31 @@ start(PARAMETERS) when is_record(PARAMETERS,a_node_start_properties) ->
 		true -> {already_started,NODE_FULL_NAME};
 		false ->
 
-			case start_command(PARAMETERS) of
-				{ok,ERL_COMMAND} ->
+			ERL_COMMAND = start_command(PARAMETERS),
 
-					START_OUTPUT = if
-						FQDN == HOST -> os:cmd(ERL_COMMAND);
-						true -> a_ssh:execute(HOST,ERL_COMMAND)
-					end,
+			CHECK_SUCCESS = fun() ->
+				timer:sleep(PARAMETERS#a_node_start_properties.command_timeout),
+				CHECK = if
+					        FQDN == HOST -> is_started(NODE_NAME);
+					        true -> is_started(NODE_NAME,HOST)
+				        end,
+				case CHECK of
+					true -> {ok,NODE_FULL_NAME};
+					_ -> {error,{ERL_COMMAND,NODE_FULL_NAME}}
+				end
+			end,
 
-					CHECK_SUCCESS = fun() ->
-						timer:sleep(PARAMETERS#a_node_start_properties.command_timeout),
-						CHECK = if
-							FQDN == HOST -> is_started(NODE_NAME);
-							true -> is_started(NODE_NAME,HOST)
-						end,
-						case CHECK of
-							true -> {ok,NODE_FULL_NAME};
-							_ -> {error,{ERL_COMMAND,NODE_FULL_NAME}}
-						end
-					end,
-
-					case START_OUTPUT of
-						"ok\n" -> CHECK_SUCCESS();
-						{true,"ok\n"} -> CHECK_SUCCESS();
-						_ -> {error,START_OUTPUT}
-					end;
-
-				{error,REASON} ->
-					{error,REASON}
+			START_OUTPUT = if
+				FQDN == HOST -> os:cmd(ERL_COMMAND);
+				true -> a_ssh:execute(HOST,ERL_COMMAND)
+			end,
+			case START_OUTPUT of
+				"ok\n" -> CHECK_SUCCESS();
+				{true,"ok\n"} -> CHECK_SUCCESS();
+				_ -> {error,START_OUTPUT}
 			end
 
-	end;
-
-start(PARAMETERS) ->
-
-	{error,[
-		{"PARAMETERS",is_record(PARAMETERS,a_node_start_properties)}
-	]}.
+	end.
 
 
 %% ----------------------------
@@ -470,16 +455,7 @@ ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS)
 	case net_adm:ping(NODE_NAME) of
 		pong -> a_rpc:async_call(NODE_NAME,MODULE,FUNCTION,ARGUMENTS);
 		_ -> {error,not_connected}
-	end;
-
-ensure(NODE_NAME,MODULE,FUNCTION,ARGUMENTS) ->
-
-	{error,[
-		{"NODE_NAME",is_atom(NODE_NAME)},
-		{"MODULE",is_atom(MODULE)},
-		{"FUNCTION",is_atom(FUNCTION)},
-		{"ARGUMENTS",is_list(ARGUMENTS)}
-	]}.
+	end.
 
 
 %% ----------------------------
@@ -498,11 +474,7 @@ stop(NODE_FQDN) when is_atom(NODE_FQDN) ->
 	case stop(NODE_FQDN,init,stop,[]) of
 		ok -> {ok,NODE_FQDN};
 		_ -> {error,NODE_FQDN}
-	end;
-
-stop(NODE_FQDN) ->
-
-	{error,[{"NODE_FQDN",is_atom(NODE_FQDN)}]}.
+	end.
 
 
 %% ----------------------------
@@ -524,16 +496,7 @@ stop(NODE_FQDN,MODULE,FUNCTION,ARGUMENTS)
 	case net_adm:ping(NODE_FQDN) of
 		pong ->	a_rpc:async_call(NODE_FQDN,MODULE,FUNCTION,[]);
 		REPLY -> {error,{no_connected_node,REPLY}}
-	end;
-
-stop(NODE_FQDN,MODULE,FUNCTION,ARGUMENTS) ->
-
-	{error,[
-		{"NODE_FQDN",is_atom(NODE_FQDN)},
-		{"MODULE",is_atom(MODULE)},
-		{"FUNCTION",is_atom(FUNCTION)},
-		{"ARGUMENTS",is_list(ARGUMENTS)}
-	]}.
+	end.
 
 
 %% ----------------------------

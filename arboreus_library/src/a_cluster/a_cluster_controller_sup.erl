@@ -123,9 +123,3 @@ init([_CLUSTER_CONTROLLER_PROPERTIES]) ->
 			{error,REASON}
 	end.
 
-
-init_data() ->
-
-
-
-	ok.

@@ -37,22 +37,22 @@ test() -> ok.
 
 
 %% ----------------------------
-%% @doc
--spec start_link() -> {'ok', PID} | 'ignore' | {'error', REASON}
+%% @doc Start Cluster Controller with default properties
+-spec start_link() -> {'ok',PID} | 'ignore' | {'error',REASON}
 	when
 		PID :: pid(),
 		REASON :: term().
 
 start_link() ->
 
-	supervisor:start_link({local, ?SERVER},?MODULE,[
+	supervisor:start_link({local,?SERVER},?MODULE,[
 		#a_cluster_controller_properties{}
 	]).
 
 
 %% ----------------------------
-%% @doc
--spec start_link(CLUSTER_CONTROLLER_PROPERTIES) -> {'ok', PID} | 'ignore' | {'error', REASON}
+%% @doc Start Cluster Controller with defined properties
+-spec start_link(CLUSTER_CONTROLLER_PROPERTIES) -> {'ok',PID} | 'ignore' | {'error',REASON}
 	when
 		CLUSTER_CONTROLLER_PROPERTIES :: #a_cluster_controller_properties{},
 		PID :: pid(),
@@ -60,34 +60,36 @@ start_link() ->
 
 start_link(CLUSTER_CONTROLLER_PROPERTIES) ->
 
-	supervisor:start_link({local, ?SERVER},?MODULE,[
+	case supervisor:start_link({local,?SERVER},?MODULE,[
 		CLUSTER_CONTROLLER_PROPERTIES
-	]).
+	]) of
+		{ok,SUPERVISOR_PID} ->
+
+			{ok,DB_PID} = start_db(SUPERVISOR_PID),
+			{ok,HANDLER_PID} = start_handler(SUPERVISOR_PID),
+			{ok,MONITOR_PID} = start_monitor(SUPERVISOR_PID),
+
+			ok = setup(DB_PID,HANDLER_PID,MONITOR_PID),
+
+			{ok,SUPERVISOR_PID};
+
+		START_LINK_REPLY ->
+			START_LINK_REPLY
+	end.
 
 
 %% ----------------------------
-%% @doc
--spec init(ARGUMENTS) -> {ok, STATE} | {error, REASON}
+%% @doc Start Cluster Controller db process
+-spec start_db(SUPERVISOR_PID) -> {ok,DB_PID} | {error,REASON}
 	when
-		ARGUMENTS :: list(),
-		STATE :: term(),
+		SUPERVISOR_PID :: pid(),
+		DB_PID :: pid(),
 		REASON :: term().
 
-init([_CLUSTER_CONTROLLER_PROPERTIES]) ->
-
-	HANDLER = #{
-		id => a_cluster_controller_handler,
-		start => {'a_cluster_controller_handler_gs','start_link',[
-			#a_cluster_controller_handler_state{}
-		]},
-		restart => transient,
-		shutdown => 5000,
-		type => worker,
-		modules => ['a_cluster_controller_handler_gs']
-	},
+start_db(SUPERVISOR_PID) ->
 
 	DB = #{
-		id => a_cluster_controller_db,
+		id => ?A_ID_CLUSTER_CONTROLLER_DB,
 		start => {'a_cluster_controller_db_gs','start_link',[
 			#a_cluster_controller_db_state{}
 		]},
@@ -97,8 +99,61 @@ init([_CLUSTER_CONTROLLER_PROPERTIES]) ->
 		modules => ['a_cluster_controller_db_gs']
 	},
 
+	SETUP_DB = fun(IN_PID) ->
+		{ok,IN_PID}
+	end,
+
+	case supervisor:start_child(SUPERVISOR_PID,DB) of
+		{ok,DB_PID} -> SETUP_DB(DB_PID);
+		{ok,DB_PID,_INFO} -> SETUP_DB(DB_PID);
+		{error,START_CHILD_ERROR} -> {error,START_CHILD_ERROR}
+	end.
+
+
+%% ----------------------------
+%% @doc Start Cluster Controller handler process
+-spec start_handler(SUPERVISOR_PID) -> {ok,HANDLER_PID} | {error,REASON}
+	when
+		SUPERVISOR_PID :: pid(),
+		HANDLER_PID :: pid(),
+		REASON :: term().
+
+start_handler(SUPERVISOR_PID) ->
+
+	HANDLER = #{
+		id => ?A_ID_CLUSTER_CONNECTOR_HANDLER,
+		start => {'a_cluster_controller_handler_gs','start_link',[
+			#a_cluster_controller_handler_state{}
+		]},
+		restart => transient,
+		shutdown => 5000,
+		type => worker,
+		modules => ['a_cluster_controller_handler_gs']
+	},
+
+	SETUP_HANDLER = fun(IN_PID) ->
+		{ok,IN_PID}
+	end,
+
+	case supervisor:start_child(SUPERVISOR_PID,HANDLER) of
+		{ok,HANDLER_PID} -> SETUP_HANDLER(HANDLER_PID);
+		{ok,HANDLER_PID,_INFO} -> SETUP_HANDLER(HANDLER_PID);
+		{error,START_CHILD_ERROR} -> {error,START_CHILD_ERROR}
+	end.
+
+
+%% ----------------------------
+%% @doc Start Cluster Controller monitor process
+-spec start_monitor(SUPERVISOR_PID) -> {ok,MONITOR_PID} | {error,REASON}
+	when
+		SUPERVISOR_PID :: pid(),
+		MONITOR_PID :: pid(),
+		REASON :: term().
+
+start_monitor(SUPERVISOR_PID) ->
+
 	MONITOR = #{
-		id => a_cluster_controller_monitor,
+		id => ?A_ID_CLUSTER_CONTROLLER_MONITOR,
 		start => {'a_cluster_controller_monitor_gs','start_link',[
 			#a_cluster_controller_monitor_state{}
 		]},
@@ -108,18 +163,51 @@ init([_CLUSTER_CONTROLLER_PROPERTIES]) ->
 		modules => ['a_cluster_controller_monitor_gs']
 	},
 
-	CHILD_SPECIFICATIONS = [HANDLER,DB,MONITOR],
-	case supervisor:check_childspecs(CHILD_SPECIFICATIONS) of
-		ok ->
-			MAX_RESTART = 1000,
-			MAX_TIME_BETWEEN_RESTARTS = 3600,
-			RESTART_STRATEGY = #{
-				strategy => one_for_one,
-				intensity => MAX_RESTART,
-				period => MAX_TIME_BETWEEN_RESTARTS
-			},
-			{ok, {RESTART_STRATEGY,CHILD_SPECIFICATIONS}};
-		{error,REASON} ->
-			{error,REASON}
+	SETUP_MONITOR = fun(IN_PID) ->
+		{ok,IN_PID}
+	end,
+
+	case supervisor:start_child(SUPERVISOR_PID,MONITOR) of
+		{ok, MONITOR_PID} -> SETUP_MONITOR(MONITOR_PID);
+		{ok, MONITOR_PID,_INFO} -> SETUP_MONITOR(MONITOR_PID);
+		{error,START_CHILD_ERROR} -> {error,START_CHILD_ERROR}
 	end.
+
+
+%% ----------------------------
+%% @doc Setup Cluster Controller processes
+-spec setup(DB_PID,HANDLER_PID,MONITOR_PID) -> ok
+	when
+		DB_PID :: pid(),
+		HANDLER_PID :: pid(),
+		MONITOR_PID :: pid().
+
+setup(DB_PID,HANDLER_PID,MONITOR_PID) ->
+
+	ok = gen_server:call(DB_PID,{setup,HANDLER_PID,MONITOR_PID}),
+	ok = gen_server:call(HANDLER_PID,{setup,DB_PID,MONITOR_PID}),
+	ok = gen_server:call(MONITOR_PID,{setup,DB_PID,HANDLER_PID}),
+
+	ok.
+
+
+%% ----------------------------
+%% @doc
+-spec init(ARGUMENTS) -> {ok,STATE} | {error,REASON}
+	when
+		ARGUMENTS :: list(),
+		STATE :: term(),
+		REASON :: term().
+
+init([_CLUSTER_CONTROLLER_PROPERTIES]) ->
+
+	CHILD_SPECIFICATIONS = [],
+	MAX_RESTART = 1000,
+	MAX_TIME_BETWEEN_RESTARTS = 3600,
+	SUPERVISOR_FLAGS = #{
+		strategy => one_for_one,
+		intensity => MAX_RESTART,
+		period => MAX_TIME_BETWEEN_RESTARTS
+	},
+	{ok,{SUPERVISOR_FLAGS,CHILD_SPECIFICATIONS}}.
 

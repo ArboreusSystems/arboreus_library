@@ -13,6 +13,7 @@
 
 -include("constants/a_constants_general.hrl").
 -include("constants/a_constants_structure_tree.hrl").
+-include("constants/a_constants_cluster.hrl").
 
 -include("macros/a_macro_lists.hrl").
 

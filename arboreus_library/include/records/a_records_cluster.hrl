@@ -13,22 +13,25 @@
 %% Application includes
 
 -ifndef(A_RECORDS_CLUSTER).
--define(A_RECORDS_CLUSTER, 1).
+-define(A_RECORDS_CLUSTER,1).
 
 -record(a_cluster_controller_properties,{
 
 }).
 
 -record(a_cluster_controller_handler_state,{
-
+	db :: pid(),
+	monitor :: pid()
 }).
 
 -record(a_cluster_controller_db_state,{
-
+	handler :: pid(),
+	monitor :: pid()
 }).
 
 -record(a_cluster_controller_monitor_state,{
-
+	handler :: pid(),
+	db :: pid()
 }).
 
 -record(a_cluster_connector_properties,{

@@ -18,7 +18,7 @@
 %% System includes
 
 %% Application includes
--include("a_includes.hrl").
+-include("../../include/a_includes.hrl").
 
 %% API
 -export([

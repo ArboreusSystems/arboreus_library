@@ -18,7 +18,7 @@
 %% System includes
 
 %% Application includes
--include("a_includes.hrl").
+-include("../../include/a_includes.hrl").
 
 %% API
 -export([
@@ -74,7 +74,7 @@ start_link(STATE) ->
 init([_STATE]) ->
 
 	process_flag(trap_exit,true),
-	{ok, #a_cluster_controller_db_state{}}.
+	{ok,#a_cluster_controller_db_state{}}.
 
 
 %% ----------------------------
@@ -117,7 +117,7 @@ handle_call(REQUEST,FROM,STATE = #a_cluster_controller_db_state{}) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_cast(_REQUEST, STATE = #a_cluster_controller_db_state{}) ->
+handle_cast(_REQUEST,STATE = #a_cluster_controller_db_state{}) ->
 
 	{noreply, STATE}.
 
@@ -136,7 +136,7 @@ handle_cast(_REQUEST, STATE = #a_cluster_controller_db_state{}) ->
 
 handle_info(_INFO,STATE = #a_cluster_controller_db_state{}) ->
 
-	{noreply, STATE}.
+	{noreply,STATE}.
 
 
 %% ----------------------------

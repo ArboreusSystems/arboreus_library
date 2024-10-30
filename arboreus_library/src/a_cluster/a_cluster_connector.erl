@@ -12,10 +12,13 @@
 %% System includes
 
 %% Application includes
+-include("../../include/a_includes.hrl").
 
 %% API
 -export([
+
 	test/0
+
 ]).
 
 

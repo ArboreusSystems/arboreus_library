@@ -12,7 +12,7 @@
 %% System includes
 
 %% Application includes
--include("a_includes.hrl").
+-include("../../include/a_includes.hrl").
 
 %% API
 -export([
@@ -23,7 +23,9 @@
 	pid_handler/1,
 	pid_monitor/1,
 
-	node_name/1
+	node_name/1,
+	get_node/2,
+	define_get_node_handler/2
 
 ]).
 
@@ -106,3 +108,21 @@ node_name(SUPERVISOR_PID) ->
 
 	{ok,HANDLER_PID} = pid_handler(SUPERVISOR_PID),
 	gen_server:call(HANDLER_PID,node_name).
+
+
+%% ----------------------------
+%% @doc
+
+get_node(TYPE,SUPERVISOR_PID) ->
+
+	{ok,HANDLER_PID} = pid_handler(SUPERVISOR_PID),
+	gen_server:call(HANDLER_PID,{get_node,TYPE}).
+
+
+%% ----------------------------
+%% @doc
+
+define_get_node_handler(GET_NODE_HANDLER,SUPERVISOR_PID) ->
+
+	{ok,HANDLER_PID} = pid_handler(SUPERVISOR_PID),
+	gen_server:call(HANDLER_PID,{define_get_node_handler,GET_NODE_HANDLER}).

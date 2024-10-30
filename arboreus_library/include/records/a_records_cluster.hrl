@@ -11,9 +11,16 @@
 %% System includes
 
 %% Application includes
+-include("../a_includes.hrl").
 
 -ifndef(A_RECORDS_CLUSTER).
 -define(A_RECORDS_CLUSTER,1).
+
+-record(a_cluster_node_data,{
+	name = "NoDefinedName" :: a_utf_text_string(),
+	server = "NoDefinedServer" :: a_host_name_string(),
+	propperties = [] :: proplists:proplist()
+}).
 
 -record(a_cluster_controller_properties,{
 
@@ -21,7 +28,8 @@
 
 -record(a_cluster_controller_handler_state,{
 	db :: pid(),
-	monitor :: pid()
+	monitor :: pid(),
+	get_node_handler :: fun()
 }).
 
 -record(a_cluster_controller_db_state,{

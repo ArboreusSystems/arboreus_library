@@ -16,7 +16,7 @@
 %% System includes
 
 %% Application includes
--include("a_includes.hrl").
+-include("../../include/a_includes.hrl").
 
 %% API
 -export([
@@ -92,6 +92,15 @@ init([_STATE]) ->
 		NEW_STATE :: #a_cluster_controller_handler_state{},
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
+
+handle_call({define_get_node_handler,HANDLER},_FROM,STATE = #a_cluster_controller_handler_state{})
+	when is_function(HANDLER) ->
+
+	define_get_node_handler(HANDLER,STATE);
+
+handle_call({get_node,TYPE},_FROM,STATE = #a_cluster_controller_handler_state{}) ->
+
+	get_node(TYPE,STATE);
 
 handle_call(node_name,_FROM,STATE = #a_cluster_controller_handler_state{}) ->
 
@@ -189,6 +198,7 @@ code_change(_OLD_VERSION,STATE = #a_cluster_controller_handler_state{},_EXTRA) -
 setup(DB_PID,MONITOR_PID,STATE) ->
 
 	{reply,ok,STATE#a_cluster_controller_handler_state{
+		get_node_handler = a_cluster_controller_default:get_node_handler(),
 		db = DB_PID,
 		monitor = MONITOR_PID
 	}}.
@@ -202,3 +212,42 @@ setup(DB_PID,MONITOR_PID,STATE) ->
 		NODE_NAME :: a_node_name_atom().
 
 node_name(STATE) -> {reply,{ok,node()},STATE}.
+
+
+%% ----------------------------
+%% @doc
+
+get_node(TYPE,STATE) ->
+
+	erlang:display(TYPE),
+	erlang:display(STATE),
+
+	NODES = [
+		{type0,[#a_cluster_node_data{}]},
+		{type1,[#a_cluster_node_data{}]},
+		{type2,[#a_cluster_node_data{}]}
+	],
+
+	GET_NODE_HANDLER = STATE#a_cluster_controller_handler_state.get_node_handler,
+	case GET_NODE_HANDLER(TYPE,NODES) of
+		no_node -> {reply,{error,no_node},STATE};
+		no_type -> {reply,{error,no_type},STATE};
+		NODE_DATA -> {reply,{ok,NODE_DATA},STATE}
+	end.
+
+
+%% ----------------------------
+%% @doc
+
+define_get_node_handler(HANDLER,STATE) when is_function(HANDLER) ->
+
+	erlang:display(HANDLER),
+	erlang:display(STATE),
+
+	{reply,ok,STATE#a_cluster_controller_handler_state{
+		get_node_handler = HANDLER
+	}};
+
+define_get_node_handler(_HANDLER,STATE) ->
+
+	{reply,{error,handler_not_function},STATE}.

@@ -72,7 +72,7 @@ start_link(STATE) ->
 init([_STATE]) ->
 
 	process_flag(trap_exit, true),
-	{ok, #a_cluster_controller_handler_state{}}.
+	{ok,#a_cluster_controller_handler_state{}}.
 
 
 %% ----------------------------
@@ -92,6 +92,10 @@ init([_STATE]) ->
 		NEW_STATE :: #a_cluster_controller_handler_state{},
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
+
+handle_call(node_name,_FROM,STATE = #a_cluster_controller_handler_state{}) ->
+
+	node_name(STATE);
 
 handle_call({setup,DB_PID,MONITOR_PID},_FROM,STATE = #a_cluster_controller_handler_state{}) ->
 
@@ -188,3 +192,13 @@ setup(DB_PID,MONITOR_PID,STATE) ->
 		db = DB_PID,
 		monitor = MONITOR_PID
 	}}.
+
+
+%% ----------------------------
+%% @doc Return Cluster Controller node name.
+-spec node_name(STATE) -> {reply,{ok,NODE_NAME},STATE}
+	when
+		STATE :: #a_cluster_controller_handler_state{},
+		NODE_NAME :: a_node_name_atom().
+
+node_name(STATE) -> {reply,{ok,node()},STATE}.

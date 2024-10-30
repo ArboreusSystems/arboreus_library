@@ -21,7 +21,9 @@
 
 	pid_db/1,
 	pid_handler/1,
-	pid_monitor/1
+	pid_monitor/1,
+
+	node_name/1
 
 ]).
 
@@ -91,3 +93,16 @@ pid_monitor(SUPERVISOR_PID) ->
 		false ->
 			{error,no_cluster_controller_monitor}
 	end.
+
+
+%% ----------------------------
+%% @doc Return Cluster Controller node name
+-spec node_name(SUPERVISOR_PID) -> {ok,NODE_NAME}
+	when
+		SUPERVISOR_PID :: pid(),
+		NODE_NAME :: a_node_name_atom().
+
+node_name(SUPERVISOR_PID) ->
+
+	{ok,HANDLER_PID} = pid_handler(SUPERVISOR_PID),
+	gen_server:call(HANDLER_PID,node_name).

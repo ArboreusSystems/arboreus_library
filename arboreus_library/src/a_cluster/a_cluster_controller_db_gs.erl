@@ -102,6 +102,10 @@ init([STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
+handle_call({add_node,NODE_DATA},_FROM,STATE) ->
+
+	add_node(NODE_DATA,STATE);
+
 handle_call(get_all_nodes,_FROM,STATE) ->
 
 	get_all_nodes(STATE);
@@ -222,3 +226,27 @@ get_all_nodes(STATE) ->
 	),
 
 	{reply,{ok,NODES},STATE}.
+
+
+%% ----------------------------
+%% @doc Add node to Cluster Controller
+-spec add_node(NODE_DATA,STATE) -> {reply,OUTPUT,STATE}
+	when
+		OUTPUT :: {reply,{ok,NODE_DATA},STATE} | {reply,{error,REASON},STATE},
+		NODE_DATA :: #a_cluster_node_data{},
+		STATE :: #a_cluster_controller_db_state{},
+		REASON :: term().
+
+add_node(NODE_DATA,STATE) when is_record(NODE_DATA,a_cluster_node_data) ->
+
+	case ets:insert(
+		STATE#a_cluster_controller_db_state.ets_nodes,
+		[NODE_DATA]
+	) of
+		true -> {reply,{ok,NODE_DATA},STATE};
+		_ -> {reply,{error,not_inserted},STATE}
+	end;
+
+add_node(_NODE_DATA,STATE) ->
+
+	{reply,{error,wrong_node_data},STATE}.

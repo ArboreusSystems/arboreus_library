@@ -93,7 +93,7 @@ init([_STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_call({setup,DB_PID,MONITOR_PID},_FROM,STATE = #a_cluster_controller_monitor_state{}) ->
+handle_call({setup,DB_PID,MONITOR_PID},_FROM,STATE) ->
 
 	setup(DB_PID,MONITOR_PID,STATE);
 

@@ -26,7 +26,8 @@
 	node_name/1,
 	get_nodes_by_handler/2,
 	define_get_nodes_handler/2,
-	get_all_nodes/1
+	get_all_nodes/1,
+	add_node/2
 
 ]).
 
@@ -150,3 +151,17 @@ get_all_nodes(SUPERVISOR_PID) ->
 
 	{ok,DB_PID} = pid_db(SUPERVISOR_PID),
 	gen_server:call(DB_PID,get_all_nodes).
+
+
+%% ----------------------------
+%% @doc Add node data to Cluster Connector
+-spec add_node(NODE_DATA,SUPERVISOR_PID) -> {ok,NODE_DATA} | {error,REASON}
+	when
+		NODE_DATA :: #a_cluster_node_data{},
+		SUPERVISOR_PID :: pid(),
+		REASON :: term().
+
+add_node(NODE_DATA,SUPERVISOR_PID) ->
+
+	{ok,DB_PID} = pid_db(SUPERVISOR_PID),
+	gen_server:call(DB_PID,{add_node,NODE_DATA}).

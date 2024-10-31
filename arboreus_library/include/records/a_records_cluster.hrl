@@ -33,7 +33,7 @@
 
 	db :: pid(),
 	monitor :: pid(),
-	get_node_handler :: fun()
+	get_nodes_handler :: fun()
 }).
 
 -record(a_cluster_controller_db_state,{

@@ -102,7 +102,11 @@ init([STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_call({setup,HANDLER_PID,MONITOR_PID},_FROM,STATE = #a_cluster_controller_db_state{}) ->
+handle_call(get_all_nodes,_FROM,STATE) ->
+
+	get_all_nodes(STATE);
+
+handle_call({setup,HANDLER_PID,MONITOR_PID},_FROM,STATE) ->
 
 	setup(HANDLER_PID,MONITOR_PID,STATE);
 
@@ -124,7 +128,7 @@ handle_call(REQUEST,FROM,STATE = #a_cluster_controller_db_state{}) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_cast(_REQUEST,STATE = #a_cluster_controller_db_state{}) ->
+handle_cast(_REQUEST,STATE) ->
 
 	{noreply, STATE}.
 
@@ -201,3 +205,20 @@ setup(HANDLER_PID,MONITOR_PID,STATE) ->
 		handler = HANDLER_PID,
 		monitor = MONITOR_PID
 	}}.
+
+
+%% ----------------------------
+%% @doc Return all registered in ETS table nodes
+-spec get_all_nodes(STATE) -> {reply,{ok,NODES},STATE}
+	when
+		STATE :: #a_cluster_controller_db_state{},
+		NODES :: [#a_cluster_node_data{}].
+
+get_all_nodes(STATE) ->
+
+	NODES = ets:match_object(
+		STATE#a_cluster_controller_db_state.ets_nodes,
+		{'_','_','_','_','_','_'}
+	),
+
+	{reply,{ok,NODES},STATE}.

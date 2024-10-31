@@ -24,8 +24,9 @@
 	pid_monitor/1,
 
 	node_name/1,
-	get_node/2,
-	define_get_node_handler/2
+	get_nodes_by_handler/2,
+	define_get_nodes_handler/2,
+	get_all_nodes/1
 
 ]).
 
@@ -111,18 +112,41 @@ node_name(SUPERVISOR_PID) ->
 
 
 %% ----------------------------
-%% @doc
+%% @doc Return list of nodes filtered by handler
+-spec get_nodes_by_handler(PARAMETERS,SUPERVISOR_PID) -> NODES
+	when
+		PARAMETERS :: [any()],
+		SUPERVISOR_PID :: pid(),
+		NODES :: [#a_cluster_node_data{}].
 
-get_node(TYPE,SUPERVISOR_PID) ->
+get_nodes_by_handler(PARAMETERS,SUPERVISOR_PID) ->
 
 	{ok,HANDLER_PID} = pid_handler(SUPERVISOR_PID),
-	gen_server:call(HANDLER_PID,{get_node,TYPE}).
+	gen_server:call(HANDLER_PID,{get_nodes_by_handler,PARAMETERS}).
 
 
 %% ----------------------------
-%% @doc
+%% @doc Define get nodes handler
+-spec define_get_nodes_handler(GET_NODE_HANDLER,SUPERVISOR_PID) -> ok | {error,REASON}
+	when
+		GET_NODE_HANDLER :: fun(),
+		SUPERVISOR_PID :: pid(),
+		REASON :: term().
 
-define_get_node_handler(GET_NODE_HANDLER,SUPERVISOR_PID) ->
+define_get_nodes_handler(GET_NODE_HANDLER,SUPERVISOR_PID) ->
 
 	{ok,HANDLER_PID} = pid_handler(SUPERVISOR_PID),
-	gen_server:call(HANDLER_PID,{define_get_node_handler,GET_NODE_HANDLER}).
+	gen_server:call(HANDLER_PID,{define_get_nodes_handler,GET_NODE_HANDLER}).
+
+
+%% ----------------------------
+%% @doc Return list of all registered nodes
+-spec get_all_nodes(SUPERVISOR_PID) -> {ok,NODES}
+	when
+		SUPERVISOR_PID :: pid(),
+		NODES :: [#a_cluster_node_data{}].
+
+get_all_nodes(SUPERVISOR_PID) ->
+
+	{ok,DB_PID} = pid_db(SUPERVISOR_PID),
+	gen_server:call(DB_PID,get_all_nodes).

@@ -72,7 +72,7 @@ start_link(STATE) ->
 init([_STATE]) ->
 
 	process_flag(trap_exit, true),
-	{ok,#a_cluster_controller_handler_state{}}.
+	{ok,a_cluster_controller_default:handler_state()}.
 
 
 %% ----------------------------
@@ -93,20 +93,20 @@ init([_STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_call({define_get_node_handler,HANDLER},_FROM,STATE = #a_cluster_controller_handler_state{})
+handle_call({define_get_nodes_handler,HANDLER},_FROM,STATE)
 	when is_function(HANDLER) ->
 
-	define_get_node_handler(HANDLER,STATE);
+	define_get_nodes_handler(HANDLER,STATE);
 
-handle_call({get_node,TYPE},_FROM,STATE = #a_cluster_controller_handler_state{}) ->
+handle_call({get_nodes_by_handler,TYPE},_FROM,STATE) ->
 
-	get_node(TYPE,STATE);
+	get_nodes_by_handler(TYPE,STATE);
 
-handle_call(node_name,_FROM,STATE = #a_cluster_controller_handler_state{}) ->
+handle_call(node_name,_FROM,STATE) ->
 
 	node_name(STATE);
 
-handle_call({setup,DB_PID,MONITOR_PID},_FROM,STATE = #a_cluster_controller_handler_state{}) ->
+handle_call({setup,DB_PID,MONITOR_PID},_FROM,STATE) ->
 
 	setup(DB_PID,MONITOR_PID,STATE);
 
@@ -202,7 +202,6 @@ code_change(_OLD_VERSION,STATE = #a_cluster_controller_handler_state{},_EXTRA) -
 setup(DB_PID,MONITOR_PID,STATE) ->
 
 	{reply,ok,STATE#a_cluster_controller_handler_state{
-		get_node_handler = a_cluster_controller_default:get_node_handler(),
 		db = DB_PID,
 		monitor = MONITOR_PID
 	}}.
@@ -220,42 +219,41 @@ node_name(STATE) -> {reply,{ok,node()},STATE}.
 
 %% ----------------------------
 %% @doc Return node data
--spec get_node(TYPE,STATE) -> {reply,{ok,NODE_DATA},STATE} | {reply,{error,REASON},STATE}
+-spec get_nodes_by_handler(TYPE,STATE) -> {reply,{ok,NODE_DATA},STATE} | {reply,{error,REASON},STATE}
 	when
 		TYPE :: any(),
 		STATE :: #a_cluster_controller_handler_state{},
 		NODE_DATA :: #a_cluster_node_data{},
 		REASON :: term().
 
-get_node(TYPE,STATE) ->
+get_nodes_by_handler(PROPERTIES,STATE) ->
 
-	NODES = [
-		{type0,[#a_cluster_node_data{}]},
-		{type1,[#a_cluster_node_data{}]},
-		{type2,[#a_cluster_node_data{}]}
-	],
+	{ok,ALL_NODES} = gen_server:call(
+		STATE#a_cluster_controller_handler_state.db,
+		get_all_nodes
+	),
 
-	GET_NODE_HANDLER = STATE#a_cluster_controller_handler_state.get_node_handler,
-	case GET_NODE_HANDLER(TYPE,NODES) of
+	GET_NODES_HANDLER = STATE#a_cluster_controller_handler_state.get_nodes_handler,
+	case GET_NODES_HANDLER(PROPERTIES,ALL_NODES) of
 		no_node -> {reply,{error,no_node},STATE};
 		no_type -> {reply,{error,no_type},STATE};
-		NODE_DATA -> {reply,{ok,NODE_DATA},STATE}
+		NODES_DATA -> {reply,{ok,NODES_DATA},STATE}
 	end.
 
 
 %% ----------------------------
 %% @doc Define handler for getting node
--spec define_get_node_handler(HANDLER,STATE) -> {reply,ok,STATE}
+-spec define_get_nodes_handler(HANDLER,STATE) -> {reply,ok,STATE}
 	when
 		HANDLER :: fun(),
 		STATE :: #a_cluster_controller_handler_state{}.
 
-define_get_node_handler(HANDLER,STATE) when is_function(HANDLER) ->
+define_get_nodes_handler(HANDLER,STATE) when is_function(HANDLER) ->
 
 	{reply,ok,STATE#a_cluster_controller_handler_state{
-		get_node_handler = HANDLER
+		get_nodes_handler = HANDLER
 	}};
 
-define_get_node_handler(_HANDLER,STATE) ->
+define_get_nodes_handler(_HANDLER,STATE) ->
 
 	{reply,{error,handler_not_function},STATE}.

@@ -20,7 +20,7 @@
 	test/0,
 
 	handler_state/0,
-	get_node_handler/0
+	get_nodes_by_type_handler/0
 
 ]).
 
@@ -33,26 +33,28 @@ test() -> ok.
 
 
 %% ----------------------------
-%% @doc
+%% @doc Return default handler state
+-spec handler_state() -> STATE
+	when STATE :: #a_cluster_controller_handler_state{}.
 
 handler_state() ->
 
 	#a_cluster_controller_handler_state{
-		get_node_handler = get_node_handler()
+		get_nodes_handler = get_nodes_by_type_handler()
 	}.
 
 
 %% ----------------------------
-%% @doc
+%% @doc Return for filtering nodes by type
+-spec get_nodes_by_type_handler() -> fun().
 
-get_node_handler() ->
+get_nodes_by_type_handler() ->
 
-	fun(IN_TYPE,IN_NODE_LIST) when is_list(IN_NODE_LIST) ->
-		case proplists:get_value(IN_TYPE,IN_NODE_LIST) of
-			[] -> no_node;
-			undefined -> no_type;
-			[NODE_PROPERTY|_NODE_PROPERTIES] -> NODE_PROPERTY
-		end
+	fun([IN_TYPE],IN_NODES) when is_list(IN_NODES) ->
+		lists:filter(
+			fun(NODE_DATA) -> NODE_DATA#a_cluster_node_data.type =:= IN_TYPE end,
+			IN_NODES
+		)
 	end.
 
 

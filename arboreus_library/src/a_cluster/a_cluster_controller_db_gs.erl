@@ -71,10 +71,17 @@ start_link(STATE) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-init([_STATE]) ->
+init([STATE]) ->
 
-	process_flag(trap_exit,true),
-	{ok,#a_cluster_controller_db_state{}}.
+	case a_cluster_controller_db:init() of
+		{ok,TABLE_REFERENCE} ->
+			process_flag(trap_exit,true),
+			{ok,STATE#a_cluster_controller_db_state{
+				ets_nodes = TABLE_REFERENCE
+			}};
+		{error,REASON} ->
+			{error,REASON}
+	end.
 
 
 %% ----------------------------
@@ -133,6 +140,10 @@ handle_cast(_REQUEST,STATE = #a_cluster_controller_db_state{}) ->
 		NEW_STATE :: #a_cluster_controller_db_state{},
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
+
+handle_info({'EXIT',_FROM,REASON},STATE) ->
+
+	{stop,REASON,STATE};
 
 handle_info(_INFO,STATE = #a_cluster_controller_db_state{}) ->
 

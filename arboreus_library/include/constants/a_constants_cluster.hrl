@@ -20,6 +20,7 @@
 -define(A_ID_CLUSTER_CONTROLLER,a_id_cluster_controller).
 -define(A_ID_CLUSTER_CONTROLLER_MONITOR,a_id_cluster_controller_monitor).
 -define(A_ID_CLUSTER_CONTROLLER_DB,a_id_cluster_controller_db).
+-define(A_ID_CLUSTER_CONTROLLER_DB_TABLE_NODES,a_id_cluster_controller_db_table_nodes).
 -define(A_ID_CLUSTER_CONTROLLER_HANDLER,a_id_cluster_controller_handler).
 
 -define(A_ID_CLUSTER_CONNECTOR,a_id_cluster_connector).

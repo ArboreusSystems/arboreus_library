@@ -17,6 +17,9 @@
 -define(A_RECORDS_CLUSTER,1).
 
 -record(a_cluster_node_data,{
+
+	id = <<"NoDefinedID"/utf8>> :: a_id_32(),
+	type = "NoDefinedType" :: any(),
 	name = "NoDefinedName" :: a_utf_text_string(),
 	server = "NoDefinedServer" :: a_host_name_string(),
 	propperties = [] :: proplists:proplist()
@@ -27,17 +30,21 @@
 }).
 
 -record(a_cluster_controller_handler_state,{
+
 	db :: pid(),
 	monitor :: pid(),
 	get_node_handler :: fun()
 }).
 
 -record(a_cluster_controller_db_state,{
+
 	handler :: pid(),
-	monitor :: pid()
+	monitor :: pid(),
+	ets_nodes :: reference()
 }).
 
 -record(a_cluster_controller_monitor_state,{
+
 	handler :: pid(),
 	db :: pid()
 }).

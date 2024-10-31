@@ -145,6 +145,10 @@ handle_cast(_REQUEST,STATE = #a_cluster_controller_handler_state{}) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
+handle_info({'EXIT',_FROM,REASON},STATE) ->
+
+	{stop,REASON,STATE};
+
 handle_info(_INFO,STATE = #a_cluster_controller_handler_state{}) ->
 
 	{noreply,STATE}.
@@ -215,12 +219,15 @@ node_name(STATE) -> {reply,{ok,node()},STATE}.
 
 
 %% ----------------------------
-%% @doc
+%% @doc Return node data
+-spec get_node(TYPE,STATE) -> {reply,{ok,NODE_DATA},STATE} | {reply,{error,REASON},STATE}
+	when
+		TYPE :: any(),
+		STATE :: #a_cluster_controller_handler_state{},
+		NODE_DATA :: #a_cluster_node_data{},
+		REASON :: term().
 
 get_node(TYPE,STATE) ->
-
-	erlang:display(TYPE),
-	erlang:display(STATE),
 
 	NODES = [
 		{type0,[#a_cluster_node_data{}]},
@@ -237,12 +244,13 @@ get_node(TYPE,STATE) ->
 
 
 %% ----------------------------
-%% @doc
+%% @doc Define handler for getting node
+-spec define_get_node_handler(HANDLER,STATE) -> {reply,ok,STATE}
+	when
+		HANDLER :: fun(),
+		STATE :: #a_cluster_controller_handler_state{}.
 
 define_get_node_handler(HANDLER,STATE) when is_function(HANDLER) ->
-
-	erlang:display(HANDLER),
-	erlang:display(STATE),
 
 	{reply,ok,STATE#a_cluster_controller_handler_state{
 		get_node_handler = HANDLER

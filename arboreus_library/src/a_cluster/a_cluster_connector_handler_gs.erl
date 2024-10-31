@@ -127,6 +127,10 @@ handle_cast(_REQUEST, STATE = #a_cluster_connector_handler_state{}) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
+handle_info({'EXIT',_FROM,REASON},STATE) ->
+
+	{stop,REASON,STATE};
+
 handle_info(_INFO, STATE = #a_cluster_connector_handler_state{}) ->
 
 	{noreply, STATE}.

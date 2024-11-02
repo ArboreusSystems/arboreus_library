@@ -99,9 +99,7 @@ start_db(SUPERVISOR_PID) ->
 		modules => ['a_cluster_controller_db_gs']
 	},
 
-	SETUP_DB = fun(IN_PID) ->
-		{ok,IN_PID}
-	end,
+	SETUP_DB = fun(IN_PID) -> {ok,IN_PID} end,
 
 	case supervisor:start_child(SUPERVISOR_PID,DB) of
 		{ok,DB_PID} -> SETUP_DB(DB_PID);
@@ -131,9 +129,7 @@ start_handler(SUPERVISOR_PID) ->
 		modules => ['a_cluster_controller_handler_gs']
 	},
 
-	SETUP_HANDLER = fun(IN_PID) ->
-		{ok,IN_PID}
-	end,
+	SETUP_HANDLER = fun(IN_PID) -> {ok,IN_PID} end,
 
 	case supervisor:start_child(SUPERVISOR_PID,HANDLER) of
 		{ok,HANDLER_PID} -> SETUP_HANDLER(HANDLER_PID);
@@ -163,9 +159,7 @@ start_monitor(SUPERVISOR_PID) ->
 		modules => ['a_cluster_controller_monitor_gs']
 	},
 
-	SETUP_MONITOR = fun(IN_PID) ->
-		{ok,IN_PID}
-	end,
+	SETUP_MONITOR = fun(IN_PID) -> {ok,IN_PID} end,
 
 	case supervisor:start_child(SUPERVISOR_PID,MONITOR) of
 		{ok, MONITOR_PID} -> SETUP_MONITOR(MONITOR_PID);
@@ -192,7 +186,7 @@ setup(DB_PID,HANDLER_PID,MONITOR_PID) ->
 
 
 %% ----------------------------
-%% @doc
+%% @doc Init supervisor
 -spec init(ARGUMENTS) -> {ok,STATE} | {error,REASON}
 	when
 		ARGUMENTS :: list(),

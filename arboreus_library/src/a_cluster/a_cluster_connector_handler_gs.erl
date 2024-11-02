@@ -93,9 +93,14 @@ init([_STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_call(_REQUEST, _FROM, STATE = #a_cluster_connector_handler_state{}) ->
+handle_call({add_node,NODE_DATA},_FROM,STATE) ->
 
-	{reply, ok, STATE}.
+	add_node(NODE_DATA,STATE);
+
+handle_call(REQUEST,FROM,STATE = #a_cluster_connector_handler_state{}) ->
+
+	ERROR = {error,undefined_call,self(),REQUEST,FROM,?MODULE,?FILE,?LINE},
+	{reply,ERROR,STATE}.
 
 
 %% ----------------------------
@@ -171,3 +176,11 @@ code_change(_OLD_VERSION, STATE = #a_cluster_connector_handler_state{}, _EXTRA) 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+
+%% ----------------------------
+%% @doc
+
+add_node(_NODE_DATA,STATE) ->
+
+	{reply,{},STATE}.

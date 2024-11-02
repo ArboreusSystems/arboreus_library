@@ -49,10 +49,6 @@
 	db :: pid()
 }).
 
--record(a_cluster_connector_properties,{
-
-}).
-
 -record(a_cluster_connector_handler_state,{
 
 	main_controller = 'none@noserver.nodomain' :: a_node_name_atom(),

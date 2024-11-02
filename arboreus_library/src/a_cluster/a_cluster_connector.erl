@@ -17,7 +17,9 @@
 %% API
 -export([
 
-	test/0
+	test/0,
+
+	pid_handler/1
 
 ]).
 
@@ -27,3 +29,23 @@
 -spec test() -> ok.
 
 test() -> ok.
+
+
+%% ----------------------------
+%% @doc Return Cluster Connector handler PID
+-spec pid_handler(SUPERVISOR_PID) -> {ok,HANDLER_PID} | {error,REASON}
+	when
+		SUPERVISOR_PID :: pid(),
+		HANDLER_PID :: pid(),
+		REASON :: term().
+
+pid_handler(SUPERVISOR_PID) ->
+
+	case a_otp_supervisor:find_child(
+		by_id,SUPERVISOR_PID,?A_ID_CLUSTER_CONNECTOR_HANDLER
+	) of
+		{?A_ID_CLUSTER_CONNECTOR_HANDLER,HANDLER_PID,_TYPE,_MODULES} ->
+			{ok,HANDLER_PID};
+		false ->
+			{error,no_cluster_controller_handler}
+	end.

@@ -55,6 +55,8 @@
 
 -record(a_cluster_connector_handler_state,{
 
+	main_controller = 'none@noserver.nodomain' :: a_node_name_atom(),
+	data = #a_cluster_node_data{} :: #a_cluster_node_data{}
 }).
 
 -endif. %% A_RECORDS_CLUSTER

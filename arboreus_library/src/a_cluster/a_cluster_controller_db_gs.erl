@@ -102,6 +102,14 @@ init([STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
+handle_call({select_by_id,NODE_ID},_FROM,STATE) ->
+
+	select_by_id(NODE_ID,STATE);
+
+handle_call({is_added_by_id,NODE_ID},_FROM,STATE) ->
+
+	is_added_by_id(NODE_ID,STATE);
+
 handle_call({add_node,NODE_DATA},_FROM,STATE) ->
 
 	add_node(NODE_DATA,STATE);
@@ -239,14 +247,51 @@ get_all_nodes(STATE) ->
 
 add_node(NODE_DATA,STATE) when is_record(NODE_DATA,a_cluster_node_data) ->
 
-	case ets:insert(
-		STATE#a_cluster_controller_db_state.ets_nodes,
-		[NODE_DATA]
-	) of
-		true -> {reply,{ok,NODE_DATA},STATE};
-		_ -> {reply,{error,not_inserted},STATE}
-	end;
+	NODE_ID = a_node:node_id(
+		a_node:node_name_string(
+			NODE_DATA#a_cluster_node_data.name,
+			NODE_DATA#a_cluster_node_data.server
+		)
+	),
+
+	{reply,a_cluster_controller_db:add(
+		NODE_DATA#a_cluster_node_data{id = NODE_ID},
+		STATE#a_cluster_controller_db_state.ets_nodes
+	),STATE};
 
 add_node(_NODE_DATA,STATE) ->
 
 	{reply,{error,wrong_node_data},STATE}.
+
+
+%% ----------------------------
+%% @doc Check if node already added to the list
+-spec is_added_by_id(NODE_ID,STATE) -> OUTPUT
+	when
+		NODE_ID :: a_id_32(),
+		STATE :: #a_cluster_controller_db_state{},
+		OUTPUT :: boolean().
+
+is_added_by_id(NODE_ID,STATE) ->
+
+	case a_cluster_controller_db:select_by_id(
+		NODE_ID,STATE#a_cluster_controller_db_state.ets_nodes
+	) of
+		[] -> {reply,false,STATE};
+		[_NODE_DATA] -> {reply,true,STATE}
+	end.
+
+
+%% ----------------------------
+%% @doc Return selected by ID node data
+-spec select_by_id(NODE_ID,STATE) -> OUTPUT
+	when
+		NODE_ID :: a_id_32(),
+		STATE :: #a_cluster_controller_db_state{},
+		OUTPUT :: [#a_cluster_node_data{}].
+
+select_by_id(NODE_ID,STATE) ->
+
+	{reply,a_cluster_controller_db:select_by_id(
+		NODE_ID,STATE#a_cluster_controller_db_state.ets_nodes
+	),STATE}.

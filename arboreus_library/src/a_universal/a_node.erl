@@ -23,6 +23,8 @@
 	load/1,
 	names/0,names/1,
 	fqdn/0,
+	node_name_string/2,
+	node_id/1,
 	default_node_properties/0,
 	start/1,
 	stop/1,stop/4,
@@ -325,6 +327,38 @@ fqdn() ->
 	CMD_OUTPUT = os:cmd("hostname -f"),
 	{HOSTNAME,_} = lists:split(length(CMD_OUTPUT) - 1, CMD_OUTPUT),
 	HOSTNAME.
+
+
+%% ----------------------------
+%% @doc Return node name string
+-spec node_name_string(NAME,SERVER) -> a_node_name_string()
+	when
+		NAME :: a_utf_text_string(),
+		SERVER :: a_utf_text_string().
+
+node_name_string(NAME,SERVER) -> NAME ++ "@" ++ SERVER.
+
+
+%% ----------------------------
+%% @doc Return binary within MD5 node ID
+-spec node_id(NODE_NAME_BINARY) -> a_id_32()
+	when
+		NODE_NAME_BINARY ::
+			a_node_name_string() |
+			a_node_name_atom() |
+			a_node_name_binary().
+
+node_id(NODE_NAME_BINARY) when is_binary(NODE_NAME_BINARY) ->
+
+	a_sequence:md(NODE_NAME_BINARY,md5);
+
+node_id(NODE_NAME_ATOM) when is_atom(NODE_NAME_ATOM) ->
+
+	node_id(atom_to_binary(NODE_NAME_ATOM));
+
+node_id(NODE_NAME_STRING) when is_list(NODE_NAME_STRING) ->
+
+	node_id(list_to_binary(NODE_NAME_STRING)).
 
 
 %% ----------------------------

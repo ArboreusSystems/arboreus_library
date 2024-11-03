@@ -71,10 +71,10 @@ start_link(STATE) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-init([_STATE]) ->
+init([STATE]) ->
 
 	process_flag(trap_exit, true),
-	{ok, #a_cluster_connector_handler_state{}}.
+	{ok,STATE}.
 
 
 %% ----------------------------

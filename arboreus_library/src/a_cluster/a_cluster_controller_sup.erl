@@ -121,7 +121,7 @@ start_handler(SUPERVISOR_PID) ->
 	HANDLER = #{
 		id => ?A_ID_CLUSTER_CONTROLLER_HANDLER,
 		start => {'a_cluster_controller_handler_gs','start_link',[
-			#a_cluster_controller_handler_state{}
+			a_cluster_controller_default:handler_state()
 		]},
 		restart => transient,
 		shutdown => 5000,

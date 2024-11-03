@@ -247,15 +247,13 @@ get_all_nodes(STATE) ->
 
 add_node(NODE_DATA,STATE) when is_record(NODE_DATA,a_cluster_node_data) ->
 
-	NODE_ID = a_node:node_id(
-		a_node:node_name_string(
-			NODE_DATA#a_cluster_node_data.name,
-			NODE_DATA#a_cluster_node_data.server
-		)
-	),
-
 	{reply,a_cluster_controller_db:add(
-		NODE_DATA#a_cluster_node_data{id = NODE_ID},
+		NODE_DATA#a_cluster_node_data{id = a_node:node_id(
+			a_node:name_string(
+				NODE_DATA#a_cluster_node_data.name,
+				NODE_DATA#a_cluster_node_data.server
+			)
+		)},
 		STATE#a_cluster_controller_db_state.ets_nodes
 	),STATE};
 

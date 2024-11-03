@@ -30,7 +30,12 @@
 %% @doc Module test function
 -spec test() -> ok.
 
-test() -> ok.
+test() ->
+
+	ets:fun2ms(
+
+		fun(N = #a_cluster_node_data{id=C}) when C =:= 600 -> N end
+	).
 
 
 %% ----------------------------
@@ -92,7 +97,7 @@ add(NODE_DATA,TABLE_REFERENCE) ->
 select_by_id(NODE_ID,TABLE_REFERENCE) ->
 
 	ets:select(TABLE_REFERENCE,[{
-		{a_cluster_node_data,'$1','$2','$3','$4','$5'},
+		#a_cluster_node_data{id = '$1',_ = '_'},
 		[{'=:=','$1',NODE_ID}],
-		[{{a_cluster_node_data,'$1','$2','$3','$4','$5'}}]
+		['$_']
 	}]).

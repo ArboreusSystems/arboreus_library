@@ -23,7 +23,8 @@
 	load/1,
 	names/0,names/1,
 	fqdn/0,
-	node_name_string/2,
+	name_string/2,
+	name_atom/2,
 	node_id/1,
 	default_node_properties/0,
 	start/1,
@@ -331,12 +332,22 @@ fqdn() ->
 
 %% ----------------------------
 %% @doc Return node name string
--spec node_name_string(NAME,SERVER) -> a_node_name_string()
+-spec name_string(NAME,SERVER) -> a_node_name_string()
 	when
 		NAME :: a_utf_text_string(),
 		SERVER :: a_utf_text_string().
 
-node_name_string(NAME,SERVER) -> NAME ++ "@" ++ SERVER.
+name_string(NAME,SERVER) -> NAME ++ "@" ++ SERVER.
+
+
+%% ----------------------------
+%% @doc Return node name atom
+-spec name_atom(NAME,SERVER) -> a_node_name_atom()
+	when
+		NAME :: a_utf_text_string(),
+		SERVER :: a_utf_text_string().
+
+name_atom(NAME,SERVER) -> list_to_atom(name_string(NAME,SERVER)).
 
 
 %% ----------------------------

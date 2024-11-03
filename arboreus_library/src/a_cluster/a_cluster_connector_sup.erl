@@ -104,7 +104,7 @@ init([_CLUSTER_CONNECTOR_PROPERTIES]) ->
 start_handler(SUPERVISOR_PID) ->
 
 	HANDLER = #{
-		id => a_cluster_connector_handler,
+		id => ?A_ID_CLUSTER_CONNECTOR_HANDLER,
 		start => {'a_cluster_connector_handler_gs','start_link',[
 			#a_cluster_connector_handler_state{}
 		]},

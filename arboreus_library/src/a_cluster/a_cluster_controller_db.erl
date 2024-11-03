@@ -30,12 +30,7 @@
 %% @doc Module test function
 -spec test() -> ok.
 
-test() ->
-
-	ets:fun2ms(
-
-		fun(N = #a_cluster_node_data{id=C}) when C =:= 600 -> N end
-	).
+test() -> ok.
 
 
 %% ----------------------------

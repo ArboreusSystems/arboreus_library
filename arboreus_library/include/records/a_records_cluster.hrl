@@ -52,7 +52,10 @@
 -record(a_cluster_connector_handler_state,{
 
 	main_controller = 'none@noserver.nodomain' :: a_node_name_atom(),
-	data = #a_cluster_node_data{} :: #a_cluster_node_data{}
+	data = #a_cluster_node_data{} :: #a_cluster_node_data{},
+	add_node_handler = fun(IN_NODE_DATA,IN_MAIN_CONTROLLER) ->
+		{error,{no_handler,IN_NODE_DATA,IN_MAIN_CONTROLLER}}
+	end :: fun()
 }).
 
 -endif. %% A_RECORDS_CLUSTER

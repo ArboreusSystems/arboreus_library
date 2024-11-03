@@ -183,4 +183,4 @@ code_change(_OLD_VERSION, STATE = #a_cluster_connector_handler_state{}, _EXTRA) 
 
 add_node(_NODE_DATA,STATE) ->
 
-	{reply,{},STATE}.
+	{reply,ok,STATE}.

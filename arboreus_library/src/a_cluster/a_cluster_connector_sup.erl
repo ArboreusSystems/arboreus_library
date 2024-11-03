@@ -21,7 +21,7 @@
 	test/0,
 
 	init/1,
-	start_link/0,start_link/1
+	start_link/0,start_link/2
 
 ]).
 
@@ -38,7 +38,7 @@ test() -> ok.
 
 %% ----------------------------
 %% @doc
--spec start_link() -> {'ok', PID} | 'ignore' | {'error', REASON}
+-spec start_link() -> {'ok',PID} | 'ignore' | {'error',REASON}
 	when
 		PID :: pid(),
 		REASON :: term().
@@ -52,18 +52,24 @@ start_link() ->
 
 %% ----------------------------
 %% @doc
--spec start_link(INIT_STATE) -> {'ok', PID} | 'ignore' | {'error', REASON}
+-spec start_link(CLUSTER_CONNECTOR_PROPERTIES,INIT_HANDLER_STATE) ->
+	{'ok', PID} | 'ignore' | {'error', REASON}
 	when
-		INIT_STATE :: #a_cluster_connector_handler_state{},
+		CLUSTER_CONNECTOR_PROPERTIES :: term(),
+		INIT_HANDLER_STATE :: #a_cluster_connector_handler_state{},
 		PID :: pid(),
 		REASON :: term().
 
-start_link(INIT_STATE) ->
+start_link(CLUSTER_CONNECTOR_PROPERTIES,INIT_HANDLER_STATE) ->
 
-	case supervisor:start_link({local,?SERVER},?MODULE,[INIT_STATE]) of
+	case supervisor:start_link(
+		{local,?SERVER},?MODULE,[CLUSTER_CONNECTOR_PROPERTIES]
+	) of
 		{ok,SUPERVISOR_PID} ->
 
-			{ok,_HANDLER_PID} = start_handler(SUPERVISOR_PID),
+			{ok,_HANDLER_PID} = start_handler(
+				SUPERVISOR_PID,INIT_HANDLER_STATE
+			),
 
 			{ok,SUPERVISOR_PID};
 
@@ -74,7 +80,7 @@ start_link(INIT_STATE) ->
 
 %% ----------------------------
 %% @doc Init supervisor
--spec init(ARGUMENTS) -> {ok, STATE} | {error, REASON}
+-spec init(ARGUMENTS) -> {ok,STATE} | {error,REASON}
 	when
 		ARGUMENTS :: list(),
 		STATE :: term(),
@@ -95,18 +101,19 @@ init([_CLUSTER_CONNECTOR_PROPERTIES]) ->
 
 %% ----------------------------
 %% @doc Start Cluster Connector handler process
--spec start_handler(SUPERVISOR_PID) -> {ok,HANDLER_PID} | {error,REASON}
+-spec start_handler(SUPERVISOR_PID,INIT_HANDLER_STATE) -> {ok,HANDLER_PID} | {error,REASON}
 	when
 		SUPERVISOR_PID :: pid(),
+		INIT_HANDLER_STATE :: #a_cluster_connector_handler_state{},
 		HANDLER_PID :: pid(),
 		REASON :: term().
 
-start_handler(SUPERVISOR_PID) ->
+start_handler(SUPERVISOR_PID,INIT_HANDLER_STATE) ->
 
 	HANDLER = #{
 		id => ?A_ID_CLUSTER_CONNECTOR_HANDLER,
 		start => {'a_cluster_connector_handler_gs','start_link',[
-			#a_cluster_connector_handler_state{}
+			INIT_HANDLER_STATE
 		]},
 		restart => transient,
 		shutdown => 5000,

@@ -27,7 +27,8 @@
 	get_nodes_by_handler/2,
 	define_get_nodes_handler/2,
 	get_all_nodes/1,
-	add_node/2
+	add_node/2,
+	delete_node_by_id/2
 
 ]).
 
@@ -154,7 +155,7 @@ get_all_nodes(SUPERVISOR_PID) ->
 
 
 %% ----------------------------
-%% @doc Add node data to Cluster Connector
+%% @doc Add node data to Cluster Controller
 -spec add_node(NODE_DATA,SUPERVISOR_PID) -> {ok,NODE_DATA} | {error,REASON}
 	when
 		NODE_DATA :: #a_cluster_node_data{},
@@ -165,3 +166,17 @@ add_node(NODE_DATA,SUPERVISOR_PID) ->
 
 	{ok,DB_PID} = pid_db(SUPERVISOR_PID),
 	gen_server:call(DB_PID,{add_node,NODE_DATA}).
+
+
+%% ----------------------------
+%% @doc Delete node by ID from Cluster Controller
+-spec delete_node_by_id(NODE_ID,SUPERVISOR_PID) -> OUTPUT
+	when
+		NODE_ID :: a_id_32(),
+		SUPERVISOR_PID :: pid(),
+		OUTPUT :: boolean().
+
+delete_node_by_id(NODE_ID,SUPERVISOR_PID) ->
+
+	{ok,DB_PID} = pid_db(SUPERVISOR_PID),
+	gen_server:call(DB_PID,{delete_by_id,NODE_ID}).

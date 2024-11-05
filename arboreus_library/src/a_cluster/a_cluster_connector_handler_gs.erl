@@ -93,13 +93,13 @@ init([STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_call(node_data,_FROM,STATE) ->
+handle_call({set_data,NODE_DATA},_FROM,STATE) -> set_data(NODE_DATA,STATE);
 
-	node_data(STATE);
+handle_call(node_data,_FROM,STATE) -> node_data(STATE);
 
-handle_call(add_node,_FROM,STATE) ->
+handle_call(delete_node,_FROM,STATE) -> delete_node(STATE);
 
-	add_node(STATE);
+handle_call(add_node,_FROM,STATE) -> add_node(STATE);
 
 handle_call(REQUEST,FROM,STATE = #a_cluster_connector_handler_state{}) ->
 
@@ -201,6 +201,23 @@ add_node(STATE) ->
 
 
 %% ----------------------------
+%% @doc Delete node from the list on Cluster Controller
+-spec delete_node(STATE) -> {reply,DELETE_NODE_RESULT,STATE}
+	when
+		STATE :: #a_cluster_connector_handler_state{},
+		DELETE_NODE_RESULT :: boolean().
+
+delete_node(STATE) ->
+
+	DELETE_NODE_HANDLER = STATE#a_cluster_connector_handler_state.delete_node_by_id_handler,
+	NODE_DATA = STATE#a_cluster_connector_handler_state.data,
+	{reply,DELETE_NODE_HANDLER(
+		NODE_DATA#a_cluster_node_data.id,
+		STATE#a_cluster_connector_handler_state.main_controller
+	),STATE}.
+
+
+%% ----------------------------
 %% @doc Return node data
 -spec node_data(STATE) -> {reply,{ok,DATA},STATE}
 	when
@@ -210,3 +227,17 @@ add_node(STATE) ->
 node_data(STATE) ->
 
 	{reply,{ok,STATE#a_cluster_connector_handler_state.data},STATE}.
+
+
+%% ----------------------------
+%% @doc Set node data for handler
+-spec set_data(NODE_DATA,STATE) -> {reply,ok,STATE}
+	when
+		NODE_DATA :: #a_cluster_node_data{},
+		STATE :: #a_cluster_connector_handler_state{}.
+
+set_data(NODE_DATA,STATE) ->
+
+	{reply,ok,STATE#a_cluster_connector_handler_state{
+		data = NODE_DATA
+	}}.

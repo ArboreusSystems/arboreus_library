@@ -21,7 +21,8 @@
 
 	init/0,
 	add/2,
-	select_by_id/2
+	select_by_id/2,
+	delete_by_id/2
 
 ]).
 
@@ -96,3 +97,19 @@ select_by_id(NODE_ID,TABLE_REFERENCE) ->
 		[{'=:=','$1',NODE_ID}],
 		['$_']
 	}]).
+
+
+%% ----------------------------
+%% @doc Delete node data record by ID
+-spec delete_by_id(NODE_ID,TABLE_REFERENCE) -> boolean()
+	when
+		NODE_ID :: a_id_32(),
+		TABLE_REFERENCE :: reference().
+
+delete_by_id(NODE_ID,TABLE_REFERENCE) ->
+
+	ets:delete(TABLE_REFERENCE,NODE_ID),
+	case select_by_id(NODE_ID,TABLE_REFERENCE) of
+		[] -> true;
+		_ -> false
+	end.

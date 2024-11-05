@@ -102,6 +102,10 @@ init([STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
+handle_call({delete_by_id,NODE_ID},_FROM,STATE) ->
+
+	delete_by_id(NODE_ID,STATE);
+
 handle_call({select_by_id,NODE_ID},_FROM,STATE) ->
 
 	select_by_id(NODE_ID,STATE);
@@ -291,5 +295,20 @@ is_added_by_id(NODE_ID,STATE) ->
 select_by_id(NODE_ID,STATE) ->
 
 	{reply,a_cluster_controller_db:select_by_id(
+		NODE_ID,STATE#a_cluster_controller_db_state.ets_nodes
+	),STATE}.
+
+
+%% ----------------------------
+%% @doc Delete node by ID from list
+-spec delete_by_id(NODE_ID,STATE) -> OUTPUT
+	when
+		NODE_ID :: a_id_32(),
+		STATE :: #a_cluster_controller_db_state{},
+		OUTPUT:: boolean().
+
+delete_by_id(NODE_ID,STATE) ->
+
+	{reply,a_cluster_controller_db:delete_by_id(
 		NODE_ID,STATE#a_cluster_controller_db_state.ets_nodes
 	),STATE}.

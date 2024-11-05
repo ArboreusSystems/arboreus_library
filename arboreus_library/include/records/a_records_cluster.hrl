@@ -55,6 +55,9 @@
 	data = #a_cluster_node_data{} :: #a_cluster_node_data{},
 	add_node_handler = fun(IN_NODE_DATA,IN_MAIN_CONTROLLER) ->
 		{error,{no_handler,IN_NODE_DATA,IN_MAIN_CONTROLLER}}
+	end :: fun(),
+	delete_node_by_id_handler = fun(IN_NODE_ID,IN_MAIN_CONTROLLER) ->
+		{error,{no_handler,IN_NODE_ID,IN_MAIN_CONTROLLER}}
 	end :: fun()
 }).
 

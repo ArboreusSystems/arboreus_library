@@ -93,6 +93,10 @@ init([STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
+handle_call(node_data,_FROM,STATE) ->
+
+	node_data(STATE);
+
 handle_call(add_node,_FROM,STATE) ->
 
 	add_node(STATE);
@@ -180,6 +184,12 @@ code_change(_OLD_VERSION,STATE = #a_cluster_connector_handler_state{},_EXTRA) ->
 
 %% ----------------------------
 %% @doc Add current node to Cluster Controller
+-spec add_node(STATE) -> {reply,ADD_NODE_RESULT,STATE}
+	when
+		STATE :: #a_cluster_connector_handler_state{},
+		ADD_NODE_RESULT :: {ok,NODE_DATA} | {already_added,NODE_DATA} | {error,REASON},
+		NODE_DATA :: #a_cluster_node_data{},
+		REASON :: term().
 
 add_node(STATE) ->
 
@@ -188,3 +198,15 @@ add_node(STATE) ->
 		STATE#a_cluster_connector_handler_state.data,
 		STATE#a_cluster_connector_handler_state.main_controller
 	),STATE}.
+
+
+%% ----------------------------
+%% @doc Return node data
+-spec node_data(STATE) -> {reply,{ok,DATA},STATE}
+	when
+		STATE :: #a_cluster_connector_handler_state{},
+		DATA :: #a_cluster_node_data{}.
+
+node_data(STATE) ->
+
+	{reply,{ok,STATE#a_cluster_connector_handler_state.data},STATE}.

@@ -65,9 +65,18 @@ start_link(CLUSTER_CONTROLLER_PROPERTIES) ->
 	]) of
 		{ok,SUPERVISOR_PID} ->
 
-			{ok,DB_PID} = start_db(SUPERVISOR_PID),
-			{ok,HANDLER_PID} = start_handler(SUPERVISOR_PID),
-			{ok,MONITOR_PID} = start_monitor(SUPERVISOR_PID),
+			{ok,DB_PID} = start_db(
+				SUPERVISOR_PID,
+				CLUSTER_CONTROLLER_PROPERTIES#a_cluster_controller_properties.db_state
+			),
+			{ok,HANDLER_PID} = start_handler(
+				SUPERVISOR_PID,
+				CLUSTER_CONTROLLER_PROPERTIES#a_cluster_controller_properties.handler_state
+			),
+			{ok,MONITOR_PID} = start_monitor(
+				SUPERVISOR_PID,
+				CLUSTER_CONTROLLER_PROPERTIES#a_cluster_controller_properties.monitor_state
+			),
 
 			ok = setup(DB_PID,HANDLER_PID,MONITOR_PID),
 
@@ -80,18 +89,19 @@ start_link(CLUSTER_CONTROLLER_PROPERTIES) ->
 
 %% ----------------------------
 %% @doc Start Cluster Controller db process
--spec start_db(SUPERVISOR_PID) -> {ok,DB_PID} | {error,REASON}
+-spec start_db(SUPERVISOR_PID,INITIAL_DB_STATE) -> {ok,DB_PID} | {error,REASON}
 	when
 		SUPERVISOR_PID :: pid(),
+		INITIAL_DB_STATE :: #a_cluster_controller_db_state{},
 		DB_PID :: pid(),
 		REASON :: term().
 
-start_db(SUPERVISOR_PID) ->
+start_db(SUPERVISOR_PID,INITIAL_DB_STATE) ->
 
 	DB = #{
 		id => ?A_ID_CLUSTER_CONTROLLER_DB,
 		start => {'a_cluster_controller_db_gs','start_link',[
-			#a_cluster_controller_db_state{}
+			INITIAL_DB_STATE
 		]},
 		restart => transient,
 		shutdown => 5000,
@@ -110,18 +120,19 @@ start_db(SUPERVISOR_PID) ->
 
 %% ----------------------------
 %% @doc Start Cluster Controller handler process
--spec start_handler(SUPERVISOR_PID) -> {ok,HANDLER_PID} | {error,REASON}
+-spec start_handler(SUPERVISOR_PID,INITIAL_HANDLER_STATE) -> {ok,HANDLER_PID} | {error,REASON}
 	when
 		SUPERVISOR_PID :: pid(),
+		INITIAL_HANDLER_STATE :: #a_cluster_connector_handler_state{},
 		HANDLER_PID :: pid(),
 		REASON :: term().
 
-start_handler(SUPERVISOR_PID) ->
+start_handler(SUPERVISOR_PID,INITIAL_DB_STATE) ->
 
 	HANDLER = #{
 		id => ?A_ID_CLUSTER_CONTROLLER_HANDLER,
 		start => {'a_cluster_controller_handler_gs','start_link',[
-			a_cluster_controller_default:handler_state()
+			INITIAL_DB_STATE
 		]},
 		restart => transient,
 		shutdown => 5000,
@@ -140,18 +151,19 @@ start_handler(SUPERVISOR_PID) ->
 
 %% ----------------------------
 %% @doc Start Cluster Controller monitor process
--spec start_monitor(SUPERVISOR_PID) -> {ok,MONITOR_PID} | {error,REASON}
+-spec start_monitor(SUPERVISOR_PID,INITIAL_MONITOR_STATE) -> {ok,MONITOR_PID} | {error,REASON}
 	when
 		SUPERVISOR_PID :: pid(),
+		INITIAL_MONITOR_STATE :: #a_cluster_controller_monitor_state{},
 		MONITOR_PID :: pid(),
 		REASON :: term().
 
-start_monitor(SUPERVISOR_PID) ->
+start_monitor(SUPERVISOR_PID,INITIAL_MONITOR_STATE) ->
 
 	MONITOR = #{
 		id => ?A_ID_CLUSTER_CONTROLLER_MONITOR,
 		start => {'a_cluster_controller_monitor_gs','start_link',[
-			#a_cluster_controller_monitor_state{}
+			INITIAL_MONITOR_STATE
 		]},
 		restart => transient,
 		shutdown => 5000,

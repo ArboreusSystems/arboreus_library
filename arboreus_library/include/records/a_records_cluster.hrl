@@ -25,15 +25,13 @@
 	propperties = [] :: proplists:proplist()
 }).
 
--record(a_cluster_controller_properties,{
-
-}).
-
 -record(a_cluster_controller_handler_state,{
 
 	db :: pid(),
 	monitor :: pid(),
-	get_nodes_handler :: fun()
+	get_nodes_handler = fun(IN_PROPERTIES,IN_ALL_NODES) ->
+		{error,{no_handler,[IN_PROPERTIES,IN_ALL_NODES]}}
+	end :: fun()
 }).
 
 -record(a_cluster_controller_db_state,{
@@ -59,6 +57,16 @@
 	delete_node_by_id_handler = fun(IN_NODE_ID,IN_MAIN_CONTROLLER) ->
 		{error,{no_handler,IN_NODE_ID,IN_MAIN_CONTROLLER}}
 	end :: fun()
+}).
+
+-record(a_cluster_controller_properties,{
+
+	handler_state = #a_cluster_controller_handler_state{}
+	:: #a_cluster_controller_handler_state{},
+	monitor_state = #a_cluster_controller_monitor_state{}
+	:: #a_cluster_controller_monitor_state{},
+	db_state = #a_cluster_controller_db_state{}
+	:: #a_cluster_controller_db_state{}
 }).
 
 -endif. %% A_RECORDS_CLUSTER

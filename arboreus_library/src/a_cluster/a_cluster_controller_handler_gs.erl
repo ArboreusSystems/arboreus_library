@@ -219,11 +219,11 @@ node_name(STATE) -> {reply,{ok,node()},STATE}.
 
 %% ----------------------------
 %% @doc Return node data
--spec get_nodes_by_handler(TYPE,STATE) -> {reply,{ok,NODE_DATA},STATE} | {reply,{error,REASON},STATE}
+-spec get_nodes_by_handler(TYPE,STATE) -> {reply,{ok,NODES_DATA},STATE} | {reply,{error,REASON},STATE}
 	when
 		TYPE :: any(),
 		STATE :: #a_cluster_controller_handler_state{},
-		NODE_DATA :: #a_cluster_node_data{},
+		NODES_DATA :: [#a_cluster_node_data{}],
 		REASON :: term().
 
 get_nodes_by_handler(PROPERTIES,STATE) ->
@@ -235,6 +235,7 @@ get_nodes_by_handler(PROPERTIES,STATE) ->
 
 	GET_NODES_HANDLER = STATE#a_cluster_controller_handler_state.get_nodes_handler,
 	case GET_NODES_HANDLER(PROPERTIES,ALL_NODES) of
+		{error,REASON} -> {reply,{error,REASON},STATE};
 		no_node -> {reply,{error,no_node},STATE};
 		no_type -> {reply,{error,no_type},STATE};
 		NODES_DATA -> {reply,{ok,NODES_DATA},STATE}

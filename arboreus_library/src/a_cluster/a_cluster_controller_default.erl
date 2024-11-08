@@ -19,8 +19,7 @@
 
 	test/0,
 
-	handler_state/0,
-	get_nodes_by_type_handler/0
+	handler_state/0
 
 ]).
 
@@ -39,22 +38,7 @@ test() -> ok.
 
 handler_state() ->
 
-	#a_cluster_controller_handler_state{
-		get_nodes_handler = get_nodes_by_type_handler()
-	}.
+	#a_cluster_controller_handler_state{}.
 
-
-%% ----------------------------
-%% @doc Return for filtering nodes by type
--spec get_nodes_by_type_handler() -> fun().
-
-get_nodes_by_type_handler() ->
-
-	fun([IN_TYPE],IN_NODES) when is_list(IN_NODES) ->
-		lists:filter(
-			fun(NODE_DATA) -> NODE_DATA#a_cluster_node_data.type =:= IN_TYPE end,
-			IN_NODES
-		)
-	end.
 
 

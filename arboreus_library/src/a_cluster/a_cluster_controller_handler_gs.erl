@@ -98,6 +98,10 @@ handle_call({define_get_nodes_handler,HANDLER},_FROM,STATE)
 
 	define_get_nodes_handler(HANDLER,STATE);
 
+handle_call({get_nodes_by_type,TYPE},_FROM,STATE) ->
+
+	get_nodes_by_type(TYPE,STATE);
+
 handle_call({get_nodes_by_handler,TYPE},_FROM,STATE) ->
 
 	get_nodes_by_handler(TYPE,STATE);
@@ -218,6 +222,27 @@ node_name(STATE) -> {reply,{ok,node()},STATE}.
 
 
 %% ----------------------------
+%% @doc Return list of nodes filtered by type
+-spec get_nodes_by_type(TYPE,STATE) -> {reply,NODES,STATE}
+	when
+		TYPE :: any(),
+		STATE :: #a_cluster_controller_handler_state{},
+		NODES :: [#a_cluster_node_data{}].
+
+get_nodes_by_type(TYPE,STATE) ->
+
+	{ok,ALL_NODES} = gen_server:call(
+		STATE#a_cluster_controller_handler_state.db,
+		get_all_nodes
+	),
+
+	{reply,lists:filter(
+		fun(NODE_DATA) -> NODE_DATA#a_cluster_node_data.type =:= TYPE end,
+		ALL_NODES
+	),STATE}.
+
+
+%% ----------------------------
 %% @doc Return node data
 -spec get_nodes_by_handler(TYPE,STATE) -> {reply,{ok,NODES_DATA},STATE} | {reply,{error,REASON},STATE}
 	when
@@ -233,8 +258,8 @@ get_nodes_by_handler(PROPERTIES,STATE) ->
 		get_all_nodes
 	),
 
-	GET_NODES_HANDLER = STATE#a_cluster_controller_handler_state.get_nodes_handler,
-	case GET_NODES_HANDLER(PROPERTIES,ALL_NODES) of
+	GET_NODES_BY_HANDLER = STATE#a_cluster_controller_handler_state.get_nodes_by_handler,
+	case GET_NODES_BY_HANDLER(PROPERTIES,ALL_NODES) of
 		{error,REASON} -> {reply,{error,REASON},STATE};
 		no_node -> {reply,{error,no_node},STATE};
 		no_type -> {reply,{error,no_type},STATE};
@@ -252,7 +277,7 @@ get_nodes_by_handler(PROPERTIES,STATE) ->
 define_get_nodes_handler(HANDLER,STATE) when is_function(HANDLER) ->
 
 	{reply,ok,STATE#a_cluster_controller_handler_state{
-		get_nodes_handler = HANDLER
+		get_nodes_by_handler = HANDLER
 	}};
 
 define_get_nodes_handler(_HANDLER,STATE) ->

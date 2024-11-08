@@ -24,6 +24,7 @@
 	pid_monitor/1,
 
 	node_name/1,
+	get_nodes_by_type/2,
 	get_nodes_by_handler/2,
 	define_get_nodes_handler/2,
 	get_all_nodes/1,
@@ -114,12 +115,28 @@ node_name(SUPERVISOR_PID) ->
 
 
 %% ----------------------------
+%% @doc Return nodes filtered by type
+-spec get_nodes_by_type(TYPE,SUPERVISOR_PID) -> NODES | {error,REASON}
+	when
+		TYPE :: any(),
+		SUPERVISOR_PID :: pid(),
+		NODES :: [#a_cluster_node_data{}],
+		REASON :: term().
+
+get_nodes_by_type(TYPE,SUPERVISOR_PID) ->
+
+	{ok,HANDLER_PID} = pid_handler(SUPERVISOR_PID),
+	gen_server:call(HANDLER_PID,{get_nodes_by_type,TYPE}).
+
+
+%% ----------------------------
 %% @doc Return list of nodes filtered by handler
--spec get_nodes_by_handler(PARAMETERS,SUPERVISOR_PID) -> NODES
+-spec get_nodes_by_handler(PARAMETERS,SUPERVISOR_PID) -> NODES | {error,REASON}
 	when
 		PARAMETERS :: [any()],
 		SUPERVISOR_PID :: pid(),
-		NODES :: [#a_cluster_node_data{}].
+		NODES :: [#a_cluster_node_data{}],
+		REASON :: term().
 
 get_nodes_by_handler(PARAMETERS,SUPERVISOR_PID) ->
 

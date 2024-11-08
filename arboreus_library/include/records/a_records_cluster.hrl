@@ -29,8 +29,8 @@
 
 	db :: pid(),
 	monitor :: pid(),
-	get_nodes_handler = fun(IN_PROPERTIES,IN_ALL_NODES) ->
-		{error,{no_handler,[IN_PROPERTIES,IN_ALL_NODES]}}
+	get_nodes_by_handler = fun(IN_PROPERTIES,IN_ALL_NODES) ->
+		{error,{no_handler,{get_nodes_by_handler,IN_PROPERTIES,IN_ALL_NODES}}}
 	end :: fun()
 }).
 
@@ -51,11 +51,14 @@
 
 	main_controller = 'none@noserver.nodomain' :: a_node_name_atom(),
 	data = #a_cluster_node_data{} :: #a_cluster_node_data{},
+	get_nodes_by_type_handler = fun(IN_TYPE,IN_MAIN_CONTROLLER) ->
+		{error,{no_handler,{get_node_by_type_handler,IN_TYPE,IN_MAIN_CONTROLLER}}}
+	end,
 	add_node_handler = fun(IN_NODE_DATA,IN_MAIN_CONTROLLER) ->
-		{error,{no_handler,IN_NODE_DATA,IN_MAIN_CONTROLLER}}
+		{error,{no_handler,{add_node_handler,IN_NODE_DATA,IN_MAIN_CONTROLLER}}}
 	end :: fun(),
 	delete_node_by_id_handler = fun(IN_NODE_ID,IN_MAIN_CONTROLLER) ->
-		{error,{no_handler,IN_NODE_ID,IN_MAIN_CONTROLLER}}
+		{error,{no_handler,{delete_node_by_id_handler,IN_NODE_ID,IN_MAIN_CONTROLLER}}}
 	end :: fun()
 }).
 

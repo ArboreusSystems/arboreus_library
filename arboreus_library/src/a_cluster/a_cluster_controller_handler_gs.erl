@@ -93,14 +93,19 @@ init([STATE]) ->
 		TIMEOUT :: timeout() | hibernate,
 		REASON :: term().
 
-handle_call({define_get_nodes_handler,HANDLER},_FROM,STATE)
+handle_call({define_get_nodes_by_type,HANDLER},_FROM,STATE)
 	when is_function(HANDLER) ->
 
-	define_get_nodes_handler(HANDLER,STATE);
+	define_get_nodes_by_type(HANDLER,STATE);
 
 handle_call({get_nodes_by_type,TYPE},_FROM,STATE) ->
 
 	get_nodes_by_type(TYPE,STATE);
+
+handle_call({define_get_nodes_by_handler,HANDLER},_FROM,STATE)
+	when is_function(HANDLER) ->
+
+	define_get_nodes_by_handler(HANDLER,STATE);
 
 handle_call({get_nodes_by_handler,TYPE},_FROM,STATE) ->
 
@@ -236,10 +241,32 @@ get_nodes_by_type(TYPE,STATE) ->
 		get_all_nodes
 	),
 
-	{reply,lists:filter(
-		fun(NODE_DATA) -> NODE_DATA#a_cluster_node_data.type =:= TYPE end,
-		ALL_NODES
-	),STATE}.
+	HANDLER_GET_NODES_BY_TYPE = STATE#a_cluster_controller_handler_state.handler_get_nodes_by_type,
+	case HANDLER_GET_NODES_BY_TYPE(TYPE,ALL_NODES) of
+		{error,REASON} -> {reply,{error,REASON},STATE};
+		no_node -> {reply,{error,no_node},STATE};
+		no_type -> {reply,{error,no_type},STATE};
+		NODES_DATA -> {reply,{ok,NODES_DATA},STATE}
+	end.
+
+
+%% ----------------------------
+%% @doc Define handler for call 'get_nodes_by_type'
+-spec define_get_nodes_by_type(HANDLER,STATE) -> {reply,ok,STATE} | {reply,{error,REASON},STATE}
+	when
+		HANDLER :: fun(),
+		STATE :: #a_cluster_controller_handler_state{},
+		REASON :: term().
+
+define_get_nodes_by_type(HANDLER,STATE) when is_function(HANDLER) ->
+
+	{reply,ok,STATE#a_cluster_controller_handler_state{
+		handler_get_nodes_by_type = HANDLER
+	}};
+
+define_get_nodes_by_type(_HANDLER,STATE) ->
+
+	{reply,{error,handler_not_function},STATE}.
 
 
 %% ----------------------------
@@ -258,8 +285,8 @@ get_nodes_by_handler(PROPERTIES,STATE) ->
 		get_all_nodes
 	),
 
-	GET_NODES_BY_HANDLER = STATE#a_cluster_controller_handler_state.get_nodes_by_handler,
-	case GET_NODES_BY_HANDLER(PROPERTIES,ALL_NODES) of
+	HANDLER_GET_NODES_BY_HANDLER = STATE#a_cluster_controller_handler_state.handler_get_nodes_by_handler,
+	case HANDLER_GET_NODES_BY_HANDLER(PROPERTIES,ALL_NODES) of
 		{error,REASON} -> {reply,{error,REASON},STATE};
 		no_node -> {reply,{error,no_node},STATE};
 		no_type -> {reply,{error,no_type},STATE};
@@ -269,17 +296,18 @@ get_nodes_by_handler(PROPERTIES,STATE) ->
 
 %% ----------------------------
 %% @doc Define handler for getting node
--spec define_get_nodes_handler(HANDLER,STATE) -> {reply,ok,STATE}
+-spec define_get_nodes_by_handler(HANDLER,STATE) -> {reply,ok,STATE} | {reply,{error,REASON},STATE}
 	when
 		HANDLER :: fun(),
-		STATE :: #a_cluster_controller_handler_state{}.
+		STATE :: #a_cluster_controller_handler_state{},
+		REASON :: term().
 
-define_get_nodes_handler(HANDLER,STATE) when is_function(HANDLER) ->
+define_get_nodes_by_handler(HANDLER,STATE) when is_function(HANDLER) ->
 
 	{reply,ok,STATE#a_cluster_controller_handler_state{
-		get_nodes_by_handler = HANDLER
+		handler_get_nodes_by_handler = HANDLER
 	}};
 
-define_get_nodes_handler(_HANDLER,STATE) ->
+define_get_nodes_by_handler(_HANDLER,STATE) ->
 
 	{reply,{error,handler_not_function},STATE}.

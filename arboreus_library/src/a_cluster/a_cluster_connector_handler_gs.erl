@@ -195,7 +195,7 @@ code_change(_OLD_VERSION,STATE = #a_cluster_connector_handler_state{},_EXTRA) ->
 
 add_node(STATE) ->
 
-	ADD_NODE_HANDLER = STATE#a_cluster_connector_handler_state.add_node_handler,
+	ADD_NODE_HANDLER = STATE#a_cluster_connector_handler_state.handler_add_node,
 	{reply,ADD_NODE_HANDLER(
 		STATE#a_cluster_connector_handler_state.data,
 		STATE#a_cluster_connector_handler_state.main_controller
@@ -213,7 +213,7 @@ add_node(STATE) ->
 
 get_nodes_by_type(TYPE,STATE) ->
 
-	GET_NODE_BY_TYPE_HANDLER = STATE#a_cluster_connector_handler_state.get_nodes_by_type_handler,
+	GET_NODE_BY_TYPE_HANDLER = STATE#a_cluster_connector_handler_state.handler_get_nodes_by_type,
 	{reply,GET_NODE_BY_TYPE_HANDLER(
 		TYPE,
 		STATE#a_cluster_connector_handler_state.main_controller
@@ -229,7 +229,7 @@ get_nodes_by_type(TYPE,STATE) ->
 
 delete_node(STATE) ->
 
-	DELETE_NODE_HANDLER = STATE#a_cluster_connector_handler_state.delete_node_by_id_handler,
+	DELETE_NODE_HANDLER = STATE#a_cluster_connector_handler_state.handler_delete_node_by_id,
 	NODE_DATA = STATE#a_cluster_connector_handler_state.data,
 	{reply,DELETE_NODE_HANDLER(
 		NODE_DATA#a_cluster_node_data.id,

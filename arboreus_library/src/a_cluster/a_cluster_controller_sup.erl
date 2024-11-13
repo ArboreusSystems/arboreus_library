@@ -127,12 +127,12 @@ start_db(SUPERVISOR_PID,INITIAL_DB_STATE) ->
 		HANDLER_PID :: pid(),
 		REASON :: term().
 
-start_handler(SUPERVISOR_PID,INITIAL_DB_STATE) ->
+start_handler(SUPERVISOR_PID,INITIAL_HANDLER_STATE) ->
 
 	HANDLER = #{
 		id => ?A_ID_CLUSTER_CONTROLLER_HANDLER,
 		start => {'a_cluster_controller_handler_gs','start_link',[
-			INITIAL_DB_STATE
+			INITIAL_HANDLER_STATE
 		]},
 		restart => transient,
 		shutdown => 5000,

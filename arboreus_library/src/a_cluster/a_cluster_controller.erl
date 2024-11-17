@@ -173,8 +173,9 @@ get_all_nodes(SUPERVISOR_PID) ->
 
 %% ----------------------------
 %% @doc Add node data to Cluster Controller
--spec add_node(NODE_DATA,SUPERVISOR_PID) -> {ok,NODE_DATA} | {error,REASON}
+-spec add_node(NODE_DATA,SUPERVISOR_PID) -> OUTPUT
 	when
+		OUTPUT ::  {ok,NODE_DATA} | {already_added,NODE_DATA} | {error,REASON},
 		NODE_DATA :: #a_cluster_node_data{},
 		SUPERVISOR_PID :: pid(),
 		REASON :: term().

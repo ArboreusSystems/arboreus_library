@@ -244,7 +244,8 @@ get_all_nodes(STATE) ->
 %% @doc Add node to Cluster Controller
 -spec add_node(NODE_DATA,STATE) -> {reply,OUTPUT,STATE}
 	when
-		OUTPUT :: {reply,{ok,NODE_DATA},STATE} | {reply,{error,REASON},STATE},
+		OUTPUT :: {reply,OUTPUT_ADD_NODE,STATE},
+		OUTPUT_ADD_NODE :: {ok,NODE_DATA} | {already_added,NODE_DATA} | {error,REASON},
 		NODE_DATA :: #a_cluster_node_data{},
 		STATE :: #a_cluster_controller_db_state{},
 		REASON :: term().

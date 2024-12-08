@@ -27,7 +27,7 @@
 	update_unique/1,transaction_update_unique/1,
 	select_all/1,transaction_select_all/1,dirty_select_all/1,
 	delete/2,transaction_delete/2,dirty_delete/2,
-	generate_id/4
+	generate_id/4,transaction_delete_object/1
 
 ]).
 
@@ -37,6 +37,16 @@
 -spec test() -> ok.
 
 test() -> ok.
+
+
+%% ----------------------------
+%% @doc Delete defined object
+
+transaction_delete_object(OBJECT) ->
+
+	mnesia:transaction(fun() ->
+		mnesia:delete_object(OBJECT)
+	end).
 
 
 %% ----------------------------

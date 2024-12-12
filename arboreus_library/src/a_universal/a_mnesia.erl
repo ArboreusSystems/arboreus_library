@@ -26,8 +26,8 @@
 	read_by_ids/2,transaction_read_by_ids/2,dirty_read_by_ids/2,
 	update_unique/1,transaction_update_unique/1,
 	select_all/1,transaction_select_all/1,dirty_select_all/1,
-	delete/2,transaction_delete/2,dirty_delete/2,
-	generate_id/4,transaction_delete_object/1
+	delete/2,transaction_delete/2,dirty_delete/2,delete_objects/1,
+	generate_id/4,transaction_delete_object/1,transaction_delete_objects/1
 
 ]).
 
@@ -37,6 +37,31 @@
 -spec test() -> ok.
 
 test() -> ok.
+
+
+%% ----------------------------
+%% @doc Delete objects from DB with transaction
+-spec transaction_delete_objects(OBJECTS) -> ok
+	when OBJECTS :: [tuple()].
+
+transaction_delete_objects(OBJECTS) ->
+
+	mnesia:transaction(fun() ->
+		delete_objects(OBJECTS)
+	end).
+
+
+%% ----------------------------
+%% @doc Delete objects from DB
+-spec delete_objects(OBJECTS) -> ok
+	when OBJECTS :: [tuple()].
+
+delete_objects([]) -> ok;
+
+delete_objects([OBJECT|OBJECTS]) ->
+
+	ok = mnesia:delete_object(OBJECT),
+	delete_objects(OBJECTS).
 
 
 %% ----------------------------

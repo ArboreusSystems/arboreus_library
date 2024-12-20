@@ -11,8 +11,12 @@
 
 %% API
 -export([
+
 	test/0,
-	name/1
+
+	name/1,
+	to_list/1
+
 ]).
 
 
@@ -40,3 +44,14 @@ name(RECORD) when is_tuple(RECORD)->
 	end;
 
 name(_) -> {error,[{"RECORD",false}]}.
+
+
+%% ----------------------------
+%% @doc Convert data from record to list
+-spec to_list(RECORD) -> list()
+	when RECORD :: tuple().
+
+to_list(RECORD) when is_tuple(RECORD) ->
+
+	[_|DATA] = tuple_to_list(RECORD),
+	DATA.

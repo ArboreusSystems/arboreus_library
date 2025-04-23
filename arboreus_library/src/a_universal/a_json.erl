@@ -19,7 +19,11 @@
 
 	test/0,
 
-	encode/1
+	encode/1,
+	decode/1,decode/2,
+
+	from_file/1,from_file/2,
+	to_file/2
 
 ]).
 
@@ -35,16 +39,87 @@ test() -> ok.
 %% @doc Encode JSON from Erlang value
 -spec encode(DATA) -> OUTPUT
 	when
-		DATA :: any(),
-		OUTPUT :: a_utf_text_string().
+		DATA :: map() | proplists:proplist(),
+		OUTPUT :: iodata().
 
-%% Multiverse functionality for encode/1 function
--if(?OTP_RELEASE == 25).
--define(A_JSON_ENCODE(IN_DATA),json2:encode(IN_DATA)).
--elif(?OTP_RELEASE == 27).
--define(A_JSON_ENCODE(IN_DATA),json:encode(IN_DATA)).
--else.
--define(A_JSON_ENCODE(IN_DATA),a_string:from_term({error,{otp_release,IN_DATA}})).
--endif.
+encode(DATA) when is_list(DATA) ->
 
-encode(DATA) -> ?A_JSON_ENCODE(DATA).
+	encode(proplists:to_map(DATA));
+
+encode(DATA) when is_map(DATA) ->
+
+	json:encode(DATA).
+
+
+%% ----------------------------
+%% @doc Perform JSON data decode from UTF string or binary
+-spec decode(DATA) -> OUTPUT
+	when
+		DATA :: a_utf_text_binary() | a_utf_text_string(),
+		OUTPUT :: map() | proplists:proplist().
+
+decode(DATA) -> decode(DATA,map).
+
+
+%% ----------------------------
+%% @doc Perform JSON data decode from UTF string or binary
+-spec decode(DATA,RETURN_TYPE) -> OUTPUT
+	when
+		DATA :: a_utf_text_binary() | a_utf_text_string(),
+		RETURN_TYPE :: map | proplist,
+		OUTPUT :: proplists:proplist() | map().
+
+decode(DATA,RETURN_TYPE) when is_list(DATA) ->
+
+	decode(list_to_binary(DATA),RETURN_TYPE);
+
+decode(DATA,RETURN_TYPE) when is_binary(DATA) ->
+
+	JSON = json:decode(DATA),
+	case RETURN_TYPE of
+		proplist -> maps:to_list(JSON);
+		_ -> JSON
+	end.
+
+
+%% ----------------------------
+%% @doc Read JSON file from file
+-spec from_file(PATH) -> {ok,JSON} | {not_existed,PATH}
+	when
+		PATH :: a_utf_text_string(),
+		JSON :: map() | proplists:proplist().
+
+from_file(PATH) -> from_file(PATH,map).
+
+
+%% ----------------------------
+%% @doc Read JSON file from file
+-spec from_file(PATH,RETURN_TYPE) -> {ok,JSON} | {not_existed,PATH}
+	when
+		PATH :: a_utf_text_string(),
+		RETURN_TYPE :: map | proplist,
+		JSON :: map() | proplists:proplist().
+
+from_file(PATH,RETURN_TYPE) ->
+
+	case filelib:is_file(PATH) of
+		true ->
+			{ok,DATA} = file:read_file(PATH),
+			{ok,decode(DATA,RETURN_TYPE)};
+		false ->
+			{not_existed,PATH}
+	end.
+
+
+%% ----------------------------
+%% @doc Write data to JSON file
+-spec to_file(PATH,DATA) -> ok
+	when
+		PATH :: a_unix_path_string(),
+		DATA :: map() | proplists:proplist().
+
+to_file(PATH,DATA) ->
+
+	{ok,FILE} = file:open(PATH,[write]),
+	file:write(FILE,encode(DATA)),
+	file:close(FILE).

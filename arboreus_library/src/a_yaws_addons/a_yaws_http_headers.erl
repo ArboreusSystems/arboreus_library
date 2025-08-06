@@ -16,7 +16,9 @@
 
 %% Module API
 -export([
+
 	test/0,
+
 	access_control_allow_origin/1,
 	access_control_allow_methods/1,
 	content_type/1,
@@ -29,7 +31,9 @@
 	json/2,
 	csv/2,
 	xml/2,
+	txt/2,
 	cors/0,cors/1
+
 ]).
 
 
@@ -337,4 +341,27 @@ xml(application_no_cache,File_name) ->
 	[
 		cache(no),
 		xml(application,File_name)
+	].
+
+
+%%-----------------------------------
+%% @doc Return a list within HTTP headers for TXT file format
+-spec txt(TYPE,FILE_NAME) -> YAWS_HEADERS
+	when
+		TYPE :: no_cache | solid,
+		FILE_NAME :: unicode:latin1_chardata(),
+		YAWS_HEADERS :: a_yaws_http_headers().
+
+txt(no_cache,FILE_NAME) ->
+
+	[
+		cache(no),
+		txt(solid,FILE_NAME)
+	];
+
+txt(solid,FILE_NAME) ->
+
+	[
+		content_type("text/plain; charset=utf-8"),
+		content_disposition(lists:concat(["attachment; filename=",FILE_NAME]))
 	].

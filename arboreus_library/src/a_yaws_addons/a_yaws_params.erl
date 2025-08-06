@@ -9,15 +9,19 @@
 -module(a_yaws_params).
 -author("Alexandr KIRILOV (http://alexandr.kirilov.me)").
 
-%% Data types
+%% Application includes
 -include("a_includes.hrl").
 
 %% Module API
 -export([
+
 	test/0,
+
 	check/3,
+	check_list/2,
 	checkout/4,
 	check_parameters/2
+
 ]).
 
 
@@ -57,6 +61,42 @@ checkout(Parameter_name,Parameters,Type,Type_properties) ->
 	case proplists:get_value(Parameter_name,Parameters) of
 		undefined -> notinlist;
 		Value_string -> check(Type,Value_string,Type_properties)
+	end.
+
+
+%% ----------------------------
+%% @doc Wrapper function for check/3, checking list of typed parameters
+-spec check_list(LIST,TYPE_PROPERTIES) -> list() | nomatch
+	when
+		LIST :: list(),
+		TYPE_PROPERTIES :: {TYPE,TYPE_PARAMETERS},
+		TYPE :: atom(),
+		TYPE_PARAMETERS :: list().
+
+check_list(LIST,TYPE_PROPERTIES) -> check_list(LIST,TYPE_PROPERTIES,[]).
+
+
+%% ----------------------------
+%% @doc Checking list of typed parameters
+-spec check_list(LIST,TYPE_PROPERTIES,OUTPUT) -> list() | nomatch
+	when
+		LIST :: list(),
+		TYPE_PROPERTIES :: {TYPE,TYPE_PARAMETERS},
+		TYPE :: atom(),
+		TYPE_PARAMETERS :: list(),
+		OUTPUT :: list().
+
+check_list([],_,OUTPUT) -> OUTPUT;
+
+check_list([ELEMENT|LIST],{TYPE,TYPE_PARAMETERS},OUTPUT) ->
+
+	case check(TYPE,ELEMENT,TYPE_PARAMETERS) of
+		nomatch -> nomatch;
+		CHECKED_ELEMENT ->
+			check(
+				LIST,{TYPE,TYPE_PARAMETERS},
+				lists:append(OUTPUT,[CHECKED_ELEMENT])
+			)
 	end.
 
 

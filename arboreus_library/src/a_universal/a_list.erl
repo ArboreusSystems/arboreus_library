@@ -18,14 +18,16 @@
 
 %% API
 -export([
+
 	test/0,
+
 	get_out/3,
-	check/2,check/3,
 	clear_duplicates/1,
 	find_members/2,
 	compare_members/2,
 	exclude/2,
 	numerate/1
+
 ]).
 
 
@@ -184,41 +186,6 @@ clear_duplicates_handler([ELEMENT|LIST],OUTPUT) ->
 			false -> lists:append(OUTPUT,[ELEMENT])
 		end
 	).
-
-%% ----------------------------
-%% @doc Wrapper function for check/3, checking list of typed elements
--spec check(LIST,TYPE_PROPERTIES) -> list() | nomatch
-	when
-		LIST :: list(),
-		TYPE_PROPERTIES :: {TYPE,TYPE_PARAMETERS},
-		TYPE :: atom(),
-		TYPE_PARAMETERS :: list().
-
-check(LIST,TYPE_PROPERTIES) -> check(LIST,TYPE_PROPERTIES,[]).
-
-
-%% ----------------------------
-%% @doc Checking list of typed elements
--spec check(LIST,TYPE_PROPERTIES,OUTPUT) -> list() | nomatch
-	when
-		LIST :: list(),
-		TYPE_PROPERTIES :: {TYPE,TYPE_PARAMETERS},
-		TYPE :: atom(),
-		TYPE_PARAMETERS :: list(),
-		OUTPUT :: list().
-
-check([],_,OUTPUT) -> OUTPUT;
-
-check([ELEMENT|LIST],{TYPE,TYPE_PARAMETERS},OUTPUT) ->
-
-	case a_yaws_params:check(TYPE,ELEMENT,TYPE_PARAMETERS) of
-		nomatch -> nomatch;
-		CHECKED_ELEMENT ->
-			check(
-				LIST,{TYPE,TYPE_PARAMETERS},
-				lists:append(OUTPUT,[CHECKED_ELEMENT])
-			)
-	end.
 
 
 %% ----------------------------

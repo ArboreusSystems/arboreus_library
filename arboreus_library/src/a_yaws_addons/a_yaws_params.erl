@@ -18,8 +18,8 @@
 	test/0,
 
 	check/3,
-	check_list/2,
 	checkout/4,
+	check_list/2,
 	check_parameters/2
 
 ]).
@@ -29,43 +29,117 @@
 %% @doc Module test function
 -spec test() -> ok.
 
-test() -> ok.
+test() ->
+
+	0.2 = check(float,"0.2",[]),
+	nomatch = check(float,"aaa",[]),
+	nomatch = check(float,"1",[]),
+
+	0.2 = check(float_positive,"0.2",[]),
+	nomatch = check(float_positive,"-0.2",[]),
+	nomatch = check(float_positive,"aaa",[]),
+	nomatch = check(float_positive,"1",[]),
+
+	-0.2 = check(float_negative,"-0.2",[]),
+	nomatch = check(float_negative,"0.2",[]),
+	nomatch = check(float_negative,"aaa",[]),
+	nomatch = check(float_negative,"1",[]),
+
+	-0.2 = check(float_from_list,"-0.2",[[-0.2]]),
+	nomatch = check(float_from_list,"-0.2",[[0.2]]),
+	nomatch = check(float_from_list,"aaa",[[0.2]]),
+	nomatch = check(float_from_list,"1",[[0.2]]),
+
+	-1.2 = check(float_ranged,"-1.2",[-2.2,3.5]),
+	nomatch = check(float_ranged,"-2.5",[-2.2,3.5]),
+	nomatch = check(float_ranged,"-4.2",[-2.2,3.5]),
+	nomatch = check(float_ranged,"aaa",[-2.2,3.5]),
+	nomatch = check(float_ranged,"1",[-2.2,3.5]),
+
+	10 = check(integer,"10",[]),
+	nomatch = check(integer,"aaa",[]),
+	nomatch = check(integer,"0.1",[]),
+
+	10 = check(integer_positive,"10",[]),
+	nomatch = check(integer_positive,"10.1",[]),
+	nomatch = check(integer_positive,"-10",[]),
+	nomatch = check(integer_positive,"aaa",[]),
+
+	-10 = check(integer_negative,"-10",[]),
+	nomatch = check(integer_negative,"10.1",[]),
+	nomatch = check(integer_negative,"10",[]),
+	nomatch = check(integer_negative,"aaa",[]),
+
+	1 = check(integer_from_list,"1",[[1]]),
+	nomatch = check(integer_from_list,"1",[[2]]),
+	nomatch = check(integer_from_list,"-0.2",[[1]]),
+	nomatch = check(integer_from_list,"aaa",[[1]]),
+
+	0 = check(integer_ranged,"0",[-2,5]),
+	nomatch = check(integer_ranged,"10",[-2,5]),
+	nomatch = check(integer_ranged,"4.2",[-2,5]),
+	nomatch = check(integer_ranged,"aaa",[-2,5]),
+	nomatch = check(integer_ranged,"-10",[-2,5]),
+
+	atom = check(atom,"atom",[]),
+	'ATOM' = check(atom,"ATOM",[]),
+	'1' = check(atom,"1",[]),
+	'1.0' = check(atom,"1.0",[]),
+
+	true = check(boolean,"true",[]),
+	true = check(boolean,"1",[]),
+	false = check(boolean,"false",[]),
+	false = check(boolean,"0",[]),
+	nomatch = check(boolean,"11",[]),
+
+	1 = check(boolean_integer,"true",[]),
+	1 = check(boolean_integer,"1",[]),
+	0 = check(boolean_integer,"false",[]),
+	0 = check(boolean_integer,"0",[]),
+	nomatch = check(boolean_integer,"11",[]),
+
+	ok.
 
 
-%%-----------------------------------
-%% @doc Checking the request parameter through the Regexp defined for the type. Return the
-%% Parameter = Checked_parameter() converted to the defined datatype from list
--spec check(Type,Parameter,Type_properties) -> nomatch | _Checked_parameter
+%% ----------------------------
+%% @doc Checking the request parameter through the Regexp defined for the type.
+-spec check(TYPE,PARAMETER,TYPE_PROPERTIES) -> nomatch | CHECKED_VALUE
 	when
-	Type :: atom(),
-	Parameter :: a_http_post_parameter(),
-	Type_properties :: a_list_of_properties().
+		TYPE :: atom(),
+		PARAMETER :: a_http_post_parameter(),
+		TYPE_PROPERTIES :: a_list_of_properties(),
+		CHECKED_VALUE :: any().
 
-check(user_defined,Parameter,[Module,Function,Arguments]) ->
-	apply(Module,Function,[Parameter,Arguments]);
-check(Type,Parameter,Type_properties) ->
-	parameter_value(Type,Parameter,Type_properties).
+check(user_defined,PARAMETER,[MODULE,FUNCTION,ARGUMENTS]) ->
+
+	apply(MODULE,FUNCTION,[PARAMETER,ARGUMENTS]);
+
+check(TYPE,PARAMETER,TYPE_PROPERTIES) ->
+
+	parameter_value(TYPE,PARAMETER,TYPE_PROPERTIES).
 
 
 %% ----------------------------
 %% @doc Find and check parameter from Yaws parameters proplist
--spec checkout(Parameter_name,Parameters,Type,Type_properties) ->
-	notinlist | nomatch | _Checked_parameter
+-spec checkout(PARAMETER_NAME,PARAMETERS,TYPE,TYPE_PROPERTIES) ->
+	notinlist | nomatch | CHECKED_VALUE
 	when
-	Parameter_name :: string(),
-	Parameters :: proplists:proplist(),
-	Type :: atom(),
-	Type_properties :: list().
+		PARAMETER_NAME :: string(),
+		PARAMETERS :: proplists:proplist(),
+		TYPE :: atom(),
+		TYPE_PROPERTIES :: list(),
+		CHECKED_VALUE :: any().
 
-checkout(Parameter_name,Parameters,Type,Type_properties) ->
-	case proplists:get_value(Parameter_name,Parameters) of
+checkout(PARAMETER_NAME,PARAMETERS,TYPE,TYPE_PROPERTIES) ->
+
+	case proplists:get_value(PARAMETER_NAME,PARAMETERS) of
 		undefined -> notinlist;
-		Value_string -> check(Type,Value_string,Type_properties)
+		VALUE_STRING -> check(TYPE,VALUE_STRING,TYPE_PROPERTIES)
 	end.
 
 
 %% ----------------------------
-%% @doc Wrapper function for check/3, checking list of typed parameters
+%% @doc Wrapper function for check/3, checking list of typed elements
 -spec check_list(LIST,TYPE_PROPERTIES) -> list() | nomatch
 	when
 		LIST :: list(),
@@ -77,7 +151,7 @@ check_list(LIST,TYPE_PROPERTIES) -> check_list(LIST,TYPE_PROPERTIES,[]).
 
 
 %% ----------------------------
-%% @doc Checking list of typed parameters
+%% @doc Checking list of typed elements
 -spec check_list(LIST,TYPE_PROPERTIES,OUTPUT) -> list() | nomatch
 	when
 		LIST :: list(),
@@ -100,138 +174,152 @@ check_list([ELEMENT|LIST],{TYPE,TYPE_PARAMETERS},OUTPUT) ->
 	end.
 
 
+%% ----------------------------
+%% @doc Checking requested parameters in following of Data_schema
+-spec check_parameters(DATA_SCHEMA,PARAMETERS) -> CHECKED_PARAMETERS | false
+	when
+		DATA_SCHEMA :: list(),
+		PARAMETERS :: list(),
+		CHECKED_PARAMETERS :: proplists:proplist().
+
+check_parameters(DATA_SCHEMA,PARAMETERS) -> check_parameters(DATA_SCHEMA,PARAMETERS,[]).
+
+
+%% ----------------------------
+%% @doc Handler function for check_parameters/2
+-spec check_parameters([RULE|DATA_SCHEMA],PARAMETERS,RESULT) -> CHECKED_PARAMETERS | false
+	when
+		RULE :: {PARAMETER_NAME,PARAMETER_PROPERTIES},
+		PARAMETER_NAME :: a_utf_text_string(),
+		PARAMETER_PROPERTIES :: proplists:proplist(),
+		DATA_SCHEMA :: proplists:proplist(),
+		PARAMETERS :: list(),
+		RESULT :: CHECKED_PARAMETERS | false,
+		CHECKED_PARAMETERS :: proplists:proplist().
+
+check_parameters([],_,RESULT) -> RESULT;
+
+check_parameters([RULE|DATA_SCHEMA],PARAMETERS,RESULT) ->
+
+	{PARAMETER_NAME,PARAMETER_PROPERTIES} = RULE,
+
+	CHECK = fun(F_PARAMETER_VALUE) ->
+		TYPE = proplists:get_value(type,PARAMETER_PROPERTIES),
+		TYPE_PROPERTIES = proplists:get_value(type_properties,PARAMETER_PROPERTIES),
+		PARAMETER_CHECKED = a_yaws_params:check(TYPE,F_PARAMETER_VALUE,TYPE_PROPERTIES),
+		case PARAMETER_CHECKED of
+			nomatch ->
+				false;
+			PARAMETER_CHECKED ->
+				NAME = list_to_atom(PARAMETER_NAME),
+				F_OUTPUT = lists:append(RESULT,[{NAME,PARAMETER_CHECKED}]),
+				check_parameters(DATA_SCHEMA,PARAMETERS,F_OUTPUT)
+		end
+	end,
+
+	case proplists:get_value(require,PARAMETER_PROPERTIES) of
+		true ->
+			case proplists:get_value(PARAMETER_NAME,PARAMETERS) of
+				undefined -> false;
+				PARAMETER_VALUE -> CHECK(PARAMETER_VALUE)
+			end;
+		false ->
+			case proplists:get_value(PARAMETER_NAME,PARAMETERS) of
+				undefined -> CHECK(proplists:get_value(require_default,PARAMETER_PROPERTIES));
+				PARAMETER_VALUE -> CHECK(PARAMETER_VALUE)
+			end
+	end.
+
+
 %%-----------------------------------
 %% @doc Secondary function for check/3
--spec parameter_value(Type,Parameter,Type_properties) -> nomatch | _Checked_parameter | {error,_Reason}
+-spec parameter_value(TYPE,PARAMETER,TYPE_PROPERTIES) ->
+	nomatch | CHECKED_VALUE | {error,REASON}
 	when
-	Type :: atom(),
-	Parameter :: a_http_post_parameter(),
-	Type_properties::list().
+		TYPE :: atom(),
+		PARAMETER :: a_http_post_parameter(),
+		TYPE_PROPERTIES ::list(),
+		CHECKED_VALUE :: any(),
+		REASON :: term().
 
 %% List of typed elements
 parameter_value(list_of_typed,Parameters,{Separator,Type,Type_properties}) ->
-	a_list:check(
+
+	check_list(
 		string:tokens(Parameters,Separator),
 		{Type,Type_properties}
 	);
+
 %% Float, regex rule ^[\-]?[0-9]*\.[0-9]*$
-parameter_value(float,Parameter,_) ->
-	try list_to_float(Parameter)
-	catch _:_ -> nomatch end;
+parameter_value(float,PARAMETER,_) ->
+
+	a_yaws_params_primitives:float(PARAMETER);
+
 %% Float, regex rule ^[0-9]*\.[0-9]*$
-parameter_value(pos_float,Parameter,_) ->
-	case check(float,Parameter,[]) of
-		nomatch -> nomatch;
-		Value ->
-			if
-				Value >= 0 -> Value;
-				true -> nomatch
-			end
-	end;
+parameter_value(float_positive,PARAMETER,_) ->
+
+	a_yaws_params_primitives:float_positive(PARAMETER);
+
 %% Negative float
-parameter_value(neg_float,Parameter,_) ->
-	case check(float,Parameter,[]) of
-		nomatch -> nomatch;
-		Value ->
-			if
-				Value < 0 -> Value;
-				true -> nomatch
-			end
-	end;
+parameter_value(float_negative,PARAMETER,_) ->
+
+	a_yaws_params_primitives:float_negative(PARAMETER);
+
 %% Float from list
-parameter_value(float_from_list,Parameter,[List]) ->
-	case parameter_value(float,Parameter,[]) of
-		nomatch -> nomatch;
-		Float ->
-			case lists:member(Float,List) of
-				true -> Float;
-				false -> nomatch
-			end
-	end;
+parameter_value(float_from_list,PARAMETER,[LIST]) ->
+
+	a_yaws_params_primitives:float_from_list(PARAMETER,LIST);
+
+%% Ranged float
+parameter_value(float_ranged,PARAMETER,[MINOR,MAJOR]) ->
+
+	a_yaws_params_primitives:float_ranged(PARAMETER,MINOR,MAJOR);
+
 %% Integer, regex rule ^[\-]?[0-9]*$
-parameter_value(integer,Parameter,_) ->
-	try list_to_integer(Parameter)
-	catch _:_ -> nomatch end;
+parameter_value(integer,PARAMETER,_) ->
+
+	a_yaws_params_primitives:integer(PARAMETER);
+
 %% Positive integer, regex rule "^[0-9]*$"
-parameter_value(pos_integer,Parameter,_) ->
-	case check(integer,Parameter,[]) of
-		nomatch -> nomatch;
-		Integer ->
-			if
-				Integer >= 0 -> Integer;
-				true -> nomatch
-			end
-	end;
+parameter_value(integer_positive,PARAMETER,_) ->
+
+	a_yaws_params_primitives:integer_positive(PARAMETER);
+
 %% Neg_integer, regex rule ^[\-]{1}[0-9]*$
-parameter_value(neg_integer,Parameter,_) ->
-	case check(integer,Parameter,[]) of
-		nomatch -> nomatch;
-		Integer ->
-			if
-				Integer < 0 -> Integer;
-				true -> nomatch
-			end
-	end;
-%% Ranged integer
-parameter_value(ranged_integer,Parameter,[Minor,Major]) ->
-	case check(integer,Parameter,[]) of
-		nomatch -> nomatch;
-		Integer ->
-			if
-				Minor < Major ->
-					if
-						Integer =< Major ->
-							if
-								Integer >= Minor -> Integer;
-								true -> nomatch
-							end;
-						true -> nomatch
-					end;
-				true -> nomatch
-			end
-	end;
+parameter_value(integer_negative,PARAMETER,_) ->
+
+	a_yaws_params_primitives:integer_negative(PARAMETER);
+
 %% Integer from list
-parameter_value(integer_from_list,Parameter,[List]) ->
-	case parameter_value(integer,Parameter,[]) of
-		nomatch -> nomatch;
-		Integer ->
-			case lists:member(Integer,List) of
-				true -> Integer;
-				false -> nomatch
-			end
-	end;
+parameter_value(integer_from_list,PARAMETER,[LIST]) ->
+
+	a_yaws_params_primitives:integer_from_list(PARAMETER,LIST);
+
+%% Ranged integer
+parameter_value(integer_ranged,PARAMETER,[MINOR,MAJOR]) ->
+
+	a_yaws_params_primitives:integer_ranged(PARAMETER,MINOR,MAJOR);
+
 %% Atom
-parameter_value(atom,Parameter,_) ->
-	try list_to_atom(Parameter)
-	catch _:_ -> nomatch end;
+parameter_value(atom,PARAMETER,_) ->
+
+	a_yaws_params_primitives:atom(PARAMETER);
+
 %% Atom from list
-parameter_value(atom_from_list,Parameter,[List]) ->
-	case parameter_value(atom,Parameter,[]) of
-		nomatch -> nomatch;
-		Atom ->
-			case lists:member(Atom,List) of
-				true -> Atom;
-				false -> nomatch
-			end
-	end;
-%% A_atom, regex rule ^[a-z]{1}[a-zA-Z0-9\_]*$
-parameter_value(a_atom,Parameter,_) ->
-	Pattern = "^[a-z]{1}[a-zA-Z0-9\_]*$",
-	case re:run(Parameter,Pattern) of
-		nomatch -> nomatch;
-		{match,_} -> list_to_atom(Parameter)
-	end;
-%% Boolean, regex rule ^true$|^false$
-parameter_value(boolean,Parameter,_) ->
-	Pattern = "^true$|^false$",
-	case re:run(Parameter,Pattern) of
-		nomatch -> nomatch;
-		{match,_} ->
-			if
-				Parameter == "true" -> true;
-				Parameter == "false" -> false
-			end
-	end;
+parameter_value(atom_from_list,PARAMETER,[LIST]) ->
+
+	a_yaws_params_primitives:atom_from_list(PARAMETER,LIST);
+
+%% Boolean
+parameter_value(boolean,PARAMETER,_) ->
+
+	a_yaws_params_primitives:boolean(PARAMETER);
+
+%% Boolean integer
+parameter_value(boolean_integer,PARAMETER,_) ->
+
+	a_yaws_params_primitives:boolean_integer(PARAMETER);
+
 %% Latin_name, regex rule ^[a-zA-Z0-9 -_]{1,lenght}$
 parameter_value(latin_name,Parameter,[Length]) ->
 	Pattern = fun() ->
@@ -721,53 +809,3 @@ parameter_value(by_pattern,Parameter,[Pattern,Output_type])
 	end.
 
 
-%% ----------------------------
-%% @doc Checking requested parameters in following of Data_schema selected
-%% in following of table name.
-%% Return:
-%%      false - in case of wrong request parameters
-%%      list() - in case of passed checking
-%% Example of passed checking: [{parameter1,"Value1"},{parameter2,"Value2"},{parameter2,"Value2"}]
--spec check_parameters(Data_schema,Parameters) -> list() | false
-	when Data_schema::list(), Parameters::list().
-
-check_parameters(Data_schema,Parameters) ->
-	check_parameters(Data_schema,Parameters,[]).
-
-check_parameters([],_,Result) -> Result;
-check_parameters([Rule|Data_schema],Parameters,Result) ->
-	{Parameter_name,Parameter_properties} = Rule,
-	Check_value = fun(Parameter_value) ->
-		Type = proplists:get_value(type,Parameter_properties),
-		Type_properties = proplists:get_value(type_properties,Parameter_properties),
-		Parameter_checked = a_yaws_params:check(Type,Parameter_value,Type_properties),
-		case Parameter_checked of
-			nomatch ->
-				false;
-			{error,Reason} ->
-				{error,Reason};
-			_ ->
-				Name = list_to_atom(Parameter_name),
-				Result_out = lists:append(Result,[{Name,Parameter_checked}]),
-				check_parameters(Data_schema,Parameters,Result_out)
-		end
-	end,
-	case proplists:get_value(require,Parameter_properties) of
-		true ->
-			Parameter_value = proplists:get_value(Parameter_name,Parameters),
-			if
-				Parameter_value == undefined ->
-					false;
-				true ->
-					Check_value(Parameter_value)
-			end;
-		false ->
-			Parameter_value = proplists:get_value(Parameter_name,Parameters),
-			if
-				Parameter_value == undefined ->
-					Parameter_default = proplists:get_value(require_default,Parameter_properties),
-					Check_value(Parameter_default);
-				true ->
-					Check_value(Parameter_value)
-			end
-	end.

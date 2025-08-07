@@ -98,6 +98,46 @@ test() ->
 	0 = check(boolean_integer,"0",[]),
 	nomatch = check(boolean_integer,"11",[]),
 
+	"name" = check(latin_name,"name",[4,string]),
+	<<"name">> = check(latin_name,"name",[4,binary]),
+	<<"name">> = check(latin_name,"name",[5,binary]),
+	nomatch = check(latin_name,"name",[2,binary]),
+
+	"name" = check(latin_name_ranged,"name",[2,6,string]),
+	<<"name">> = check(latin_name_ranged,"name",[4,4,binary]),
+	nomatch = check(latin_name_ranged,"name",[5,9,binary]),
+
+	<<"dGVzdA==">> = check(base64,"dGVzdA==",[binary]),
+	"dGVzdA==" = check(base64,"dGVzdA==",[string]),
+	nomatch = check(base64,"wrong_string",[string]),
+
+	<<"test">> = check(base64_encoded,"dGVzdA==",[binary]),
+	"test" = check(base64_encoded,"dGVzdA==",[string]),
+	nomatch = check(base64_encoded,"wrong_string",[string]),
+
+	<<"testID">> = check(id,"testID",[6,binary]),
+	"testID" = check(id,"testID",[6,string]),
+	nomatch = check(id,"testID",[5,binary]),
+	nomatch = check(id,"testID",[7,binary]),
+
+	<<"testID">> = check(id_or_null,"testID",[6,"0",binary]),
+	null = check(id_or_null,"0",[6,"0",binary]),
+	nomatch = check(id_or_null,"wrong_id",[6,"0",binary]),
+	nomatch = check(id_or_null,"wrongidwrongid",[6,"0",binary]),
+
+	<<"testID">> = check(id_ranged,"testID",[4,7,binary]),
+	"testID" = check(id_ranged,"testID",[4,7,string]),
+	nomatch = check(id_ranged,"testID",[7,10,binary]),
+	nomatch = check(id_ranged,"test ID",[4,10,string]),
+
+	<<"testID">> = check(id_ranged_or_null,"testID",[4,7,"0",binary]),
+	null = check(id_ranged_or_null,"0",[4,7,"0",binary]),
+	nomatch = check(id_ranged_or_null,"0000000000000",[4,7,"0",binary]),
+
+	<<"79054025255fb1a26e4bc422aef54eb4">> = check(id_md5,"79054025255fb1a26e4bc422aef54eb4",[binary]),
+	"79054025255fb1a26e4bc422aef54eb4" = check(id_md5,"79054025255fb1a26e4bc422aef54eb4",[string]),
+	nomatch = check(id_md5,"79054025255fb1a26e4bc422aef54",[string]),
+
 	ok.
 
 
@@ -320,84 +360,56 @@ parameter_value(boolean_integer,PARAMETER,_) ->
 
 	a_yaws_params_primitives:boolean_integer(PARAMETER);
 
-%% Latin_name, regex rule ^[a-zA-Z0-9 -_]{1,lenght}$
-parameter_value(latin_name,Parameter,[Length]) ->
-	Pattern = fun() ->
-		case Length of
-			free ->
-				<<("^(<<\"){1}([a-zA-Z0-9 _-]{1,})(\">>)$")/utf8>>;
-			_ ->
-				<<("^(<<\"){1}([a-zA-Z0-9 \-\_]{1,")/utf8,
-				(integer_to_binary(Length))/binary,
-				("})(\">>)$")/utf8>>
-		end
-	end,
-	Binary_parameter = unicode:characters_to_binary(Parameter),
-	case re:run(Binary_parameter,Pattern()) of
-		nomatch -> nomatch;
-		{match,_} ->
-			Size = byte_size(Binary_parameter),
-			binary:part(Binary_parameter,3,Size-6)
-	end;
+%% Latin_name, regex rule ^[a-zA-Z]{1}[a-zA-Z0-9\_\-]{1,LENGTH}$
+parameter_value(latin_name,PARAMETER,[LENGTH,OUTPUT_TYPE]) ->
 
-%% Unicode_base64 ^([a-zA-Z0-9\=\+\/]{4,})$
-parameter_value(base64,Parameter,[az_esm]) ->
-	Pattern = "^([a-zA-Z0-9\=\+\/]{4,})$",
-	try
-		case re:run(Parameter,Pattern) of
-			nomatch -> nomatch;
-			{match,_} -> Parameter
-		end
-	catch _:_ -> nomatch
-	end;
-parameter_value(base64,Parameter,[az_esm_binary]) ->
-	case parameter_value(base64,Parameter,[az_esm]) of
-		nomatch -> nomatch;
-		_ -> unicode:characters_to_binary(Parameter)
-	end;
-parameter_value(base64,Parameter,[az_esm_unicode,string]) ->
-	case parameter_value(base64,Parameter,[az_esm]) of
-		nomatch -> nomatch;
-		_ ->
-			try binary_to_list(base64:decode(Parameter))
-			catch _:_ -> nomatch
-			end
-	end;
-parameter_value(base64,Parameter,[az_esm_unicode,binary]) ->
-	case parameter_value(base64,Parameter,[az_esm_binary]) of
-		nomatch -> nomatch;
-		_ ->
-			try base64:decode(Parameter)
-			catch _:_  -> nomatch
-			end
-	end;
-parameter_value(base64,Parameter,[typified,Type,Type_properties]) ->
-	case parameter_value(base64,Parameter,[az_esm_unicode,string]) of
-		nomatch -> nomatch;
-		Checked_parameter -> check(Type,Checked_parameter,Type_properties)
-	end;
+	a_yaws_params_primitives:latin_name(PARAMETER,LENGTH,OUTPUT_TYPE);
+
+%% Latin_name_ranged, regex rule ^[a-zA-Z]{1}[a-zA-Z0-9\_\-]{MINOR,MAJOR}$
+parameter_value(latin_name_ranged,PARAMETER,[MINOR,MAJOR,OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:latin_name_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE);
+
+%% Unicode_base64 ^([a-zA-Z0-9\=\+\/]{0,})$
+parameter_value(base64,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:base64(PARAMETER,OUTPUT_TYPE);
+
+%% Unicode_base64 ^([a-zA-Z0-9\=\+\/]{0,})$
+parameter_value(base64_encoded,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:base64_encoded(PARAMETER,OUTPUT_TYPE);
+
 %% Id
-parameter_value(id,Parameter,[Length,Output]) ->
-	case is_integer(Length) of
-		false -> nomatch;
-		_ ->
-			if
-				Length > 0 ->
-					Pattern = <<("^[a-zA-Z0-9]{")/utf8,
-						(integer_to_binary(Length))/binary,
-						("}$")/utf8>>,
-					Parameter_binary = unicode:characters_to_binary(Parameter),
-					case re:run(Parameter_binary,Pattern) of
-						nomatch -> nomatch;
-						{match,_} ->
-							case Output of
-								binary -> Parameter_binary;
-								_ -> binary_to_list(Parameter_binary)
-							end
-					end;
-				true -> nomatch
-			end
-	end;
+parameter_value(id,PARAMETER,[LENGTH,OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:id(PARAMETER,LENGTH,OUTPUT_TYPE);
+
+%% Id or null
+parameter_value(id_or_null,PARAMETER,[LENGTH,NULL,OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:id_or_null(PARAMETER,LENGTH,NULL,OUTPUT_TYPE);
+
+%% Id ranged
+parameter_value(id_ranged,PARAMETER,[MINOR,MAJOR,OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:id_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE);
+
+%% Id ranged or null
+parameter_value(id_ranged_or_null,PARAMETER,[MINOR,MAJOR,NULL,OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:id_ranged_or_null(PARAMETER,MINOR,MAJOR,NULL,OUTPUT_TYPE);
+
+%% Id of md5
+parameter_value(id_md5,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:id_md5(PARAMETER,OUTPUT_TYPE);
+
+%% Id of md4
+parameter_value(id_md4,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:id_md4(PARAMETER,OUTPUT_TYPE);
+
 %% IP regex rule ^([\d]{1,3})\.([\d]{1,3})\.([\d]{1,3})\.([\d]{1,3})$
 parameter_value(ipv4,Parameter,[Output_type]) ->
 	try

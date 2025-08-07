@@ -25,9 +25,13 @@
 	integer/1,integer_positive/1,integer_negative/1,
 	integer_from_list/2,integer_ranged/3,
 
-	atom/1,atom_from_list/2,
+	id/3,id_or_null/4,id_ranged/4,id_ranged_or_null/5,
+	id_md5/2,id_md4/2,
 
-	boolean/1,boolean_integer/1
+	atom/1,atom_from_list/2,
+	boolean/1,boolean_integer/1,
+	latin_name/3,latin_name_ranged/4,
+	base64/2, base64_encoded/2
 
 ]).
 
@@ -250,6 +254,120 @@ integer_ranged(PARAMETER,MINOR,MAJOR) ->
 
 
 %% ----------------------------
+%% @doc Check ID of defined length
+-spec id(PARAMETER,LENGTH,OUTPUT_TYPE) -> ID | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		LENGTH :: pos_integer(),
+		OUTPUT_TYPE :: binary | string,
+		ID :: a_utf_text_binary() | a_utf_text_string().
+
+id(PARAMETER,LENGTH,OUTPUT_TYPE) ->
+
+	if
+		LENGTH > 0 ->
+			PATTERN = <<
+				("^[a-zA-Z0-9]{")/utf8,
+				(integer_to_binary(LENGTH))/binary,
+				("}$")/utf8
+			>>,
+			PARAMETER_BINARY = unicode:characters_to_binary(PARAMETER),
+			case re:run(PARAMETER_BINARY,PATTERN) of
+				nomatch ->
+					nomatch;
+				{match,_} ->
+					case OUTPUT_TYPE of
+						binary -> PARAMETER_BINARY;
+						string -> PARAMETER
+					end
+			end;
+		true ->
+			nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check ID of defined length or null value
+-spec id_or_null(PARAMETER,LENGTH,NULL,OUTPUT_TYPE) -> ID | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		LENGTH :: pos_integer(),
+		NULL :: a_utf_text_string(),
+		OUTPUT_TYPE :: binary | string,
+		ID :: a_utf_text_binary() | a_utf_text_string() | null.
+
+id_or_null(PARAMETER,_LENGTH,NULL,_OUTPUT_TYPE) when PARAMETER =:= NULL -> null;
+
+id_or_null(PARAMETER,LENGTH,_NULL,OUTPUT_TYPE) -> id(PARAMETER,LENGTH,OUTPUT_TYPE).
+
+
+%% ----------------------------
+%% @doc Check ranged ID
+-spec id_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE) -> ID | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		MINOR :: pos_integer(),
+		MAJOR :: pos_integer(),
+		OUTPUT_TYPE :: binary | string,
+		ID :: a_utf_text_binary() | a_utf_text_string().
+
+id_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE) when MINOR > MAJOR ->
+
+	id_ranged(PARAMETER,MAJOR,MINOR,OUTPUT_TYPE);
+
+id_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE) ->
+
+	LENGTH =  length(PARAMETER),
+	if
+		LENGTH > MAJOR -> nomatch;
+		LENGTH < MINOR -> nomatch;
+		true -> id(PARAMETER,LENGTH,OUTPUT_TYPE)
+	end.
+
+
+%% ----------------------------
+%% @doc Check ranged ID or null value
+-spec id_ranged_or_null(PARAMETER,MINOR,MAJOR,NULL,OUTPUT_TYPE) -> ID | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		MINOR :: pos_integer(),
+		MAJOR :: pos_integer(),
+		NULL :: a_utf_text_string(),
+		OUTPUT_TYPE :: binary | string,
+		ID :: a_utf_text_binary() | a_utf_text_string() | null.
+
+id_ranged_or_null(PARAMETER,_MINOR,_MAJOR,NULL,_OUTPUT_TYPE) when PARAMETER =:= NULL ->
+
+	null;
+
+id_ranged_or_null(PARAMETER,MINOR,MAJOR,_NULL,OUTPUT_TYPE) ->
+
+	id_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE).
+
+
+%% ----------------------------
+%% @doc Check md5 hashed ID
+-spec id_md5(PARAMETER,OUTPUT_TYPE) -> ID_MD5 | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: binary | string,
+		ID_MD5 :: a_utf_text_string() | a_utf_text_binary().
+
+id_md5(PARAMETER,OUTPUT_TYPE) -> id(PARAMETER,32,OUTPUT_TYPE).
+
+
+%% ----------------------------
+%% @doc Check md4 hashed ID
+-spec id_md4(PARAMETER,OUTPUT_TYPE) -> ID_MD4 | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: binary | string,
+		ID_MD4 :: a_utf_text_string() | a_utf_text_binary().
+
+id_md4(PARAMETER,OUTPUT_TYPE) -> id(PARAMETER,32,OUTPUT_TYPE).
+
+
+%% ----------------------------
 %% @doc Check atom parameter
 -spec atom(PARAMETER) -> ATOM | nomatch
 	when
@@ -317,3 +435,136 @@ boolean_integer(PARAMETER) ->
 		"0" -> 0;
 		PARAMETER -> nomatch
 	end.
+
+
+%% ----------------------------
+%% @doc Check latin name parameter
+-spec latin_name(PARAMETER,LENGTH,OUTPUT_TYPE) -> LATIN_NAME | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		LENGTH :: pos_integer(),
+		LATIN_NAME :: a_utf_text_string() | a_utf_text_binary(),
+		OUTPUT_TYPE :: binary | string.
+
+latin_name(PARAMETER,LENGTH,OUTPUT_TYPE) ->
+
+	PATTERN = fun() ->
+		case LENGTH of
+			free ->
+				<<("^[a-zA-Z]{1}[a-zA-Z0-9\_\-]{1,}$")/utf8>>;
+			_ ->
+				<<("^[a-zA-Z]{1}[a-zA-Z0-9\_\-]{1,")/utf8,
+					(integer_to_binary(LENGTH - 1))/binary,
+					("}$")/utf8>>
+		end
+	end,
+
+	BINARY_PARAMETER = unicode:characters_to_binary(PARAMETER),
+	case re:run(BINARY_PARAMETER,PATTERN()) of
+		nomatch ->
+			nomatch;
+		{match,_} ->
+			case OUTPUT_TYPE of
+				binary -> BINARY_PARAMETER;
+				string -> PARAMETER
+			end
+	end.
+
+
+%% ----------------------------
+%% @doc Check latin name ranged parameter
+-spec latin_name_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE) -> LATIN_NAME | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		MINOR :: pos_integer(),
+		MAJOR :: pos_integer(),
+		OUTPUT_TYPE :: binary | string,
+		LATIN_NAME :: a_utf_text_string() | a_utf_text_binary().
+
+latin_name_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE) when MINOR > MAJOR ->
+
+	latin_name_ranged(PARAMETER,MAJOR,MINOR,OUTPUT_TYPE);
+
+latin_name_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE) ->
+
+	PATTERN = <<
+		("^[a-zA-Z]{1}[a-zA-Z0-9\_\-]{")/utf8,
+		(integer_to_binary(MINOR - 1))/binary,
+		(",")/utf8,
+		(integer_to_binary(MAJOR - 1))/binary,
+		("}$")/utf8
+	>>,
+
+	BINARY_PARAMETER = unicode:characters_to_binary(PARAMETER),
+	case re:run(BINARY_PARAMETER,PATTERN) of
+		nomatch ->
+			nomatch;
+		{match,_} ->
+			case OUTPUT_TYPE of
+				binary -> BINARY_PARAMETER;
+				string -> PARAMETER
+			end
+	end.
+
+
+%% ----------------------------
+%% @doc Check base64 decoded parameter
+-spec base64(PARAMETER,OUTPUT_TYPE) -> BASE64 | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: binary | string,
+		BASE64 :: a_utf_text_string() | a_utf_text_binary().
+
+base64(PARAMETER,OUTPUT_TYPE) ->
+
+	PATTERN = "^([a-zA-Z0-9\=\+\/]{0,})$",
+	try
+		case re:run(PARAMETER,PATTERN) of
+			nomatch -> nomatch;
+			{match,_} ->
+				case OUTPUT_TYPE of
+					binary -> list_to_binary(PARAMETER);
+					string -> PARAMETER
+				end
+		end
+	catch _:_ ->
+		nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check base64 decoded parameter with encoding
+-spec base64_encoded(PARAMETER,OUTPUT_TYPE) -> BASE64 | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: binary | string,
+		BASE64 :: a_utf_text_string() | a_utf_text_binary().
+
+base64_encoded(PARAMETER,OUTPUT_TYPE) ->
+
+	PATTERN = "^([a-zA-Z0-9\=\+\/]{0,})$",
+	try
+		case re:run(PARAMETER,PATTERN) of
+			nomatch ->
+				nomatch;
+			{match,_} ->
+
+				ENCODED_BASE64 =
+					try binary_to_list(base64:decode(PARAMETER))
+				    catch _:_ -> nomatch
+				    end,
+
+				case ENCODED_BASE64 of
+					nomatch ->
+						nomatch;
+					ENCODED_BASE64 ->
+						case OUTPUT_TYPE of
+							binary -> list_to_binary(ENCODED_BASE64);
+							string -> ENCODED_BASE64
+						end
+				end
+		end
+	catch _:_ ->
+		nomatch
+	end.
+

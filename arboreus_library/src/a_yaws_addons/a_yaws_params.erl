@@ -410,78 +410,31 @@ parameter_value(id_md4,PARAMETER,[OUTPUT_TYPE]) ->
 
 	a_yaws_params_primitives:id_md4(PARAMETER,OUTPUT_TYPE);
 
-%% IP regex rule ^([\d]{1,3})\.([\d]{1,3})\.([\d]{1,3})\.([\d]{1,3})$
-parameter_value(ipv4,Parameter,[Output_type]) ->
-	try
-		{ok,Ip_tuple} = inet:parse_ipv4_address(Parameter),
-		case Output_type of
-			string -> Parameter;
-			binary -> unicode:characters_to_binary(Parameter);
-			list -> tuple_to_list(Ip_tuple);
-			tuple -> Ip_tuple;
-			_ -> a_net:ipv4_to_integer(Ip_tuple)
-		end
-	catch _:_ -> nomatch end;
-%% Ip_range rule ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\/([0-9]{1,3})$
-parameter_value(ipv4_range,Parameter,[Output_type]) ->
-	Pattern = "^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\/([0-9]{1,3})$",
-	case re:split(Parameter,Pattern) of
-		[_,A,B,C,D,E,_] ->
-			Integer_A = binary_to_integer(A),
-			Integer_B = binary_to_integer(B),
-			Integer_C = binary_to_integer(C),
-			Integer_D = binary_to_integer(D),
-			Integer_E = binary_to_integer(E),
-			if
-				Integer_A >= 0, Integer_A =< 255,
-				Integer_B >= 0, Integer_B =< 255,
-				Integer_C >= 0, Integer_C =< 255,
-				Integer_D >= 0, Integer_D =< 255,
-				Integer_E >= 0, Integer_E =< 255 ->
-					case Output_type of
-						binary -> unicode:characters_to_binary(Parameter);
-						string -> Parameter;
-						tuple -> {Integer_A,Integer_B,Integer_C,Integer_D,Integer_E};
-						list -> [Integer_A,Integer_B,Integer_C,Integer_D,Integer_E]
-					end;
-				true -> nomatch
-			end;
-		[_] -> nomatch
-	end;
-%% IP v6 regex rule ^(\:?([a-z0-9]{4})){8}$
-parameter_value(ipv6,Parameter,[Output_type]) ->
-	try
-		{ok,Ip_tuple} = inet:parse_ipv6_address(Parameter),
-		case Output_type of
-			string -> Parameter;
-			binary -> unicode:characters_to_binary(Parameter);
-			list -> tuple_to_list(Ip_tuple);
-			tuple -> Ip_tuple;
-			_ -> a_net:ipv6_to_integer(Parameter)
-		end
-	catch _:_ -> nomatch end;
-%% FQDN regex rule
-parameter_value(fqdn,Parameter,[Output_type]) ->
-	Pattern = "^(\.?([a-zA-Z0-9\-\_]{1,})){0,}$",
-	case re:run(Parameter,Pattern) of
-		nomatch -> nomatch;
-		{match,_} ->
-			case Output_type of
-				string -> Parameter;
-				binary -> unicode:characters_to_binary(Parameter)
-			end
-	end;
+%% IP v4
+parameter_value(ipv4,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:ip_v4(PARAMETER,OUTPUT_TYPE);
+
+%% IP v4 range
+parameter_value(ipv4_range,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:ip_v4_range(PARAMETER,OUTPUT_TYPE);
+
+%% IP v6
+parameter_value(ipv6,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:ip_v6(PARAMETER,OUTPUT_TYPE);
+
+%% FQDN regex rule "^(\.?([a-zA-Z0-9\-\_]{1,})){0,}$"
+parameter_value(fqdn,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:fqdn(PARAMETER,OUTPUT_TYPE);
+
 %% E-mail regex rule ^([a-zA-Z0-9\.\_\-]{1,})\@([a-zA-Z0-9\.\_\-]{1,})$
-parameter_value(e_mail,Parameter,[Output_type]) ->
-	Pattern = "^([a-zA-Z0-9\.\_\-]{1,})\@([a-zA-Z0-9\.\_\-]{1,})$",
-	case re:run(Parameter,Pattern) of
-		nomatch -> nomatch;
-		{match,_} ->
-			case Output_type of
-				string -> Parameter;
-				binary -> unicode:characters_to_binary(Parameter)
-			end
-	end;
+parameter_value(e_mail,PARAMETER,[OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:fqdn(PARAMETER,OUTPUT_TYPE);
+
 %% Numerical sequece ^([0-9]{14,})$
 parameter_value(numerical,Parameter,[Length_rule,Output_type]) ->
 	Length = case Length_rule of

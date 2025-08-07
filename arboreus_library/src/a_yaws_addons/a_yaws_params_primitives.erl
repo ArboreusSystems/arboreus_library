@@ -31,7 +31,11 @@
 	atom/1,atom_from_list/2,
 	boolean/1,boolean_integer/1,
 	latin_name/3,latin_name_ranged/4,
-	base64/2, base64_encoded/2
+	base64/2, base64_encoded/2,
+	ip_v4/2,ip_v4_range/2,
+	ip_v6/2,
+	fqdn/2,
+	email/2
 
 ]).
 
@@ -568,3 +572,130 @@ base64_encoded(PARAMETER,OUTPUT_TYPE) ->
 		nomatch
 	end.
 
+
+%% ----------------------------
+%% @doc Check IPv4 parameter
+-spec ip_v4(PARAMETER,OUTPUT_TYPE) -> IP_V4 | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: string | binary | list | tuple | integer,
+		IP_V4 :: a_utf_text_string() | a_utf_text_binary() | a_ipv4_list() | a_ipv4_tuple() | a_ipv4_integer().
+
+ip_v4(PARAMETER,OUTPUT_TYPE) ->
+
+	try
+		{ok,IP_TUPLE} = inet:parse_ipv4_address(PARAMETER),
+		case OUTPUT_TYPE of
+			string -> PARAMETER;
+			binary -> unicode:characters_to_binary(PARAMETER);
+			list -> tuple_to_list(IP_TUPLE);
+			tuple -> IP_TUPLE;
+			integer -> a_net:ipv4_to_integer(IP_TUPLE)
+		end
+	catch _:_ ->
+		nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check IP v4 range parameter
+-spec ip_v4_range(PARAMETER,OUTPUT_TYPE) -> IP_V4_RANGE | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: binary | string | tuple | list,
+		IP_V4_RANGE :: a_utf_text_string() | a_utf_text_binary() | a_ipv4_list() | a_ipv4_tuple().
+
+ip_v4_range(PARAMETER,OUTPUT_TYPE) ->
+
+	PATTERN = "^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\/([0-9]{1,3})$",
+	case re:split(PARAMETER,PATTERN) of
+		[_,A,B,C,D,E,_] ->
+			INGETER_A = binary_to_integer(A),
+			INTEGER_B = binary_to_integer(B),
+			INGETER_C = binary_to_integer(C),
+			INGETER_D = binary_to_integer(D),
+			INGETER_E = binary_to_integer(E),
+			if
+				INGETER_A >= 0, INGETER_A =< 255,
+				INTEGER_B >= 0, INTEGER_B =< 255,
+				INGETER_C >= 0, INGETER_C =< 255,
+				INGETER_D >= 0, INGETER_D =< 255,
+				INGETER_E >= 0, INGETER_E =< 255 ->
+					case OUTPUT_TYPE of
+						binary -> unicode:characters_to_binary(PARAMETER);
+						string -> PARAMETER;
+						tuple -> {INGETER_A,INTEGER_B,INGETER_C,INGETER_D,INGETER_E};
+						list -> [INGETER_A,INTEGER_B,INGETER_C,INGETER_D,INGETER_E]
+					end;
+				true ->
+					nomatch
+			end;
+		[_] -> nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check IP v6 parameter
+-spec ip_v6(PARAMETER,OUTPUT_TYPE) -> IP_V6 | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: string | binary | list | tuple | integer,
+		IP_V6 :: a_utf_text_string() | a_utf_text_binary() | a_ipv4_list() | a_ipv4_tuple() | a_ipv4_integer().
+
+ip_v6(PARAMETER,OUTPUT_TYPE) ->
+
+	try
+		{ok,IP_TUPLE} = inet:parse_ipv6_address(PARAMETER),
+		case OUTPUT_TYPE of
+			string -> PARAMETER;
+			binary -> unicode:characters_to_binary(PARAMETER);
+			list -> tuple_to_list(IP_TUPLE);
+			tuple -> IP_TUPLE;
+			_ -> a_net:ipv6_to_integer(PARAMETER)
+		end
+	catch _:_ ->
+		nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check FQDN parameter
+-spec fqdn(PARAMETER,OUTPUT_TYPE) -> FQDN | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: string | binary,
+		FQDN :: a_utf_text_string() | a_utf_text_binary().
+
+fqdn(PARAMETER,OUTPUT_TYPE) ->
+
+	Pattern = "^(\.?([a-zA-Z0-9\-\_]{1,})){0,}$",
+	case re:run(PARAMETER,Pattern) of
+		nomatch ->
+			nomatch;
+		{match,_} ->
+			case OUTPUT_TYPE of
+				string -> PARAMETER;
+				binary -> unicode:characters_to_binary(PARAMETER)
+			end
+	end.
+
+
+%% ----------------------------
+%% @doc Check email parameter
+-spec email(PARAMETER,OUTPUT_TYPE) -> EMAIL | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		OUTPUT_TYPE :: string | binary,
+		EMAIL :: a_utf_text_string() | a_utf_text_binary().
+
+email(PARAMETER,OUTPUT_TYPE) ->
+
+	PATTERN = "^([a-zA-Z0-9\.\_\-]{1,})\@([a-zA-Z0-9\.\_\-]{1,})$",
+	case re:run(PARAMETER,PATTERN) of
+		nomatch -> nomatch;
+		{match,_} ->
+			case OUTPUT_TYPE of
+				string -> PARAMETER;
+				binary -> unicode:characters_to_binary(PARAMETER)
+			end
+	end.

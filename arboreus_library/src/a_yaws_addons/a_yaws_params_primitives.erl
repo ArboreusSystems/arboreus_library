@@ -29,13 +29,13 @@
 	integer_from_list/2,integer_ranged/3,
 	integer_range/2,integer_range_limited/3,
 
+	utf_binary/1,utf_binary_limited/2,
+	utf_binary_ranged/3,utf_binary_except/3,
+
 	id/3,id_or_null/4,id_ranged/4,id_ranged_or_null/5,
 	id_md5/2,id_md4/2,
 
-%%	utf_binary/1,utf_binary_ranged/3,
-%%	utf_binary_more_equal/2,utf_binary_less_equal/2,
-
-%%	password_ranged/3,password_more_equal/2,
+	password/2,password_ranged/3,
 	atom/1,atom_from_list/2,
 	boolean/1,boolean_integer/1,
 	latin_name/3,latin_name_ranged/4,
@@ -454,6 +454,148 @@ integer_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B})
 
 
 %% ----------------------------
+%% @doc Check UTF binary parameter
+-spec utf_binary(PARAMETER) -> UTF_BINARY | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		UTF_BINARY :: a_utf_text_binary().
+
+utf_binary(PARAMETER) when is_list(PARAMETER) ->
+
+	unicode:characters_to_binary(PARAMETER).
+
+
+%% ----------------------------
+%% @doc Check UTF binary parameter limited by length
+-spec utf_binary_limited(PARAMETER,LIMIT) -> UTF_BINARY | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		LIMIT :: {more_equal,LENGTH} | {less_equal,LENGTH} | {size,LENGTH},
+		LENGTH :: pos_integer(),
+		UTF_BINARY :: a_utf_text_binary().
+
+utf_binary_limited(PARAMETER,{more_equal,LENGTH})
+	when is_integer(LENGTH), LENGTH >= 1 ->
+
+	UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+	if
+		byte_size(UTF_BINARY) >= LENGTH -> UTF_BINARY;
+		true -> nomatch
+	end;
+
+utf_binary_limited(PARAMETER,{less_equal,LENGTH})
+	when is_integer(LENGTH), LENGTH >= 1 ->
+
+	UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+	if
+		byte_size(UTF_BINARY) =< LENGTH -> UTF_BINARY;
+		true -> nomatch
+	end;
+
+utf_binary_limited(PARAMETER,{size,LENGTH})
+	when is_integer(LENGTH), LENGTH >= 1 ->
+
+	UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+	if
+		byte_size(UTF_BINARY) == LENGTH -> UTF_BINARY;
+		true -> nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check ranged UTF binary parameter
+-spec utf_binary_ranged(PARAMETER,MINOR,MAJOR) -> UTF_BINARY | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		MINOR :: pos_integer(),
+		MAJOR :: pos_integer(),
+		UTF_BINARY :: a_utf_text_binary().
+
+utf_binary_ranged(PARAMETER,MINOR,MAJOR) when MINOR > MAJOR ->
+
+	utf_binary_ranged(PARAMETER,MAJOR,MINOR);
+
+utf_binary_ranged(PARAMETER,MINOR,MAJOR) when MINOR >= 1 ->
+
+	UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+	SIZE = byte_size(UTF_BINARY),
+	if
+		SIZE >= MINOR, SIZE =< MAJOR -> UTF_BINARY;
+		true -> nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check UTF binary parameter with exception chars
+-spec utf_binary_except(PARAMETER,EXCEPTION_CHARS,LENGTH_TYPE) -> UTF_BINARY | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		EXCEPTION_CHARS :: a_utf_text_string(),
+		LENGTH_TYPE :: free | {more_equal,LENGTH} | {less_equal,LENGTH} | {size,LENGTH} | {range,MINOR,MAJOR},
+		LENGTH :: pos_integer(),
+		MINOR :: pos_integer(),
+		MAJOR :: pos_integer(),
+		UTF_BINARY :: a_utf_text_binary().
+
+utf_binary_except(PARAMETER,EXCEPTION_CHARS,LENGTH_TYPE) ->
+
+	case io_lib:char_list(EXCEPTION_CHARS) of
+		true ->
+
+			UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+			EXCEPTION = unicode:characters_to_binary(EXCEPTION_CHARS),
+
+			PATTERN = fun() ->
+				case LENGTH_TYPE of
+					free ->
+						<<("^((?![")/utf8,(EXCEPTION)/binary,("]).){1,}$")/utf8>>;
+					{less_equal,LENGTH} ->
+						if
+							is_integer(LENGTH), LENGTH >= 2 ->
+								<<("^((?![")/utf8,(EXCEPTION)/binary,
+									("]).){1,")/utf8,(integer_to_binary(LENGTH))/binary,
+									("}$")/utf8>>;
+							true ->
+								nomatch
+						end;
+					{size,LENGTH} ->
+						if
+							is_integer(LENGTH), LENGTH >= 2 ->
+								<<("^((?![")/utf8,(EXCEPTION)/binary,
+									("]).){")/utf8,(integer_to_binary(LENGTH))/binary,
+									("}$")/utf8>>;
+							true ->
+								nomatch
+						end;
+					{range,MINOR,MAJOR} ->
+						if
+							is_integer(MINOR),is_integer(MAJOR), MINOR >= 1, MAJOR > MINOR ->
+								<<("^((?![")/utf8,(EXCEPTION)/binary,
+									("]).){")/utf8,(integer_to_binary(MINOR))/binary,
+									(",")/utf8,(integer_to_binary(MAJOR))/binary,
+									("}$")/utf8>>;
+							true ->
+								nomatch
+						end
+				end
+			end,
+
+			case PATTERN() of
+				{error,REASON} ->
+					{error,REASON};
+				PATTERN_BINARY ->
+					case re:run(UTF_BINARY,PATTERN_BINARY) of
+						nomatch -> nomatch;
+						{match,_} -> UTF_BINARY
+					end
+			end;
+
+		false ->
+			nomatch
+	end.
+
+
+%% ----------------------------
 %% @doc Check ID of defined length
 -spec id(PARAMETER,LENGTH,OUTPUT_TYPE) -> ID | nomatch
 	when
@@ -565,6 +707,33 @@ id_md5(PARAMETER,OUTPUT_TYPE) -> id(PARAMETER,32,OUTPUT_TYPE).
 		ID_MD4 :: a_utf_text_string() | a_utf_text_binary().
 
 id_md4(PARAMETER,OUTPUT_TYPE) -> id(PARAMETER,32,OUTPUT_TYPE).
+
+
+%% ----------------------------
+%% @doc Check password parameter
+-spec password(PARAMETER,MINIMUM_LENGTH) -> PASSWORD | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		MINIMUM_LENGTH :: pos_integer(),
+		PASSWORD :: a_utf_text_binary().
+
+password(PARAMETER,MINIMUM_LENGTH) ->
+
+	utf_binary_limited(PARAMETER,{more_equal,MINIMUM_LENGTH}).
+
+
+%% ----------------------------
+%% @doc Check ranged password parameter
+-spec password_ranged(PARAMETER,MINOR,MAJOR) -> PASSWORD | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		MINOR :: pos_integer(),
+		MAJOR :: pos_integer(),
+		PASSWORD :: a_utf_text_binary().
+
+password_ranged(PARAMETER,MINOR,MAJOR) when MINOR > MAJOR ->
+
+	utf_binary_ranged(PARAMETER,MINOR,MAJOR).
 
 
 %% ----------------------------

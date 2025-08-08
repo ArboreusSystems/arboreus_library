@@ -441,197 +441,42 @@ parameter_value(numerical,PARAMETER,[LENGTH_RULE,OUTPUT_TYPE]) ->
 	a_yaws_params_primitives:numerical(PARAMETER,LENGTH_RULE,OUTPUT_TYPE);
 
 %% Password regex rule ^((?![t1j]).){1,}$
-parameter_value(password,Parameter,[more_equal,Length]) ->
-	parameter_value(unicode_binary,Parameter,[free,{more_equal,Length}]);
-parameter_value(password,Parameter,[ranged,Minor_length,Major_length]) ->
-	parameter_value(unicode_binary,Parameter,[free,{range,Minor_length,Major_length}]);
+parameter_value(password,PARAMETER,[more_equal,LENGTH]) ->
+
+	a_yaws_params_primitives:password(PARAMETER,LENGTH);
+
+parameter_value(password,PARAMETER,[ranged,MINOR,MAJOR]) ->
+
+	a_yaws_params_primitives:password_ranged(PARAMETER,MINOR,MAJOR);
+
 %% Unicode binary, regex rule ^((?![t1j]).){1,}$
-parameter_value(unicode_binary,Parameter,[free]) ->
-	unicode:characters_to_binary(Parameter);
-parameter_value(unicode_binary,Parameter,[free,free]) ->
-	unicode:characters_to_binary(Parameter);
-parameter_value(unicode_binary,Parameter,[free,{more_equal,Length}]) ->
-	if
-		is_integer(Length), Length >= 1 ->
-			Binary = unicode:characters_to_binary(Parameter),
-			if
-				byte_size(Binary) >= Length -> Binary;
-				true -> nomatch
-			end
-	end;
-parameter_value(unicode_binary,Parameter,[free,{less_equal,Length}]) ->
-	if
-		is_integer(Length), Length >= 1 ->
-			Binary = unicode:characters_to_binary(Parameter),
-			if
-				byte_size(Binary) =< Length -> Binary;
-				true -> nomatch
-			end;
-		true -> nomatch
-	end;
-parameter_value(unicode_binary,Parameter,[free,{size,Length}]) ->
-	if
-		is_integer(Length), Length >= 1 ->
-			Binary = unicode:characters_to_binary(Parameter),
-			if
-				byte_size(Binary) == Length -> Binary;
-				true -> nomatch
-			end;
-		true -> nomatch
-	end;
-parameter_value(unicode_binary,Parameter,[free,{range,Minor_length,Major_length}]) ->
-	if
-		is_integer(Minor_length), is_integer(Major_length),
-		Minor_length >= 1, Major_length > Minor_length ->
-			Binary = unicode:characters_to_binary(Parameter),
-			Size = byte_size(Binary),
-			if
-				Size >= Minor_length, Size =< Major_length -> Binary;
-				true -> nomatch
-			end;
-		true -> nomatch
-	end;
-parameter_value(unicode_binary,Parameter,[{except,Exception_chars},Length_type]) ->
-	case io_lib:char_list(Exception_chars) of
-		true ->
-			Binary = unicode:characters_to_binary(Parameter),
-			Exception = unicode:characters_to_binary(Exception_chars),
-			Pattern = fun() ->
-				case Length_type of
-					free ->
-						<<("^((?![")/utf8,(Exception)/binary,("]).){1,}$")/utf8>>;
-					{less_equal,Length} ->
-						if
-							is_integer(Length), Length >= 2 ->
-								<<("^((?![")/utf8,(Exception)/binary,
-									("]).){1,")/utf8,(integer_to_binary(Length))/binary,
-									("}$")/utf8>>;
-							true -> nomatch
-						end;
-					{size,Length} ->
-						if
-							is_integer(Length), Length >= 2 ->
-								<<("^((?![")/utf8,(Exception)/binary,
-									("]).){")/utf8,(integer_to_binary(Length))/binary,
-									("}$")/utf8>>;
-							true -> nomatch
-						end;
-					{range,Minor_length,Major_length} ->
-						if
-							is_integer(Minor_length),is_integer(Major_length),
-							Minor_length >= 1, Major_length > Minor_length ->
-								<<("^((?![")/utf8,(Exception)/binary,
-									("]).){")/utf8,(integer_to_binary(Minor_length))/binary,
-									(",")/utf8,(integer_to_binary(Major_length))/binary,
-									("}$")/utf8>>;
-							true -> nomatch
-						end
-				end
-			end,
-			case Pattern() of
-				{error,Reason} -> {error,Reason};
-				Pattern_binary ->
-					case re:run(Binary,Pattern_binary) of
-						nomatch -> nomatch;
-						{match,_} -> Binary
-					end
-			end;
-		false -> nomatch
-	end;
-%% Unicode binary_wrapped, regex rule ^(<<"){1}((?!">>|[t1j]).){1,}(">>)$
-parameter_value(unicode_binary_wrapped,Parameter,[free]) ->
-	parameter_value(unicode_binary_wrapped,Parameter,[free,free]);
-parameter_value(unicode_binary_wrapped,Parameter,[free,free]) ->
-	Pattern = <<"^(<<\"){1}((?!\">>).){1,}(\">>)$">>,
-	Parameter_binary = unicode:characters_to_binary(Parameter),
-	case re:run(Parameter_binary,Pattern) of
-		nomatch -> nomatch;
-		{match,_} ->
-			Size = byte_size(Parameter_binary),
-			binary:part(Parameter_binary,3,Size-6)
-	end;
-parameter_value(unicode_binary_wrapped,Parameter,[free,{less_equal,Length}]) ->
-	case parameter_value(unicode_binary_wrapped,Parameter,[free,free]) of
-		nomatch -> nomatch;
-		Binary_parameter ->
-			if
-				byte_size(Binary_parameter) =< Length -> Binary_parameter;
-				true -> nomatch
-			end
-	end;
-parameter_value(unicode_binary_wrapped,Parameter,[free,{size,Length}]) ->
-	case parameter_value(unicode_binary_wrapped,Parameter,[free,free]) of
-		nomatch -> nomatch;
-		Binary_parameter ->
-			if
-				byte_size(Binary_parameter) == Length -> Binary_parameter;
-				true -> nomatch
-			end
-	end;
-parameter_value(unicode_binary_wrapped,Parameter,[free,{range,Minor_length,Major_length}]) ->
-	if
-		is_integer(Minor_length), is_integer(Major_length),
-		Minor_length >= 1, Major_length > Minor_length ->
-			case parameter_value(unicode_binary_wrapped,Parameter,[free,free]) of
-				nomatch -> nomatch;
-				Binary_parameter ->
-					Size = byte_size(Binary_parameter),
-					if
-						Size >= Minor_length, Size =< Major_length -> Binary_parameter;
-						true -> nomatch
-					end
-			end;
-		true -> nomatch
-	end;
-parameter_value(unicode_binary_wrapped,Parameter,[{except,Exception_chars},Length_type]) ->
-	case io_lib:char_list(Exception_chars) of
-		true ->
-			Binary = unicode:characters_to_binary(Parameter),
-			Exception = unicode:characters_to_binary(Exception_chars),
-			Pattern = fun() ->
-				case Length_type of
-					free ->
-						<<("^(<<\"){1}((?!\">>|[")/utf8,(Exception)/binary,("]).){1,}(\">>)$")/utf8>>;
-					{less_equal,Length} ->
-						if
-							is_integer(Length), Length >= 2 ->
-								<<("^(<<\"){1}((?!\">>|[")/utf8,(Exception)/binary,
-									("]).){1,")/utf8,(integer_to_binary(Length))/binary,
-									("}(\">>)$")/utf8>>;
-							true -> nomatch
-						end;
-					{size,Length} ->
-						if
-							is_integer(Length), Length >= 2 ->
-								<<("^(<<\"){1}((?!\">>|[")/utf8,(Exception)/binary,
-									("]).){")/utf8,(integer_to_binary(Length))/binary,
-									("}(\">>)$")/utf8>>;
-							true -> nomatch
-						end;
-					{range,Minor_length,Major_length} ->
-						if
-							is_integer(Minor_length),is_integer(Major_length),
-							Minor_length >= 1, Major_length > Minor_length ->
-								<<("^(<<\"){1}((?!\">>|[")/utf8,(Exception)/binary,
-									("]).){")/utf8,(integer_to_binary(Minor_length))/binary,
-									(",")/utf8,(integer_to_binary(Major_length))/binary,
-									("}(\">>)$")/utf8>>;
-							true -> nomatch
-						end
-				end
-			end,
-			case Pattern() of
-				{error,Reason} -> {error,Reason};
-				Pattern_binary ->
-					case re:run(Binary,Pattern_binary) of
-						nomatch -> nomatch;
-						{match,_} ->
-							Size = byte_size(Binary),
-							binary:part(Binary,3,Size-6)
-					end
-			end;
-		false -> nomatch
-	end;
+parameter_value(unicode_binary,PARAMETER,[free]) ->
+
+	a_yaws_params_primitives:utf_binary(PARAMETER);
+
+parameter_value(unicode_binary,PARAMETER,[free,free]) ->
+
+	a_yaws_params_primitives:utf_binary(PARAMETER);
+
+parameter_value(unicode_binary,PARAMETER,[free,{more_equal,LENGTH}]) ->
+
+	a_yaws_params_primitives:utf_binary_limited(PARAMETER,{more_equal,LENGTH});
+
+parameter_value(unicode_binary,PARAMETER,[free,{less_equal,LENGTH}]) ->
+
+	a_yaws_params_primitives:utf_binary_limited(PARAMETER,{less_equal,LENGTH});
+
+parameter_value(unicode_binary,PARAMETER,[free,{size,LENGTH}]) ->
+
+	a_yaws_params_primitives:utf_binary_limited(PARAMETER,{less_equal,LENGTH});
+
+parameter_value(unicode_binary,PARAMETER,[free,{range,MINOR,MAJOR}]) ->
+
+	a_yaws_params_primitives:utf_binary_ranged(PARAMETER,MINOR,MAJOR);
+
+parameter_value(unicode_binary,PARAMETER,[{except,EXCEPTION_CHARS},LENGTH_TYPE]) ->
+
+	a_yaws_params_primitives:utf_binary_except(PARAMETER,EXCEPTION_CHARS,LENGTH_TYPE);
 
 %% Formatted time checking
 parameter_value(time,PARAMETER,[FORMAT,OUTPUT_TYPE]) ->

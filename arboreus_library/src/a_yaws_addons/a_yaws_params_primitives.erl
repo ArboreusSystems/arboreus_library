@@ -19,23 +19,33 @@
 
 	test/0,
 
+	by_pattern/3,
+
 	float/1,float_positive/1,float_negative/1,
 	float_from_list/2,float_ranged/3,
+	float_range/2,float_range_limited/3,
 
 	integer/1,integer_positive/1,integer_negative/1,
 	integer_from_list/2,integer_ranged/3,
+	integer_range/2,integer_range_limited/3,
 
 	id/3,id_or_null/4,id_ranged/4,id_ranged_or_null/5,
 	id_md5/2,id_md4/2,
 
+%%	utf_binary/1,utf_binary_ranged/3,
+%%	utf_binary_more_equal/2,utf_binary_less_equal/2,
+
+%%	password_ranged/3,password_more_equal/2,
 	atom/1,atom_from_list/2,
 	boolean/1,boolean_integer/1,
 	latin_name/3,latin_name_ranged/4,
-	base64/2, base64_encoded/2,
+	base64/2,base64_encoded/2,
 	ip_v4/2,ip_v4_range/2,
 	ip_v6/2,
 	fqdn/2,
-	email/2
+	email/2,
+	numerical/3,
+	time/3
 
 ]).
 
@@ -45,6 +55,32 @@
 -spec test() -> ok.
 
 test() -> ok.
+
+
+%% ----------------------------
+%% @doc Check parameter by Regex pattern
+-spec by_pattern(PARAMETER,PATTERN,OUTPUT_TYPE) -> CHECKED_PARAMETER | nomatch
+	when
+		PARAMETER :: a_utf_text_string() | a_utf_text_binary(),
+		PATTERN :: a_utf_text_string() | a_utf_text_binary(),
+		OUTPUT_TYPE :: string | binary,
+		CHECKED_PARAMETER :: a_utf_text_string() | a_utf_text_binary().
+
+by_pattern(PARAMETER,PATTERN,OUTPUT_TYPE) when is_list(PARAMETER), is_list(PATTERN) ->
+
+	by_pattern(list_to_binary(PARAMETER),list_to_binary(PATTERN),OUTPUT_TYPE);
+
+by_pattern(PARAMETER,PATTERN,OUTPUT_TYPE) when is_binary(PARAMETER), is_binary(PATTERN) ->
+
+	case re:run(PARAMETER,PATTERN) of
+		nomatch ->
+			nomatch;
+		{match,_} ->
+			case OUTPUT_TYPE of
+				binary -> PARAMETER;
+				string -> unicode:characters_to_list(PARAMETER)
+			end
+	end.
 
 
 %% ----------------------------
@@ -153,6 +189,86 @@ float_ranged(PARAMETER,MINOR,MAJOR) ->
 
 
 %% ----------------------------
+%% @doc Check float range parameter
+-spec float_range(PARAMETER,TYPE) -> RANGE | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		TYPE :: range_pos_float | range_neg_float | range_float,
+		RANGE :: {MINOR,MAJOR},
+		MINOR :: integer(),
+		MAJOR :: integer().
+
+float_range(PARAMETER,TYPE) ->
+
+	PATTERN = case TYPE of
+		range_pos_float -> "^([0-9]*\.[0-9]*)\:([0-9]*\.[0-9]*)$";
+		range_neg_float -> "^(\-[0-9]{1,}\.[0-9]{1,}|0\.0)\:(\-[0-9]{1,}\.[0-9]{1,}|0\.0)$";
+		range_float -> "^(\-?[0-9]{1,}\.[0-9]{1,})\:(\-?[0-9]{1,}\.[0-9]{1,})$"
+	end,
+
+	case re:split(PARAMETER,PATTERN,[{return,list}]) of
+		[_,VALUE_STRING_1,VALUE_STRING_2,_] ->
+			VALUE_1 = list_to_float(VALUE_STRING_1),
+			VALUE_2 = list_to_float(VALUE_STRING_2),
+			if
+				VALUE_1 > VALUE_2 ->
+					MAJOR = VALUE_1, MINOR = VALUE_2;
+				true ->
+					MAJOR = VALUE_2, MINOR = VALUE_1
+			end,
+			{MINOR,MAJOR};
+		[_] ->
+			nomatch;
+		_ ->
+			nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check limited float range
+-spec float_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B}) -> RANGE | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		MINOR_A :: float(),
+		MAJOR_A :: float(),
+		MINOR_B :: float(),
+		MAJOR_B :: float(),
+		RANGE :: {MINOR,MAJOR},
+		MINOR :: integer(),
+		MAJOR :: integer().
+
+float_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B})
+	when MINOR_A > MAJOR_A ->
+
+	float_range_limited(PARAMETER,{MAJOR_A,MINOR_A},{MINOR_B,MAJOR_B});
+
+float_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B})
+	when MINOR_B > MAJOR_B ->
+
+	float_range_limited(PARAMETER,{MAJOR_A,MINOR_A},{MAJOR_B,MINOR_B});
+
+float_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B})
+	when
+		is_float(MINOR_A), is_float(MAJOR_A),
+		is_float(MINOR_B), is_float(MAJOR_B) ->
+
+	case float_range(PARAMETER,range_float) of
+		{A,B} ->
+			if
+				A =< MAJOR_A; A >= MINOR_A ->
+					if
+						B =< MAJOR_B; B >= MINOR_B -> {A,B};
+						true -> nomatch
+					end;
+				true ->
+					nomatch
+			end;
+		nomatch ->
+			nomatch
+	end.
+
+
+%% ----------------------------
 %% @doc Check integer parameter
 -spec integer(PARAMETER) -> INTEGER | nomatch
 	when
@@ -254,6 +370,86 @@ integer_ranged(PARAMETER,MINOR,MAJOR) ->
 				true ->
 					nomatch
 			end
+	end.
+
+
+%% ----------------------------
+%% @doc Check float range parameter
+-spec integer_range(PARAMETER,TYPE) -> RANGE | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		TYPE :: range_pos_integer | range_neg_integer | range_integer,
+		RANGE :: {MINOR,MAJOR},
+		MINOR :: integer(),
+		MAJOR :: integer().
+
+integer_range(PARAMETER,TYPE) ->
+
+	PATTERN = case TYPE of
+		range_pos_integer -> "^([0-9]{1,})\:([0-9]{1,})$";
+		range_neg_integer -> "^(\-[0-9]{1,}|0)\:(\-[0-9]{1,}|0)$";
+		range_integer -> "^(\-?[0-9]{1,})\:(\-?[0-9]{1,})$"
+	end,
+
+	case re:split(PARAMETER,PATTERN,[{return,list}]) of
+		[_,VALUE_STRING_1,VALUE_STRING_2,_] ->
+			VALUE_1 = list_to_integer(VALUE_STRING_1),
+			VALUE_2 = list_to_integer(VALUE_STRING_2),
+			if
+				VALUE_1 > VALUE_2 ->
+					MAJOR = VALUE_1, MINOR = VALUE_2;
+				true ->
+					MAJOR = VALUE_2, MINOR = VALUE_1
+			end,
+			{MINOR,MAJOR};
+		[_] ->
+			nomatch;
+		_ ->
+			nomatch
+	end.
+
+
+%% ----------------------------
+%% @doc Check limited integer range
+-spec integer_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B}) -> RANGE | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		MINOR_A :: integer(),
+		MAJOR_A :: integer(),
+		MINOR_B :: integer(),
+		MAJOR_B :: integer(),
+		RANGE :: {MINOR,MAJOR},
+		MINOR :: integer(),
+		MAJOR :: integer().
+
+integer_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B})
+	when MINOR_A > MAJOR_A ->
+
+	integer_range_limited(PARAMETER,{MAJOR_A,MINOR_A},{MINOR_B,MAJOR_B});
+
+integer_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B})
+	when MINOR_B > MAJOR_B ->
+
+	integer_range_limited(PARAMETER,{MAJOR_A,MINOR_A},{MAJOR_B,MINOR_B});
+
+integer_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B})
+	when
+		is_integer(MINOR_A), is_integer(MAJOR_A),
+		is_integer(MINOR_B), is_integer(MAJOR_B) ->
+
+	case integer_range(PARAMETER,float) of
+		{A,B} ->
+			if
+				A =< MAJOR_A; A >= MINOR_A ->
+					if
+						B =< MAJOR_B; B >= MINOR_B -> {A,B};
+						true -> nomatch
+					end;
+				true ->
+					nomatch
+			end;
+		nomatch ->
+			nomatch
 	end.
 
 
@@ -697,5 +893,80 @@ email(PARAMETER,OUTPUT_TYPE) ->
 			case OUTPUT_TYPE of
 				string -> PARAMETER;
 				binary -> unicode:characters_to_binary(PARAMETER)
+			end
+	end.
+
+
+%% ----------------------------
+%% @doc Check numerical string parameter
+-spec numerical(PARAMETER,LENGTH_RULE,OUTPUT_TYPE) -> NUMERICAL | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		LENGTH_RULE :: {less_or_equal,LENGTH} | {equal,LENGTH} | {ranged,MINOR,MAJOR} | {more_then,LENGTH},
+		LENGTH :: pos_integer(),
+		MINOR :: pos_integer(),
+		MAJOR :: pos_integer(),
+		OUTPUT_TYPE :: string | binary,
+		NUMERICAL :: a_utf_text_string() | a_utf_text_binary().
+
+numerical(PARAMETER,LENGTH_RULE,OUTPUT_TYPE) ->
+
+	LENGTH = case LENGTH_RULE of
+		{less_or_equal,LENGTH_NUMBER} ->
+			"{0," ++ integer_to_list(LENGTH_NUMBER) ++ "}";
+		{equal,LENGTH_NUMBER} ->
+			"{" ++ integer_to_list(LENGTH_NUMBER) ++ "}";
+		{ranged,MINOR,MAJOR} ->
+			if
+				MINOR > MAJOR ->
+					"{" ++ integer_to_list(MAJOR) ++ "," ++ integer_to_list(MINOR) ++ "}";
+				true ->
+					"{" ++ integer_to_list(MINOR) ++ "," ++ integer_to_list(MAJOR) ++ "}"
+			end;
+		{more_then,LENGTH_NUMBER} ->
+			"{" ++ integer_to_list(LENGTH_NUMBER) ++ ",}"
+	end,
+
+	PATTERN = "^([0-9]" ++ LENGTH ++ ")$",
+	case re:run(PARAMETER,PATTERN) of
+		nomatch ->
+			nomatch;
+		{match,_} ->
+			case OUTPUT_TYPE of
+				string -> PARAMETER;
+				binary -> unicode:characters_to_binary(PARAMETER)
+			end
+	end.
+
+
+%% ----------------------------
+%% @doc Check time parameter
+-spec time(PARAMETER,FORMAT,OUTPUT_TYPE) -> TIME | nomatch
+	when
+		PARAMETER :: a_utf_text_string(),
+		FORMAT :: date_tuple | rfc822 | rfc850 | ansi,
+		OUTPUT_TYPE :: string | binary | tuple,
+		TIME :: a_utf_text_string() | a_utf_text_binary() | tuple().
+
+time(PARAMETER,FORMAT,OUTPUT_TYPE) ->
+
+	case OUTPUT_TYPE of
+		string ->
+			case a_time:from_formated(FORMAT,PARAMETER,tuple) of
+				false -> nomatch;
+				{error,_} -> nomatch;
+				_ -> PARAMETER
+			end;
+		binary ->
+			case a_time:from_formated(FORMAT,PARAMETER,tuple) of
+				false -> nomatch;
+				{error,_} -> nomatch;
+				_ -> unicode:characters_to_binary(PARAMETER)
+			end;
+		_ ->
+			case a_time:from_formated(FORMAT,PARAMETER,OUTPUT_TYPE) of
+				false -> nomatch;
+				{error,_} -> nomatch;
+				Time -> Time
 			end
 	end.

@@ -436,26 +436,10 @@ parameter_value(e_mail,PARAMETER,[OUTPUT_TYPE]) ->
 	a_yaws_params_primitives:fqdn(PARAMETER,OUTPUT_TYPE);
 
 %% Numerical sequece ^([0-9]{14,})$
-parameter_value(numerical,Parameter,[Length_rule,Output_type]) ->
-	Length = case Length_rule of
-		{less_or_equal,Value} ->
-			lists:concat(["{0,",integer_to_list(Value),"}"]);
-		{equal,Value} ->
-			lists:concat(["{",integer_to_list(Value),"}"]);
-		{ranged,Minimum,Maximum} ->
-			lists:concat(["{",integer_to_list(Minimum),",",integer_to_list(Maximum),"}"]);
-		{more_then,Value} ->
-			lists:concat(["{",integer_to_list(Value),",}"])
-	end,
-	Pattern = lists:concat(["^([0-9]",Length,")$"]),
-	case re:run(Parameter,Pattern) of
-		nomatch -> nomatch;
-		{match,_} ->
-			case Output_type of
-				string -> Parameter;
-				binary -> unicode:characters_to_binary(Parameter)
-			end
-	end;
+parameter_value(numerical,PARAMETER,[LENGTH_RULE,OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:numerical(PARAMETER,LENGTH_RULE,OUTPUT_TYPE);
+
 %% Password regex rule ^((?![t1j]).){1,}$
 parameter_value(password,Parameter,[more_equal,Length]) ->
 	parameter_value(unicode_binary,Parameter,[free,{more_equal,Length}]);
@@ -648,129 +632,51 @@ parameter_value(unicode_binary_wrapped,Parameter,[{except,Exception_chars},Lengt
 			end;
 		false -> nomatch
 	end;
+
 %% Formatted time checking
-parameter_value(time,Parameter,[Format_type,Output_type]) ->
-	case Output_type of
-		string ->
-			case a_time:from_formated(Format_type,Parameter,tuple) of
-				false -> nomatch;
-				{error,_} -> nomatch;
-				_ -> Parameter
-			end;
-		binary_string ->
-			case a_time:from_formated(Format_type,Parameter,tuple) of
-				false -> nomatch;
-				{error,_} -> nomatch;
-				_ -> unicode:characters_to_binary(Parameter)
-			end;
-		_ ->
-			case a_time:from_formated(Format_type,Parameter,Output_type) of
-				false -> nomatch;
-				{error,_} -> nomatch;
-				Time -> Time
-			end
-	end;
+parameter_value(time,PARAMETER,[FORMAT,OUTPUT_TYPE]) ->
+
+	a_yaws_params_primitives:time(PARAMETER,FORMAT,OUTPUT_TYPE);
+
 %% Range positive integer, regex rule ^([0-9]{1,})\:([0-9]{1,})$
 %% Range negative integer, regex rule ^(\-[0-9]{1,}|0)\:(\-[0-9]{1,}|0)$
 %% Range integer, regex rule ^(\-?[0-9]{1,})\:(\-?[0-9]{1,})$
-parameter_value(Parameter_type,Parameter,_)
+parameter_value(TYPE,PARAMETER,_)
 	when
-		Parameter_type == range_pos_integer;
-		Parameter_type == range_neg_integer;
-		Parameter_type == range_integer	->
-	Pattern = fun() ->
-		case Parameter_type of
-			range_pos_integer -> "^([0-9]{1,})\:([0-9]{1,})$";
-			range_neg_integer -> "^(\-[0-9]{1,}|0)\:(\-[0-9]{1,}|0)$";
-			range_integer -> "^(\-?[0-9]{1,})\:(\-?[0-9]{1,})$"
-		end
-	end,
-	case re:split(Parameter,Pattern(),[{return,list}]) of
-		[_,Value1_string,Value2_string,_] ->
-			Value1 = list_to_integer(Value1_string),
-			Value2 = list_to_integer(Value2_string),
-			if
-				Value1 > Value2 -> Major = Value1, Minor = Value2 ;
-				true -> Major = Value2, Minor = Value1
-			end,
-			{Minor,Major};
-		[_] -> nomatch;
-		_ -> nomatch
-	end;
+		TYPE == range_pos_integer;
+		TYPE == range_neg_integer;
+		TYPE == range_integer ->
+
+	a_yaws_params_primitives:integer_range(PARAMETER,TYPE);
+
 %% Limited range integer
-parameter_value(limited_range_integer,Parameter,[{MinorA,MajorA},{MinorB,MajorB}])
+parameter_value(range_integer_limited,PARAMETER,[{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B}])
 	when
-		is_integer(MinorA), is_integer(MajorA),
-		is_integer(MinorB), is_integer(MajorB) ->
-	case parameter_value(range_integer,Parameter,[]) of
-		{error,Reason} -> {error,Reason};
-		{A,B} ->
-			if
-				A > MajorA; A < MinorA -> nomatch;
-				B > MajorB; B < MinorB -> nomatch;
-				true -> {A,B}
-			end;
-		nomatch -> nomatch
-	end;
+		is_integer(MINOR_A), is_integer(MAJOR_A),
+		is_integer(MINOR_B), is_integer(MAJOR_B) ->
+
+	a_yaws_params_primitives:integer_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B});
+
 %% Range positive float, regex rule ^([0-9]*\.[0-9]*)\:([0-9]*\.[0-9]*)$
 %% Range negative float, regex rule ^(\-[0-9]{1,}\.[0-9]{1,}|0)\:(\-[0-9]{1,}\.[0-9]{1,}|0)$
 %% Range float, regex rule ^(\-?[0-9]{1,}\.[0-9]{1,})\:(\-?[0-9]{1,}\.[0-9]{1,})$
-parameter_value(Parameter_type,Parameter,_)
+parameter_value(TYPE,PARAMETER,_)
 	when
-		Parameter_type == range_pos_float;
-		Parameter_type == range_neg_float;
-		Parameter_type == range_float	->
-	Pattern = fun() ->
-		case Parameter_type of
-			range_pos_float -> "^([0-9]*\.[0-9]*)\:([0-9]*\.[0-9]*)$";
-			range_neg_float -> "^(\-[0-9]{1,}\.[0-9]{1,}|0\.0)\:(\-[0-9]{1,}\.[0-9]{1,}|0\.0)$";
-			range_float -> "^(\-?[0-9]{1,}\.[0-9]{1,})\:(\-?[0-9]{1,}\.[0-9]{1,})$"
-		end
-	end,
-	case re:split(Parameter,Pattern(),[{return,list}]) of
-		[_,Value1_string,Value2_string,_] ->
-			Value1 = list_to_float(Value1_string),
-			Value2 = list_to_float(Value2_string),
-			if
-				Value1 > Value2 -> Major = Value1, Minor = Value2 ;
-				true -> Major = Value2, Minor = Value1
-			end,
-			{Minor,Major};
-		[_] -> nomatch;
-		_ -> nomatch
-	end;
+		TYPE == range_pos_float;
+		TYPE == range_neg_float;
+		TYPE == range_float	->
+
+	a_yaws_params_primitives:float_range(PARAMETER,TYPE);
+
 %% Limited range integer
-parameter_value(limited_range_float,Parameter,[{MinorA,MajorA},{MinorB,MajorB}])
+parameter_value(range_float_limited,PARAMETER,[{MINOR_A,MAJOR_A},{MINOR_A,MAJOR_B}])
 	when
-		is_float(MinorA), is_float(MajorA),
-		is_float(MinorB), is_float(MajorB) ->
-	case parameter_value(range_float,Parameter,[]) of
-		{error,Reason} -> {error,Reason};
-		{A,B} ->
-			if
-				A > MajorA; A < MinorA -> nomatch;
-				B > MajorB; B < MinorB -> nomatch;
-				true -> {A,B}
-			end;
-		nomatch -> nomatch
-	end;
+		is_float(MINOR_A), is_float(MAJOR_A),
+		is_float(MINOR_A), is_float(MAJOR_B) ->
+
+	a_yaws_params_primitives:float_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_A,MAJOR_B});
+
 %% By Pattern
-parameter_value(by_pattern,Parameter,[Pattern,Output_type])
-	when is_list(Parameter), is_list(Pattern) ->
-	parameter_value(
-		by_pattern,
-		unicode:characters_to_binary(Parameter),
-		[unicode:characters_to_binary(Pattern),Output_type]
-	);
-parameter_value(by_pattern,Parameter,[Pattern,Output_type])
-	when is_binary(Parameter), is_binary(Pattern) ->
-	case re:run(Parameter,Pattern) of
-		nomatch -> nomatch;
-		{match,_} ->
-			case Output_type of
-				binary -> Parameter;
-				string -> unicode:characters_to_list(Parameter)
-			end
-	end.
+parameter_value(by_pattern,PARAMETER,[PATTERN,OUTPUT_TYPE]) ->
 
-
+	a_yaws_params_primitives:by_pattern(PARAMETER,PATTERN,OUTPUT_TYPE).

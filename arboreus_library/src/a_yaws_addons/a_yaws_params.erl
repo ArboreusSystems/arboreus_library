@@ -207,8 +207,9 @@ check_list([ELEMENT|LIST],{TYPE,TYPE_PARAMETERS},OUTPUT) ->
 	case check(TYPE,ELEMENT,TYPE_PARAMETERS) of
 		nomatch -> nomatch;
 		CHECKED_ELEMENT ->
-			check(
-				LIST,{TYPE,TYPE_PARAMETERS},
+			check_list(
+				LIST,
+				{TYPE,TYPE_PARAMETERS},
 				lists:append(OUTPUT,[CHECKED_ELEMENT])
 			)
 	end.
@@ -283,11 +284,11 @@ check_parameters([RULE|DATA_SCHEMA],PARAMETERS,RESULT) ->
 		REASON :: term().
 
 %% List of typed elements
-parameter_value(list_of_typed,Parameters,{Separator,Type,Type_properties}) ->
+parameter_value(list_of_typed,PARAMETERS,[{SEPARATOR,TYPE,TYPE_PROPERTIES}]) ->
 
 	check_list(
-		string:tokens(Parameters,Separator),
-		{Type,Type_properties}
+		string:tokens(PARAMETERS,SEPARATOR),
+		{TYPE,TYPE_PROPERTIES}
 	);
 
 %% Float, regex rule ^[\-]?[0-9]*\.[0-9]*$
@@ -386,9 +387,9 @@ parameter_value(id,PARAMETER,[LENGTH,OUTPUT_TYPE]) ->
 	a_yaws_params_primitives:id(PARAMETER,LENGTH,OUTPUT_TYPE);
 
 %% Id or null
-parameter_value(id_or_null,PARAMETER,[LENGTH,NULL,OUTPUT_TYPE]) ->
+parameter_value(id_or_null,PARAMETER,[LENGTH,NULL,OUTPUT_NULL,OUTPUT_TYPE]) ->
 
-	a_yaws_params_primitives:id_or_null(PARAMETER,LENGTH,NULL,OUTPUT_TYPE);
+	a_yaws_params_primitives:id_or_null(PARAMETER,LENGTH,NULL,OUTPUT_NULL,OUTPUT_TYPE);
 
 %% Id ranged
 parameter_value(id_ranged,PARAMETER,[MINOR,MAJOR,OUTPUT_TYPE]) ->

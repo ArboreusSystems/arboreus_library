@@ -32,7 +32,7 @@
 	utf_binary/1,utf_binary_limited/2,
 	utf_binary_ranged/3,utf_binary_except/3,
 
-	id/3,id_or_null/4,id_ranged/4,id_ranged_or_null/5,
+	id/3,id_or_null/5,id_ranged/4,id_ranged_or_null/5,
 	id_md5/2,id_md4/2,
 
 	password/2,password_ranged/3,
@@ -630,17 +630,23 @@ id(PARAMETER,LENGTH,OUTPUT_TYPE) ->
 
 %% ----------------------------
 %% @doc Check ID of defined length or null value
--spec id_or_null(PARAMETER,LENGTH,NULL,OUTPUT_TYPE) -> ID | nomatch
+-spec id_or_null(PARAMETER,LENGTH,NULL,OUTPUT_NULL,OUTPUT_TYPE) -> ID | nomatch
 	when
 		PARAMETER :: a_utf_text_string(),
 		LENGTH :: pos_integer(),
 		NULL :: a_utf_text_string(),
+		OUTPUT_NULL :: any(),
 		OUTPUT_TYPE :: binary | string,
 		ID :: a_utf_text_binary() | a_utf_text_string() | null.
 
-id_or_null(PARAMETER,_LENGTH,NULL,_OUTPUT_TYPE) when PARAMETER =:= NULL -> null;
+id_or_null(PARAMETER,_LENGTH,NULL,OUTPUT_NULL,_OUTPUT_TYPE)
+	when PARAMETER =:= NULL ->
 
-id_or_null(PARAMETER,LENGTH,_NULL,OUTPUT_TYPE) -> id(PARAMETER,LENGTH,OUTPUT_TYPE).
+	OUTPUT_NULL;
+
+id_or_null(PARAMETER,LENGTH,_NULL,_OUTPUT_NULL,OUTPUT_TYPE) ->
+
+	id(PARAMETER,LENGTH,OUTPUT_TYPE).
 
 
 %% ----------------------------
@@ -732,6 +738,10 @@ password(PARAMETER,MINIMUM_LENGTH) ->
 		PASSWORD :: a_utf_text_binary().
 
 password_ranged(PARAMETER,MINOR,MAJOR) when MINOR > MAJOR ->
+
+	password_ranged(PARAMETER,MAJOR,MINOR);
+
+password_ranged(PARAMETER,MINOR,MAJOR) ->
 
 	utf_binary_ranged(PARAMETER,MINOR,MAJOR).
 

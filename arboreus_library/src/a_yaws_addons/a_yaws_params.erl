@@ -17,10 +17,13 @@
 
 	test/0,
 
-	check/3,
-	checkout/4,
-	check_list/2,
-	check_parameters/2
+	not_required_check/4,not_required_check/5,
+	not_required_schema_check/2,
+
+	required_check/3,
+	required_checkout/4,
+	required_check_list/2,
+	required_check_parameters/2
 
 ]).
 
@@ -31,137 +34,213 @@
 
 test() ->
 
-	0.2 = check(float,"0.2",[]),
-	nomatch = check(float,"aaa",[]),
-	nomatch = check(float,"1",[]),
+	0.2 = required_check(float,"0.2",[]),
+	nomatch = required_check(float,"aaa",[]),
+	nomatch = required_check(float,"1",[]),
 
-	0.2 = check(float_positive,"0.2",[]),
-	nomatch = check(float_positive,"-0.2",[]),
-	nomatch = check(float_positive,"aaa",[]),
-	nomatch = check(float_positive,"1",[]),
+	0.2 = required_check(float_positive,"0.2",[]),
+	nomatch = required_check(float_positive,"-0.2",[]),
+	nomatch = required_check(float_positive,"aaa",[]),
+	nomatch = required_check(float_positive,"1",[]),
 
-	-0.2 = check(float_negative,"-0.2",[]),
-	nomatch = check(float_negative,"0.2",[]),
-	nomatch = check(float_negative,"aaa",[]),
-	nomatch = check(float_negative,"1",[]),
+	-0.2 = required_check(float_negative,"-0.2",[]),
+	nomatch = required_check(float_negative,"0.2",[]),
+	nomatch = required_check(float_negative,"aaa",[]),
+	nomatch = required_check(float_negative,"1",[]),
 
-	-0.2 = check(float_from_list,"-0.2",[[-0.2]]),
-	nomatch = check(float_from_list,"-0.2",[[0.2]]),
-	nomatch = check(float_from_list,"aaa",[[0.2]]),
-	nomatch = check(float_from_list,"1",[[0.2]]),
+	-0.2 = required_check(float_from_list,"-0.2",[[-0.2]]),
+	nomatch = required_check(float_from_list,"-0.2",[[0.2]]),
+	nomatch = required_check(float_from_list,"aaa",[[0.2]]),
+	nomatch = required_check(float_from_list,"1",[[0.2]]),
 
-	-1.2 = check(float_ranged,"-1.2",[-2.2,3.5]),
-	nomatch = check(float_ranged,"-2.5",[-2.2,3.5]),
-	nomatch = check(float_ranged,"-4.2",[-2.2,3.5]),
-	nomatch = check(float_ranged,"aaa",[-2.2,3.5]),
-	nomatch = check(float_ranged,"1",[-2.2,3.5]),
+	-1.2 = required_check(float_ranged,"-1.2",[-2.2,3.5]),
+	nomatch = required_check(float_ranged,"-2.5",[-2.2,3.5]),
+	nomatch = required_check(float_ranged,"-4.2",[-2.2,3.5]),
+	nomatch = required_check(float_ranged,"aaa",[-2.2,3.5]),
+	nomatch = required_check(float_ranged,"1",[-2.2,3.5]),
 
-	10 = check(integer,"10",[]),
-	nomatch = check(integer,"aaa",[]),
-	nomatch = check(integer,"0.1",[]),
+	10 = required_check(integer,"10",[]),
+	nomatch = required_check(integer,"aaa",[]),
+	nomatch = required_check(integer,"0.1",[]),
 
-	10 = check(integer_positive,"10",[]),
-	nomatch = check(integer_positive,"10.1",[]),
-	nomatch = check(integer_positive,"-10",[]),
-	nomatch = check(integer_positive,"aaa",[]),
+	10 = required_check(integer_positive,"10",[]),
+	nomatch = required_check(integer_positive,"10.1",[]),
+	nomatch = required_check(integer_positive,"-10",[]),
+	nomatch = required_check(integer_positive,"aaa",[]),
 
-	-10 = check(integer_negative,"-10",[]),
-	nomatch = check(integer_negative,"10.1",[]),
-	nomatch = check(integer_negative,"10",[]),
-	nomatch = check(integer_negative,"aaa",[]),
+	-10 = required_check(integer_negative,"-10",[]),
+	nomatch = required_check(integer_negative,"10.1",[]),
+	nomatch = required_check(integer_negative,"10",[]),
+	nomatch = required_check(integer_negative,"aaa",[]),
 
-	1 = check(integer_from_list,"1",[[1]]),
-	nomatch = check(integer_from_list,"1",[[2]]),
-	nomatch = check(integer_from_list,"-0.2",[[1]]),
-	nomatch = check(integer_from_list,"aaa",[[1]]),
+	1 = required_check(integer_from_list,"1",[[1]]),
+	nomatch = required_check(integer_from_list,"1",[[2]]),
+	nomatch = required_check(integer_from_list,"-0.2",[[1]]),
+	nomatch = required_check(integer_from_list,"aaa",[[1]]),
 
-	0 = check(integer_ranged,"0",[-2,5]),
-	nomatch = check(integer_ranged,"10",[-2,5]),
-	nomatch = check(integer_ranged,"4.2",[-2,5]),
-	nomatch = check(integer_ranged,"aaa",[-2,5]),
-	nomatch = check(integer_ranged,"-10",[-2,5]),
+	0 = required_check(integer_ranged,"0",[-2,5]),
+	nomatch = required_check(integer_ranged,"10",[-2,5]),
+	nomatch = required_check(integer_ranged,"4.2",[-2,5]),
+	nomatch = required_check(integer_ranged,"aaa",[-2,5]),
+	nomatch = required_check(integer_ranged,"-10",[-2,5]),
 
-	atom = check(atom,"atom",[]),
-	'ATOM' = check(atom,"ATOM",[]),
-	'1' = check(atom,"1",[]),
-	'1.0' = check(atom,"1.0",[]),
+	atom = required_check(atom,"atom",[]),
+	'ATOM' = required_check(atom,"ATOM",[]),
+	'1' = required_check(atom,"1",[]),
+	'1.0' = required_check(atom,"1.0",[]),
 
-	true = check(boolean,"true",[]),
-	true = check(boolean,"1",[]),
-	false = check(boolean,"false",[]),
-	false = check(boolean,"0",[]),
-	nomatch = check(boolean,"11",[]),
+	true = required_check(boolean,"true",[]),
+	true = required_check(boolean,"1",[]),
+	false = required_check(boolean,"false",[]),
+	false = required_check(boolean,"0",[]),
+	nomatch = required_check(boolean,"11",[]),
 
-	1 = check(boolean_integer,"true",[]),
-	1 = check(boolean_integer,"1",[]),
-	0 = check(boolean_integer,"false",[]),
-	0 = check(boolean_integer,"0",[]),
-	nomatch = check(boolean_integer,"11",[]),
+	1 = required_check(boolean_integer,"true",[]),
+	1 = required_check(boolean_integer,"1",[]),
+	0 = required_check(boolean_integer,"false",[]),
+	0 = required_check(boolean_integer,"0",[]),
+	nomatch = required_check(boolean_integer,"11",[]),
 
-	"name" = check(latin_name,"name",[4,string]),
-	<<"name">> = check(latin_name,"name",[4,binary]),
-	<<"name">> = check(latin_name,"name",[5,binary]),
-	nomatch = check(latin_name,"name",[2,binary]),
+	"name" = required_check(latin_name,"name",[4,string]),
+	<<"name">> = required_check(latin_name,"name",[4,binary]),
+	<<"name">> = required_check(latin_name,"name",[5,binary]),
+	nomatch = required_check(latin_name,"name",[2,binary]),
 
-	"name" = check(latin_name_ranged,"name",[2,6,string]),
-	<<"name">> = check(latin_name_ranged,"name",[4,4,binary]),
-	nomatch = check(latin_name_ranged,"name",[5,9,binary]),
+	"name" = required_check(latin_name_ranged,"name",[2,6,string]),
+	<<"name">> = required_check(latin_name_ranged,"name",[4,4,binary]),
+	nomatch = required_check(latin_name_ranged,"name",[5,9,binary]),
 
-	<<"dGVzdA==">> = check(base64,"dGVzdA==",[binary]),
-	"dGVzdA==" = check(base64,"dGVzdA==",[string]),
-	nomatch = check(base64,"wrong_string",[string]),
+	<<"dGVzdA==">> = required_check(base64,"dGVzdA==",[binary]),
+	"dGVzdA==" = required_check(base64,"dGVzdA==",[string]),
+	nomatch = required_check(base64,"wrong_string",[string]),
 
-	<<"test">> = check(base64_encoded,"dGVzdA==",[binary]),
-	"test" = check(base64_encoded,"dGVzdA==",[string]),
-	nomatch = check(base64_encoded,"wrong_string",[string]),
+	<<"test">> = required_check(base64_encoded,"dGVzdA==",[binary]),
+	"test" = required_check(base64_encoded,"dGVzdA==",[string]),
+	nomatch = required_check(base64_encoded,"wrong_string",[string]),
 
-	<<"testID">> = check(id,"testID",[6,binary]),
-	"testID" = check(id,"testID",[6,string]),
-	nomatch = check(id,"testID",[5,binary]),
-	nomatch = check(id,"testID",[7,binary]),
+	<<"testID">> = required_check(id,"testID",[6,binary]),
+	"testID" = required_check(id,"testID",[6,string]),
+	nomatch = required_check(id,"testID",[5,binary]),
+	nomatch = required_check(id,"testID",[7,binary]),
 
-	<<"testID">> = check(id_or_null,"testID",[6,"0",binary]),
-	null = check(id_or_null,"0",[6,"0",binary]),
-	nomatch = check(id_or_null,"wrong_id",[6,"0",binary]),
-	nomatch = check(id_or_null,"wrongidwrongid",[6,"0",binary]),
+	<<"testID">> = required_check(id_or_null,"testID",[6,"0",binary]),
+	null = required_check(id_or_null,"0",[6,"0",binary]),
+	nomatch = required_check(id_or_null,"wrong_id",[6,"0",binary]),
+	nomatch = required_check(id_or_null,"wrongidwrongid",[6,"0",binary]),
 
-	<<"testID">> = check(id_ranged,"testID",[4,7,binary]),
-	"testID" = check(id_ranged,"testID",[4,7,string]),
-	nomatch = check(id_ranged,"testID",[7,10,binary]),
-	nomatch = check(id_ranged,"test ID",[4,10,string]),
+	<<"testID">> = required_check(id_ranged,"testID",[4,7,binary]),
+	"testID" = required_check(id_ranged,"testID",[4,7,string]),
+	nomatch = required_check(id_ranged,"testID",[7,10,binary]),
+	nomatch = required_check(id_ranged,"test ID",[4,10,string]),
 
-	<<"testID">> = check(id_ranged_or_null,"testID",[4,7,"0",binary]),
-	null = check(id_ranged_or_null,"0",[4,7,"0",binary]),
-	nomatch = check(id_ranged_or_null,"0000000000000",[4,7,"0",binary]),
+	<<"testID">> = required_check(id_ranged_or_null,"testID",[4,7,"0",binary]),
+	null = required_check(id_ranged_or_null,"0",[4,7,"0",binary]),
+	nomatch = required_check(id_ranged_or_null,"0000000000000",[4,7,"0",binary]),
 
-	<<"79054025255fb1a26e4bc422aef54eb4">> = check(id_md5,"79054025255fb1a26e4bc422aef54eb4",[binary]),
-	"79054025255fb1a26e4bc422aef54eb4" = check(id_md5,"79054025255fb1a26e4bc422aef54eb4",[string]),
-	nomatch = check(id_md5,"79054025255fb1a26e4bc422aef54",[string]),
+	<<"79054025255fb1a26e4bc422aef54eb4">> = required_check(id_md5,"79054025255fb1a26e4bc422aef54eb4",[binary]),
+	"79054025255fb1a26e4bc422aef54eb4" = required_check(id_md5,"79054025255fb1a26e4bc422aef54eb4",[string]),
+	nomatch = required_check(id_md5,"79054025255fb1a26e4bc422aef54",[string]),
 
 	ok.
 
 
 %% ----------------------------
+%% @doc Check not required parameter
+-spec not_required_check(PARAMETER_NAME,TYPE,TYPE_PROPERTIES,POST_PARAMETERS) ->
+	CHECKED_VALUE | default
+	when
+		PARAMETER_NAME :: a_utf_text_string(),
+		TYPE :: atom(),
+		TYPE_PROPERTIES :: a_list_of_properties(),
+		POST_PARAMETERS :: a_yaws_post_parameters(),
+		CHECKED_VALUE :: any().
+
+not_required_check(PARAMETER_NAME,TYPE,TYPE_PROPERTIES,POST_PARAMETERS) ->
+
+	not_required_check(PARAMETER_NAME,TYPE,TYPE_PROPERTIES,default,POST_PARAMETERS).
+
+
+%% ----------------------------
+%% @doc Check not required parameter or return default value
+-spec not_required_check(PARAMETER_NAME,TYPE,TYPE_PROPERTIES,DEFAULT,POST_PARAMETERS) ->
+	CHECKED_VALUE | DEFAULT
+	when
+		PARAMETER_NAME :: a_utf_text_string(),
+		TYPE :: atom(),
+		TYPE_PROPERTIES :: a_list_of_properties(),
+		POST_PARAMETERS :: a_yaws_post_parameters(),
+		CHECKED_VALUE :: any(),
+		DEFAULT :: any().
+
+not_required_check(PARAMETER_NAME,TYPE,TYPE_PROPERTIES,DEFAULT,POST_PARAMETERS) ->
+
+	case proplists:get_value(PARAMETER_NAME,POST_PARAMETERS) of
+		undefined -> DEFAULT;
+		VALUE_STRING -> required_check(TYPE,VALUE_STRING,TYPE_PROPERTIES)
+	end.
+
+
+%% ----------------------------
+%% @doc Check not required parameters schema
+-spec not_required_schema_check(SCHEMA,POST_PARAMETERS) ->
+	CHECKED_PARAMETERS | {nomatch,NAME}
+	when
+		SCHEMA :: [{NAME,TYPE,TYPE_PROPERTIES}],
+		NAME :: a_utf_text_string(),
+		TYPE :: atom(),
+		TYPE_PROPERTIES :: a_list_of_properties(),
+		POST_PARAMETERS :: a_yaws_post_parameters(),
+		CHECKED_PARAMETERS :: proplists:proplist().
+
+not_required_schema_check(SCHEMA,POST_PARAMETERS) ->
+
+	not_required_schema_check(SCHEMA,POST_PARAMETERS,[]).
+
+
+%% ----------------------------
+%% @doc Handler for not_required_schema_check/2
+-spec not_required_schema_check(SCHEMA,POST_PARAMETERS,CHECKED_PARAMETERS) ->
+	CHECKED_PARAMETERS | {nomatch,NAME}
+	when
+		SCHEMA :: [{NAME,TYPE,TYPE_PROPERTIES}],
+		NAME :: a_utf_text_string(),
+		TYPE :: atom(),
+		TYPE_PROPERTIES :: a_list_of_properties(),
+		POST_PARAMETERS :: a_yaws_post_parameters(),
+		CHECKED_PARAMETERS :: proplists:proplist().
+
+not_required_schema_check([],_POST_PARAMETERS,OUTPUT) -> OUTPUT;
+
+not_required_schema_check([{NAME,TYPE,TYPE_PROPERTIES}|SCHEMA],POST_PARAMETERS,OUTPUT) ->
+
+	case not_required_check(NAME,TYPE,TYPE_PROPERTIES,POST_PARAMETERS) of
+		default -> not_required_schema_check(SCHEMA,POST_PARAMETERS,OUTPUT);
+		nomatch -> {nomatch,NAME};
+		CHECKED_VALUE -> not_required_schema_check(SCHEMA,POST_PARAMETERS,[{NAME,CHECKED_VALUE}|OUTPUT])
+	end.
+
+
+%% ----------------------------
 %% @doc Checking the request parameter through the Regexp defined for the type.
--spec check(TYPE,PARAMETER,TYPE_PROPERTIES) -> nomatch | CHECKED_VALUE
+-spec required_check(TYPE,PARAMETER,TYPE_PROPERTIES) -> nomatch | CHECKED_VALUE
 	when
 		TYPE :: atom(),
 		PARAMETER :: a_http_post_parameter(),
 		TYPE_PROPERTIES :: a_list_of_properties(),
 		CHECKED_VALUE :: any().
 
-check(user_defined,PARAMETER,[MODULE,FUNCTION,ARGUMENTS]) ->
+required_check(user_defined,PARAMETER,[MODULE,FUNCTION,ARGUMENTS]) ->
 
 	apply(MODULE,FUNCTION,[PARAMETER,ARGUMENTS]);
 
-check(TYPE,PARAMETER,TYPE_PROPERTIES) ->
+required_check(TYPE,PARAMETER,TYPE_PROPERTIES) ->
 
 	parameter_value(TYPE,PARAMETER,TYPE_PROPERTIES).
 
 
 %% ----------------------------
 %% @doc Find and check parameter from Yaws parameters proplist
--spec checkout(PARAMETER_NAME,PARAMETERS,TYPE,TYPE_PROPERTIES) ->
+-spec required_checkout(PARAMETER_NAME,PARAMETERS,TYPE,TYPE_PROPERTIES) ->
 	notinlist | nomatch | CHECKED_VALUE
 	when
 		PARAMETER_NAME :: string(),
@@ -170,29 +249,29 @@ check(TYPE,PARAMETER,TYPE_PROPERTIES) ->
 		TYPE_PROPERTIES :: list(),
 		CHECKED_VALUE :: any().
 
-checkout(PARAMETER_NAME,PARAMETERS,TYPE,TYPE_PROPERTIES) ->
+required_checkout(PARAMETER_NAME,PARAMETERS,TYPE,TYPE_PROPERTIES) ->
 
 	case proplists:get_value(PARAMETER_NAME,PARAMETERS) of
 		undefined -> notinlist;
-		VALUE_STRING -> check(TYPE,VALUE_STRING,TYPE_PROPERTIES)
+		VALUE_STRING -> required_check(TYPE,VALUE_STRING,TYPE_PROPERTIES)
 	end.
 
 
 %% ----------------------------
 %% @doc Wrapper function for check/3, checking list of typed elements
--spec check_list(LIST,TYPE_PROPERTIES) -> list() | nomatch
+-spec required_check_list(LIST,TYPE_PROPERTIES) -> list() | nomatch
 	when
 		LIST :: list(),
 		TYPE_PROPERTIES :: {TYPE,TYPE_PARAMETERS},
 		TYPE :: atom(),
 		TYPE_PARAMETERS :: list().
 
-check_list(LIST,TYPE_PROPERTIES) -> check_list(LIST,TYPE_PROPERTIES,[]).
+required_check_list(LIST,TYPE_PROPERTIES) -> required_check_list(LIST,TYPE_PROPERTIES,[]).
 
 
 %% ----------------------------
 %% @doc Checking list of typed elements
--spec check_list(LIST,TYPE_PROPERTIES,OUTPUT) -> list() | nomatch
+-spec required_check_list(LIST,TYPE_PROPERTIES,OUTPUT) -> list() | nomatch
 	when
 		LIST :: list(),
 		TYPE_PROPERTIES :: {TYPE,TYPE_PARAMETERS},
@@ -200,14 +279,14 @@ check_list(LIST,TYPE_PROPERTIES) -> check_list(LIST,TYPE_PROPERTIES,[]).
 		TYPE_PARAMETERS :: list(),
 		OUTPUT :: list().
 
-check_list([],_,OUTPUT) -> OUTPUT;
+required_check_list([],_,OUTPUT) -> OUTPUT;
 
-check_list([ELEMENT|LIST],{TYPE,TYPE_PARAMETERS},OUTPUT) ->
+required_check_list([ELEMENT|LIST],{TYPE,TYPE_PARAMETERS},OUTPUT) ->
 
-	case check(TYPE,ELEMENT,TYPE_PARAMETERS) of
+	case required_check(TYPE,ELEMENT,TYPE_PARAMETERS) of
 		nomatch -> nomatch;
 		CHECKED_ELEMENT ->
-			check_list(
+			required_check_list(
 				LIST,
 				{TYPE,TYPE_PARAMETERS},
 				lists:append(OUTPUT,[CHECKED_ELEMENT])
@@ -217,18 +296,20 @@ check_list([ELEMENT|LIST],{TYPE,TYPE_PARAMETERS},OUTPUT) ->
 
 %% ----------------------------
 %% @doc Checking requested parameters in following of Data_schema
--spec check_parameters(DATA_SCHEMA,PARAMETERS) -> CHECKED_PARAMETERS | false
+-spec required_check_parameters(DATA_SCHEMA,PARAMETERS) -> CHECKED_PARAMETERS | false
 	when
 		DATA_SCHEMA :: list(),
 		PARAMETERS :: list(),
 		CHECKED_PARAMETERS :: proplists:proplist().
 
-check_parameters(DATA_SCHEMA,PARAMETERS) -> check_parameters(DATA_SCHEMA,PARAMETERS,[]).
+required_check_parameters(DATA_SCHEMA,PARAMETERS) ->
+
+	required_check_parameters(DATA_SCHEMA,PARAMETERS,[]).
 
 
 %% ----------------------------
 %% @doc Handler function for check_parameters/2
--spec check_parameters([RULE|DATA_SCHEMA],PARAMETERS,RESULT) -> CHECKED_PARAMETERS | false
+-spec required_check_parameters([RULE|DATA_SCHEMA],PARAMETERS,RESULT) -> CHECKED_PARAMETERS | false
 	when
 		RULE :: {PARAMETER_NAME,PARAMETER_PROPERTIES},
 		PARAMETER_NAME :: a_utf_text_string(),
@@ -238,23 +319,23 @@ check_parameters(DATA_SCHEMA,PARAMETERS) -> check_parameters(DATA_SCHEMA,PARAMET
 		RESULT :: CHECKED_PARAMETERS | false,
 		CHECKED_PARAMETERS :: proplists:proplist().
 
-check_parameters([],_,RESULT) -> RESULT;
+required_check_parameters([],_,RESULT) -> RESULT;
 
-check_parameters([RULE|DATA_SCHEMA],PARAMETERS,RESULT) ->
+required_check_parameters([RULE|DATA_SCHEMA],PARAMETERS,RESULT) ->
 
 	{PARAMETER_NAME,PARAMETER_PROPERTIES} = RULE,
 
 	CHECK = fun(F_PARAMETER_VALUE) ->
 		TYPE = proplists:get_value(type,PARAMETER_PROPERTIES),
 		TYPE_PROPERTIES = proplists:get_value(type_properties,PARAMETER_PROPERTIES),
-		PARAMETER_CHECKED = a_yaws_params:check(TYPE,F_PARAMETER_VALUE,TYPE_PROPERTIES),
+		PARAMETER_CHECKED = required_check(TYPE,F_PARAMETER_VALUE,TYPE_PROPERTIES),
 		case PARAMETER_CHECKED of
 			nomatch ->
 				false;
 			PARAMETER_CHECKED ->
 				NAME = list_to_atom(PARAMETER_NAME),
 				F_OUTPUT = lists:append(RESULT,[{NAME,PARAMETER_CHECKED}]),
-				check_parameters(DATA_SCHEMA,PARAMETERS,F_OUTPUT)
+				required_check_parameters(DATA_SCHEMA,PARAMETERS,F_OUTPUT)
 		end
 	end,
 
@@ -286,7 +367,7 @@ check_parameters([RULE|DATA_SCHEMA],PARAMETERS,RESULT) ->
 %% List of typed elements
 parameter_value(list_of_typed,PARAMETERS,[{SEPARATOR,TYPE,TYPE_PROPERTIES}]) ->
 
-	check_list(
+	required_check_list(
 		string:tokens(PARAMETERS,SEPARATOR),
 		{TYPE,TYPE_PROPERTIES}
 	);

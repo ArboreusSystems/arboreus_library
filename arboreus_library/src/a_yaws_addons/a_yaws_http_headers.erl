@@ -21,6 +21,7 @@
 
 	access_control_allow_origin/1,
 	access_control_allow_methods/1,
+	access_control_allow_headers/1,
 	content_type/1,
 	content_disposition/1,
 	pragma/1,
@@ -62,19 +63,34 @@ access_control_allow_origin(DOMAIN) ->
 
 %% ----------------------------
 %% @doc Return HTTP Yaws header Access-Control-Allow-Origin within DOMAIN value
--spec access_control_allow_methods(DOMAIN) -> YAWS_HEADER
+-spec access_control_allow_methods(METHODS) -> YAWS_HEADER
 	when
-		DOMAIN :: a_host_name_binary() | a_host_name_string() | a_ipv4_binary() | a_ipv4_string(),
+		METHODS :: a_host_name_binary() | a_host_name_string(),
 		YAWS_HEADER :: a_yaws_http_header().
 
-access_control_allow_methods(DOMAIN) when is_list(DOMAIN)->
+access_control_allow_methods(METHODS) when is_list(METHODS)->
 
-	{header,["Access-Control-Allow-Methods:",DOMAIN]};
+	{header,["Access-Control-Allow-Methods:",METHODS]};
 
-access_control_allow_methods(DOMAIN) ->
+access_control_allow_methods(METHODS) ->
 
-	access_control_allow_origin(a_var:to_string(DOMAIN)).
+	access_control_allow_origin(a_var:to_string(METHODS)).
 
+
+%% ----------------------------
+%% @doc Return HTTP Yaws header Access-Control-Request-Headers within HEADERS value
+-spec access_control_allow_headers(HEADERS) -> YAWS_HEADER
+	when
+		HEADERS :: a_host_name_binary() | a_host_name_string(),
+		YAWS_HEADER :: a_yaws_http_header().
+
+access_control_allow_headers(HEADERS) when is_list(HEADERS) ->
+
+	{header,["Access-Control-Request-Headers:",HEADERS]};
+
+access_control_allow_headers(HEADERS) ->
+
+	access_control_allow_headers(a_var:to_string(HEADERS)).
 
 
 %% ----------------------------
@@ -150,22 +166,23 @@ cors() -> cors("*").
 
 
 %% ----------------------------
-%% @doc Return list within header for Yaws Appmod
--spec cors(DOMAIN) -> YAWS_HEADERS
+%% @doc Return list within CORS headers for Yaws Appmod
+-spec cors(VALUE) -> YAWS_HEADERS
 	when
-		DOMAIN :: a_host_name_binary() | a_host_name_string() | a_ipv4_binary() | a_ipv4_string(),
+		VALUE :: a_host_name_binary() | a_host_name_string(),
 		YAWS_HEADERS :: a_yaws_http_headers().
 
-cors(DOMAIN) when is_list(DOMAIN) ->
+cors(VALUE) when is_list(VALUE) ->
 
 	[
-		access_control_allow_origin(DOMAIN),
-		access_control_allow_methods(DOMAIN)
+		access_control_allow_origin(VALUE),
+		access_control_allow_methods(VALUE),
+		access_control_allow_headers(VALUE)
 	];
 
-cors(DOMAIN) ->
+cors(VALUE) ->
 
-	cors(a_var:to_string(DOMAIN)).
+	cors(a_var:to_string(VALUE)).
 
 
 %%-----------------------------------

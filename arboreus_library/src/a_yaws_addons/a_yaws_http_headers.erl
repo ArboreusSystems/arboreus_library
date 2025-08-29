@@ -86,7 +86,7 @@ access_control_allow_methods(METHODS) ->
 
 access_control_allow_headers(HEADERS) when is_list(HEADERS) ->
 
-	{header,["Access-Control-Request-Headers:",HEADERS]};
+	{header,["Access-Control-Allow-Headers:",HEADERS]};
 
 access_control_allow_headers(HEADERS) ->
 

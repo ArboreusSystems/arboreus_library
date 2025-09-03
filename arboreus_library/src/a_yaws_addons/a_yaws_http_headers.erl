@@ -22,6 +22,7 @@
 	access_control_allow_origin/1,
 	access_control_allow_methods/1,
 	access_control_allow_headers/1,
+	access_control_expose_headers/1,
 	content_type/1,
 	content_disposition/1,
 	pragma/1,
@@ -91,6 +92,22 @@ access_control_allow_headers(HEADERS) when is_list(HEADERS) ->
 access_control_allow_headers(HEADERS) ->
 
 	access_control_allow_headers(a_var:to_string(HEADERS)).
+
+
+%% ----------------------------
+%% @doc Return HTTP Yaws header Access-Control-Expose-Headers within HEADERS value
+-spec access_control_expose_headers(HEADERS) -> YAWS_HEADER
+	when
+		HEADERS :: a_utf_text_binary() | a_utf_text_binary(),
+		YAWS_HEADER :: a_yaws_http_header().
+
+access_control_expose_headers(HEADERS) when is_list(HEADERS) ->
+
+	{header,["Access-Control-Expose-Headers:",HEADERS]};
+
+access_control_expose_headers(HEADERS) ->
+
+	access_control_expose_headers(a_var:to_string(HEADERS)).
 
 
 %% ----------------------------
@@ -177,7 +194,8 @@ cors(VALUE) when is_list(VALUE) ->
 	[
 		access_control_allow_origin(VALUE),
 		access_control_allow_methods(VALUE),
-		access_control_allow_headers(VALUE)
+		access_control_allow_headers(VALUE),
+		access_control_expose_headers(VALUE)
 	];
 
 cors(VALUE) ->

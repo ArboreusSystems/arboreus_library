@@ -66,6 +66,10 @@ delete_objects([OBJECT|OBJECTS]) ->
 
 %% ----------------------------
 %% @doc Delete defined object
+-spec transaction_delete_object(OBJECT) -> {atomic,ok} | {aborted,REASON}
+	when
+		OBJECT :: a_record(),
+		REASON :: term().
 
 transaction_delete_object(OBJECT) ->
 

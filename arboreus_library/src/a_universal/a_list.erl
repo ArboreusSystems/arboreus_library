@@ -24,7 +24,7 @@
 	get_out/3,
 	clear_duplicates/1,
 	find_members/2,
-	compare_members/2,
+	compare/2,compare_sorted/2,compare_sorted_with/2,compare_members/2,
 	exclude/2,
 	numerate/1
 
@@ -93,6 +93,40 @@ exclude_handler([ELEMENT|LIST],MEMBERS,OUTPUT) ->
 			_ -> OUTPUT
 		end
 	).
+
+
+%% ----------------------------
+%% @doc Compare lists
+-spec compare(LIST1,LIST2) -> boolean()
+	when
+		LIST1 :: list(),
+		LIST2 :: list().
+
+compare(LIST1,LIST2) -> LIST1 =:= LIST2.
+
+
+%% ----------------------------
+%% @doc Compare sorted with etalon
+-spec compare_sorted_with(ETALON,LIST) -> boolean()
+	when
+		ETALON :: list(),
+		LIST :: list().
+
+compare_sorted_with(ETALON,LIST) ->
+
+	compare(ETALON,lists:sort(LIST)).
+
+
+%% ----------------------------
+%% @doc Compare two lists within sorting
+-spec compare_sorted(LIST1,LIST2) -> boolean()
+	when
+		LIST1 :: list(),
+		LIST2 :: list().
+
+compare_sorted(LIST1,LIST2) ->
+
+	compare(lists:sort(LIST1),lists:sort(LIST2)).
 
 
 %% ----------------------------

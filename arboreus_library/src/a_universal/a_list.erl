@@ -26,7 +26,8 @@
 	find_members/2,
 	compare/2,compare_sorted/2,compare_sorted_with/2,compare_members/2,
 	exclude/2,
-	numerate/1
+	numerate/1,
+	index/2
 
 ]).
 
@@ -249,3 +250,30 @@ get_out(pair,KEY,LIST) ->
 			LIST_OUT = proplists:delete(KEY,LIST),
 			[{KEY,VALUE},LIST_OUT]
 	end.
+
+
+%% ----------------------------
+%% @doc Return index of item in the list
+-spec index(ITEM,LIST) -> {true,INDEX} | false
+	when
+		ITEM :: any(),
+		LIST :: [],
+		INDEX :: pos_integer().
+
+index(ITEM,LIST) -> index_handler(ITEM,LIST,1).
+
+
+%% ----------------------------
+%% @doc Handler for index/2 function
+-spec index_handler(ITEM,LIST,INDEX) -> {true,INDEX} | false
+	when
+		ITEM :: any(),
+		LIST :: [],
+		INDEX :: pos_integer().
+
+index_handler(_,[],_)  -> false;
+
+index_handler(ITEM,[ITEM|_],INDEX) -> {true,INDEX};
+
+index_handler(ITEM,[_|LIST],INDEX) -> index_handler(ITEM,LIST,INDEX + 1).
+

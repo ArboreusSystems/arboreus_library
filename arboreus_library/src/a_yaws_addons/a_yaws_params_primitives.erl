@@ -546,7 +546,7 @@ utf_binary_except(PARAMETER,EXCEPTION_CHARS,LENGTH_TYPE) ->
 		true ->
 
 			UTF_BINARY = utf_binary(PARAMETER),
-			EXCEPTION = unicode:characters_to_binary(EXCEPTION_CHARS),
+			EXCEPTION = utf_binary(EXCEPTION_CHARS),
 
 			PATTERN = fun() ->
 				case LENGTH_TYPE of
@@ -841,7 +841,7 @@ latin_name(PARAMETER,LENGTH,OUTPUT_TYPE) ->
 		end
 	end,
 
-	BINARY_PARAMETER = unicode:characters_to_binary(PARAMETER),
+	BINARY_PARAMETER = utf_binary(PARAMETER),
 	case re:run(BINARY_PARAMETER,PATTERN()) of
 		nomatch ->
 			nomatch;
@@ -877,7 +877,7 @@ latin_name_ranged(PARAMETER,MINOR,MAJOR,OUTPUT_TYPE) ->
 		("}$")/utf8
 	>>,
 
-	BINARY_PARAMETER = unicode:characters_to_binary(PARAMETER),
+	BINARY_PARAMETER = utf_binary(PARAMETER),
 	case re:run(BINARY_PARAMETER,PATTERN) of
 		nomatch ->
 			nomatch;
@@ -965,7 +965,7 @@ ip_v4(PARAMETER,OUTPUT_TYPE) ->
 		{ok,IP_TUPLE} = inet:parse_ipv4_address(PARAMETER),
 		case OUTPUT_TYPE of
 			string -> PARAMETER;
-			binary -> unicode:characters_to_binary(PARAMETER);
+			binary -> utf_binary(PARAMETER);
 			list -> tuple_to_list(IP_TUPLE);
 			tuple -> IP_TUPLE;
 			integer -> a_net:ipv4_to_integer(IP_TUPLE)
@@ -1000,7 +1000,7 @@ ip_v4_range(PARAMETER,OUTPUT_TYPE) ->
 				INGETER_D >= 0, INGETER_D =< 255,
 				INGETER_E >= 0, INGETER_E =< 255 ->
 					case OUTPUT_TYPE of
-						binary -> unicode:characters_to_binary(PARAMETER);
+						binary -> utf_binary(PARAMETER);
 						string -> PARAMETER;
 						tuple -> {INGETER_A,INTEGER_B,INGETER_C,INGETER_D,INGETER_E};
 						list -> [INGETER_A,INTEGER_B,INGETER_C,INGETER_D,INGETER_E]
@@ -1026,7 +1026,7 @@ ip_v6(PARAMETER,OUTPUT_TYPE) ->
 		{ok,IP_TUPLE} = inet:parse_ipv6_address(PARAMETER),
 		case OUTPUT_TYPE of
 			string -> PARAMETER;
-			binary -> unicode:characters_to_binary(PARAMETER);
+			binary -> utf_binary(PARAMETER);
 			list -> tuple_to_list(IP_TUPLE);
 			tuple -> IP_TUPLE;
 			_ -> a_net:ipv6_to_integer(PARAMETER)
@@ -1053,7 +1053,7 @@ fqdn(PARAMETER,OUTPUT_TYPE) ->
 		{match,_} ->
 			case OUTPUT_TYPE of
 				string -> PARAMETER;
-				binary -> unicode:characters_to_binary(PARAMETER)
+				binary -> utf_binary(PARAMETER)
 			end
 	end.
 
@@ -1074,7 +1074,7 @@ email(PARAMETER,OUTPUT_TYPE) ->
 		{match,_} ->
 			case OUTPUT_TYPE of
 				string -> PARAMETER;
-				binary -> unicode:characters_to_binary(PARAMETER)
+				binary -> utf_binary(PARAMETER)
 			end
 	end.
 
@@ -1116,7 +1116,7 @@ numerical(PARAMETER,LENGTH_RULE,OUTPUT_TYPE) ->
 		{match,_} ->
 			case OUTPUT_TYPE of
 				string -> PARAMETER;
-				binary -> unicode:characters_to_binary(PARAMETER)
+				binary -> utf_binary(PARAMETER)
 			end
 	end.
 
@@ -1143,7 +1143,7 @@ time(PARAMETER,FORMAT,OUTPUT_TYPE) ->
 			case a_time:from_formated(FORMAT,PARAMETER,tuple) of
 				false -> nomatch;
 				{error,_} -> nomatch;
-				_ -> unicode:characters_to_binary(PARAMETER)
+				_ -> utf_binary(PARAMETER)
 			end;
 		_ ->
 			case a_time:from_formated(FORMAT,PARAMETER,OUTPUT_TYPE) of

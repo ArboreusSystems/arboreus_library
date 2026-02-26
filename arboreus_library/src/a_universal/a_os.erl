@@ -24,7 +24,10 @@
 
 	ps/1,
 	ps_for_pid/2,
-	ps_get_pid_memory/1,ps_get_pid_memory_physical/1,ps_get_pid_memory_virtual/1
+	ps_get_pid_memory/1,ps_get_pid_memory_physical/1,ps_get_pid_memory_virtual/1,
+
+	df/1,
+	df_for_disk/1,df_for_disk_proplist/1
 
 ]).
 
@@ -195,3 +198,45 @@ ps_get_pid_memory_virtual(PID_OS) ->
 		[ERROR_RESULT] ->
 			{error,{ERROR_RESULT}}
 	end.
+
+
+%% ----------------------------
+%% @doc Return result of 'df' command execution
+-spec df(PARAMETERS) -> a_utf_text_string()
+	when PARAMETERS :: a_utf_text_string().
+
+df(PARAMETERS) ->
+
+	os:cmd(string:concat("df ",PARAMETERS)).
+
+
+%% ----------------------------
+%% @doc Return result of 'df' command for exact path
+-spec df_for_disk(PATH) -> list()
+	when PATH :: a_unix_path_string().
+
+df_for_disk(PATH) ->
+
+	[_|[DISK_INFO]] = string:tokens(df("-li " ++ PATH),"\n"),
+	string:tokens(DISK_INFO," ").
+
+
+%% ----------------------------
+%% @doc Return result of 'df' command for exact path in proplist
+-spec df_for_disk_proplist(DISK_PATH) -> proplists:proplist()
+	when DISK_PATH :: a_unix_path_string().
+
+df_for_disk_proplist(DISK_PATH) ->
+
+	[FILESYSTEM,BLOCKS,USED,AVAILABLE,CAPACITY,IUSED,IFREE,IPERCENT,MOUNTED] = df_for_disk(DISK_PATH),
+	[
+		{filesystem,FILESYSTEM},
+		{blocks,BLOCKS},
+		{used,USED},
+		{available,AVAILABLE},
+		{capacity,CAPACITY},
+		{iused,IUSED},
+		{ifree,IFREE},
+		{ipercent,IPERCENT},
+		{mounted,MOUNTED}
+	].

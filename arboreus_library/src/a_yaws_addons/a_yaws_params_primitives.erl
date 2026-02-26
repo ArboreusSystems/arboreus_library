@@ -462,7 +462,7 @@ integer_range_limited(PARAMETER,{MINOR_A,MAJOR_A},{MINOR_B,MAJOR_B})
 
 utf_binary(PARAMETER) when is_list(PARAMETER) ->
 
-	unicode:characters_to_binary(PARAMETER).
+	unicode:characters_to_binary(list_to_bitstring(PARAMETER)).
 
 
 %% ----------------------------
@@ -477,27 +477,30 @@ utf_binary(PARAMETER) when is_list(PARAMETER) ->
 utf_binary_limited(PARAMETER,{more_equal,LENGTH})
 	when is_integer(LENGTH), LENGTH >= 1 ->
 
-	UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+	UTF_BINARY = utf_binary(PARAMETER),
+	UTF_LENGTH = string:length(UTF_BINARY),
 	if
-		byte_size(UTF_BINARY) >= LENGTH -> UTF_BINARY;
+		UTF_LENGTH >= LENGTH -> UTF_BINARY;
 		true -> nomatch
 	end;
 
 utf_binary_limited(PARAMETER,{less_equal,LENGTH})
 	when is_integer(LENGTH), LENGTH >= 1 ->
 
-	UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+	UTF_BINARY = utf_binary(PARAMETER),
+	UTF_LENGTH = string:length(UTF_BINARY),
 	if
-		byte_size(UTF_BINARY) =< LENGTH -> UTF_BINARY;
+		UTF_LENGTH =< LENGTH -> UTF_BINARY;
 		true -> nomatch
 	end;
 
 utf_binary_limited(PARAMETER,{size,LENGTH})
 	when is_integer(LENGTH), LENGTH >= 1 ->
 
-	UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+	UTF_BINARY = utf_binary(PARAMETER),
+	UTF_LENGTH = string:length(UTF_BINARY),
 	if
-		byte_size(UTF_BINARY) == LENGTH -> UTF_BINARY;
+		UTF_LENGTH == LENGTH -> UTF_BINARY;
 		true -> nomatch
 	end.
 
@@ -517,8 +520,8 @@ utf_binary_ranged(PARAMETER,MINOR,MAJOR) when MINOR > MAJOR ->
 
 utf_binary_ranged(PARAMETER,MINOR,MAJOR) when MINOR >= 1 ->
 
-	UTF_BINARY = unicode:characters_to_binary(PARAMETER),
-	SIZE = byte_size(UTF_BINARY),
+	UTF_BINARY = utf_binary(PARAMETER),
+	SIZE = string:length(UTF_BINARY),
 	if
 		SIZE >= MINOR, SIZE =< MAJOR -> UTF_BINARY;
 		true -> nomatch
@@ -542,7 +545,7 @@ utf_binary_except(PARAMETER,EXCEPTION_CHARS,LENGTH_TYPE) ->
 	case io_lib:char_list(EXCEPTION_CHARS) of
 		true ->
 
-			UTF_BINARY = unicode:characters_to_binary(PARAMETER),
+			UTF_BINARY = utf_binary(PARAMETER),
 			EXCEPTION = unicode:characters_to_binary(EXCEPTION_CHARS),
 
 			PATTERN = fun() ->
@@ -613,7 +616,7 @@ id(PARAMETER,LENGTH,OUTPUT_TYPE) ->
 				(integer_to_binary(LENGTH))/binary,
 				("}$")/utf8
 			>>,
-			PARAMETER_BINARY = unicode:characters_to_binary(PARAMETER),
+			PARAMETER_BINARY = utf_binary(PARAMETER),
 			case re:run(PARAMETER_BINARY,PATTERN) of
 				nomatch ->
 					nomatch;

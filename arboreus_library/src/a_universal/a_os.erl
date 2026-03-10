@@ -30,7 +30,10 @@
 	ps_get_pid_memory/1,ps_get_pid_memory_physical/1,ps_get_pid_memory_virtual/1,
 
 	df/1,
-	df_for_disk/1,df_for_disk_proplist/1
+	df_for_disk/1,df_for_disk_proplist/1,
+
+	rm/2,
+	rm_force/1,rm_recursive/1,rm_recursive_force/1
 
 ]).
 
@@ -321,3 +324,46 @@ df_for_disk_proplist(DISK_PATH) ->
 		{ipercent,IPERCENT},
 		{mounted,MOUNTED}
 	].
+
+
+%% ----------------------------
+%% @doc Return result of 'rm' command
+-spec rm(PARAMETERS,PATH) -> OUTPUT
+	when
+		PARAMETERS :: a_utf_text_string(),
+		PATH :: a_unix_path_string(),
+		OUTPUT :: a_utf_text_string().
+
+rm(PARAMETERS,PATH) ->
+
+	os:cmd("rm " ++ PARAMETERS ++ " " ++ PATH).
+
+
+%% ----------------------------
+%% @doc Return result of 'rm' command within force parameter
+-spec rm_force(PATH) -> OUTPUT
+	when
+		PATH :: a_unix_path_string(),
+		OUTPUT :: a_utf_text_string().
+
+rm_force(PATH) -> rm("-f",PATH).
+
+
+%% ----------------------------
+%% @doc Return result of 'rm' command within recursive parameter
+-spec rm_recursive(PATH) -> OUTPUT
+	when
+		PATH :: a_unix_path_string(),
+		OUTPUT :: a_utf_text_string().
+
+rm_recursive(PATH) -> rm("-r",PATH).
+
+
+%% ----------------------------
+%% @doc Return result of 'rm' command within recursive and force parameter
+-spec rm_recursive_force(PATH) -> OUTPUT
+	when
+		PATH :: a_unix_path_string(),
+		OUTPUT :: a_utf_text_string().
+
+rm_recursive_force(PATH) -> rm("-rf",PATH).

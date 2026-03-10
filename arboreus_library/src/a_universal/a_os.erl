@@ -22,6 +22,9 @@
 	ls/1,ls_no_check/1,
 	ls_filtered/2,ls_filtered_no_check/2,
 
+	ln/3,ln_soft/2,
+	ln_ensure/3,ln_ensure_soft/2,
+
 	ps/1,
 	ps_for_pid/2,
 	ps_get_pid_memory/1,ps_get_pid_memory_physical/1,ps_get_pid_memory_virtual/1,
@@ -113,6 +116,84 @@ ls_filtered(PATH,FILTER) ->
 ls_filtered_no_check(PATH,FILTER) ->
 
 	string:tokens(os:cmd("ls " ++ PATH ++ " | grep " ++ FILTER),"\n").
+
+
+%% ----------------------------
+%% @doc Return result of 'ln' command
+-spec ln(PARAMETERS,PATH,SYMLINK) -> {ok,OUTPUT} | {error,REASON}
+	when
+		PARAMETERS :: a_utf_text_string(),
+		PATH :: a_unix_path_string(),
+		SYMLINK :: a_unix_path_string(),
+		OUTPUT :: a_utf_text_string(),
+		REASON :: existed | nopath.
+
+ln(PARAMETERS,PATH,SYMLINK) ->
+
+	case filelib:is_file(PATH) of
+		true ->
+			case filelib:is_file(SYMLINK) of
+				true -> {error,existed};
+				false -> {ok,os:cmd("ln " ++ PARAMETERS ++ " " ++ PATH ++ " " ++ SYMLINK)}
+			end;
+		false ->
+			{error,nopath}
+	end.
+
+
+%% ----------------------------
+%% @doc Create soft symlink with 'ln' command
+-spec ln_soft(PATH,SYMLINK) -> {ok,OUTPUT} | {error,REASON}
+	when
+		PATH :: a_unix_path_string(),
+		SYMLINK :: a_unix_path_string(),
+		OUTPUT :: a_utf_text_string(),
+		REASON :: existed | nopath.
+
+ln_soft(PATH,SYMLINK) -> ln("-s",PATH,SYMLINK).
+
+
+%% ----------------------------
+%% @doc Return result of 'ln' command within ensuring symlink directory existed
+-spec ln_ensure(PARAMETERS,PATH,SYMLINK) -> {ok,OUTPUT} | {error,REASON}
+	when
+		PARAMETERS :: a_utf_text_string(),
+		PATH :: a_unix_path_string(),
+		SYMLINK :: a_unix_path_string(),
+		OUTPUT :: a_utf_text_string(),
+		REASON :: existed | nopath | term().
+
+ln_ensure(PARAMETERS,PATH,SYMLINK) ->
+
+	case filelib:is_file(PATH) of
+		true ->
+			case filelib:is_file(SYMLINK) of
+				true ->
+					{error,existed};
+				false ->
+					SYMLINK_DIR = filename:dirname(SYMLINK),
+					case filelib:ensure_dir(SYMLINK_DIR) of
+						ok ->
+							{ok,os:cmd("ln " ++ PARAMETERS ++ " " ++ PATH ++ " " ++ SYMLINK)};
+						{error,REASON} ->
+							{error,REASON}
+					end
+			end;
+		false ->
+			{error,nopath}
+	end.
+
+
+%% ----------------------------
+%% @doc Create soft symlink by 'ln' command with ensuring directory
+-spec ln_ensure_soft(PATH,SYMLINK) -> {ok,OUTPUT} | {error,REASON}
+	when
+		PATH :: a_unix_path_string(),
+		SYMLINK :: a_unix_path_string(),
+		OUTPUT :: a_utf_text_string(),
+		REASON :: existed | nopath | term().
+
+ln_ensure_soft(PATH,SYMLINK) -> ln_ensure("-s",PATH,SYMLINK).
 
 
 %% ----------------------------

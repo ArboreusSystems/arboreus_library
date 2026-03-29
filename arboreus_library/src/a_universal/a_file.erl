@@ -27,8 +27,11 @@
 
 	add_to_begin/2,add_to_begin_no_check/2,
 	add_to_end/2,add_to_end_no_check/2,
+
 	add_line_to_begin/2,add_line_to_begin_no_check/2,
-	add_line_to_end/2,add_line_to_end_no_check/2
+	add_line_to_end/2,add_line_to_end_no_check/2,
+	delete_first_line/1,delete_first_line_no_check/1,
+	delete_last_line/1,delete_last_line_no_check/1
 
 ]).
 
@@ -393,3 +396,88 @@ add_line_to_end_no_check(FILE_PATH,STRING) ->
 		FILE_PATH,
 		unicode:characters_to_binary("\n" ++ STRING)
 	).
+
+
+%% ----------------------------
+%% @doc Delete first line within checking file existence
+-spec delete_first_line(FILE_PATH) -> ok | {error,REASON}
+	when
+		FILE_PATH :: a_unix_path_string(),
+		REASON :: term() | no_file | dir.
+
+delete_first_line(FILE_PATH) ->
+
+	case existed(FILE_PATH) of
+		true -> delete_first_line_no_check(FILE_PATH);
+		false -> {error,no_file};
+		dir -> {error,dir}
+	end.
+
+
+%% ----------------------------
+%% @doc Delete first line without checking file existence
+-spec delete_first_line_no_check(FILE_PATH) -> ok | {error,REASON}
+	when
+		FILE_PATH :: a_unix_path_string(),
+		REASON :: term().
+
+delete_first_line_no_check(FILE_PATH) ->
+
+	case file:read_file(FILE_PATH) of
+		{ok,EXISTED_CONTENT} ->
+			EXISTED_LINES = binary:split(EXISTED_CONTENT,<<"\n">>,[global]),
+			NEW_LINES = case EXISTED_LINES of
+				[] -> [];
+				[_FIRST|LINES] -> LINES
+			end,
+			file:write_file(
+				FILE_PATH,
+				list_to_binary(lists:join(<<"\n">>,NEW_LINES))
+			);
+		ERROR_READ ->
+			ERROR_READ
+	end.
+
+
+%% ----------------------------
+%% @doc Delete last line within checking file existence
+-spec delete_last_line(FILE_PATH) -> ok | {error,REASON}
+	when
+		FILE_PATH :: a_unix_path_string(),
+		REASON :: term() | no_file | dir.
+
+delete_last_line(FILE_PATH) ->
+
+	case existed(FILE_PATH) of
+		true -> delete_last_line_no_check(FILE_PATH);
+		false -> {error,no_file};
+		dir -> {error,dir}
+	end.
+
+
+%% ----------------------------
+%% @doc Delete last line without checking file existence
+-spec delete_last_line_no_check(FILE_PATH) -> ok | {error,REASON}
+	when
+		FILE_PATH :: a_unix_path_string(),
+		REASON :: term().
+
+delete_last_line_no_check(FILE_PATH) ->
+
+	case file:read_file(FILE_PATH) of
+		{ok,EXISTED_CONTENT} ->
+			EXISTED_LINES = binary:split(EXISTED_CONTENT,<<"\n">>,[global]),
+			NEW_LINES = case EXISTED_LINES of
+				[] ->
+					[];
+				[_FIRST|LINES] ->
+					[_FIRST_REVERSED|REVERSED_LINES] = lists:reverse(LINES),
+					lists:reverse(REVERSED_LINES)
+			end,
+			file:write_file(
+				FILE_PATH,
+				list_to_binary(lists:join(<<"\n">>,NEW_LINES))
+			);
+		ERROR_READ ->
+			ERROR_READ
+	end.

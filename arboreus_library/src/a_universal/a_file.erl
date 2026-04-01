@@ -18,6 +18,7 @@
 	test/0,
 
 	do_line/2,do_line/4,
+	read_lines/1,
 	existed/1,
 
 	create/2,create_no_check/2,
@@ -83,7 +84,7 @@ do_line(FILE_PATH,FUNCTION) ->
 		FUNCTION :: function(),
 		REASON :: term().
 
-do_line_handler(FILE_IO, FUNCTION) ->
+do_line_handler(FILE_IO,FUNCTION) ->
 
 	case io:get_line(FILE_IO,'') of
 		eof ->
@@ -132,6 +133,43 @@ do_line_handler(FILE_IO,MODULE,FUNCTION,ARGUMENTS) ->
 		LINE ->
 			apply(MODULE,FUNCTION,lists:append([LINE],ARGUMENTS)),
 			do_line_handler(FILE_IO,MODULE,FUNCTION,ARGUMENTS)
+	end.
+
+
+%% ----------------------------
+%% @doc Read all lines from file
+-spec read_lines(FILE_PATH) -> {ok,LINES} | {error,REASON}
+	when
+		FILE_PATH :: a_unix_path_string(),
+		LINES :: [a_utf_text_string()],
+		REASON :: term().
+
+read_lines(FILE_PATH) ->
+
+	{ok,FILE} = file:open(FILE_PATH,read),
+	read_lines_handler(FILE,[]).
+
+
+%% ----------------------------
+%% @doc Handler function for read_lines/1 function
+-spec read_lines_handler(FILE_IO,LINES) -> {ok,LINES} | {error,REASON}
+	when
+		FILE_IO :: io:device(),
+		LINES :: [a_utf_text_string()],
+		REASON :: term().
+
+read_lines_handler(FILE_IO,LINES) ->
+
+	case io:get_line(FILE_IO,'') of
+		eof ->
+			case file:close(FILE_IO) of
+				ok -> {ok,LINES};
+				ERROR_CLOSE -> ERROR_CLOSE
+			end;
+		{error,Reason} ->
+			{error,Reason};
+		LINE ->
+			read_lines_handler(FILE_IO,lists:append(LINES,[LINE]))
 	end.
 
 
@@ -423,16 +461,20 @@ delete_first_line(FILE_PATH) ->
 
 delete_first_line_no_check(FILE_PATH) ->
 
-	case file:read_file(FILE_PATH) of
-		{ok,EXISTED_CONTENT} ->
-			EXISTED_LINES = binary:split(EXISTED_CONTENT,<<"\n">>,[global]),
-			NEW_LINES = case EXISTED_LINES of
-				[] -> [];
-				[_FIRST|LINES] -> LINES
+	case read_lines(FILE_PATH) of
+		{ok,EXISTED_LINES} ->
+			LINES_TO_WRITE = case EXISTED_LINES of
+				[] ->
+					[];
+				EXISTED_LINES ->
+					[_FIRST|NEW_LINES] = EXISTED_LINES,
+					NEW_LINES
 			end,
 			file:write_file(
 				FILE_PATH,
-				list_to_binary(lists:join(<<"\n">>,NEW_LINES))
+				list_to_binary(
+					lists:join(<<"">>,LINES_TO_WRITE)
+				)
 			);
 		ERROR_READ ->
 			ERROR_READ
@@ -464,19 +506,20 @@ delete_last_line(FILE_PATH) ->
 
 delete_last_line_no_check(FILE_PATH) ->
 
-	case file:read_file(FILE_PATH) of
-		{ok,EXISTED_CONTENT} ->
-			EXISTED_LINES = binary:split(EXISTED_CONTENT,<<"\n">>,[global]),
-			NEW_LINES = case EXISTED_LINES of
+	case read_lines(FILE_PATH) of
+		{ok,EXISTED_LINES} ->
+			LINES_TO_WRITE = case EXISTED_LINES of
 				[] ->
 					[];
-				[_FIRST|LINES] ->
-					[_FIRST_REVERSED|REVERSED_LINES] = lists:reverse(LINES),
-					lists:reverse(REVERSED_LINES)
+				EXISTED_LINES ->
+					[_LAST|NEW_LINES] = lists:reverse(EXISTED_LINES),
+					lists:reverse(NEW_LINES)
 			end,
 			file:write_file(
 				FILE_PATH,
-				list_to_binary(lists:join(<<"\n">>,NEW_LINES))
+				list_to_binary(
+					lists:join(<<"">>,LINES_TO_WRITE)
+				)
 			);
 		ERROR_READ ->
 			ERROR_READ

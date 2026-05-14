@@ -174,8 +174,7 @@ ln_ensure(PARAMETERS,PATH,SYMLINK) ->
 				true ->
 					{error,existed};
 				false ->
-					SYMLINK_DIR = filename:dirname(SYMLINK),
-					case filelib:ensure_dir(SYMLINK_DIR) of
+					case filelib:ensure_dir(SYMLINK) of
 						ok ->
 							{ok,os:cmd("ln " ++ PARAMETERS ++ " " ++ PATH ++ " " ++ SYMLINK)};
 						{error,REASON} ->

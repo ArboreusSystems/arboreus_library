@@ -399,7 +399,7 @@ add_line_to_begin_no_check(FILE_PATH,STRING) ->
 
 	add_to_begin_no_check(
 		FILE_PATH,
-		unicode:characters_to_binary(STRING ++ "\n")
+		unicode:characters_to_binary(STRING)
 	).
 
 
@@ -432,7 +432,7 @@ add_line_to_end_no_check(FILE_PATH,STRING) ->
 
 	add_to_end_no_check(
 		FILE_PATH,
-		unicode:characters_to_binary("\n" ++ STRING)
+		unicode:characters_to_binary(STRING)
 	).
 
 
